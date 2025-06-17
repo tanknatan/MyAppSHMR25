@@ -1,0 +1,8 @@
+package com.natan.shamilov.shmr25.domain.entity
+
+data class Account(
+    val id: Int,
+    val name: String,
+    val balance: Int,
+    val currency: String
+)

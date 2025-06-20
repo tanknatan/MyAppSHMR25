@@ -27,7 +27,9 @@ fun NavGraphBuilder.accountGraph(navController: NavController) {
 
         composable(AccountFlow.AddAccount.route) {
 
-            AddAccountScreen()
+            AddAccountScreen(onBackPressed = {
+                navController.popBackStack()
+            })
         }
     }
 }

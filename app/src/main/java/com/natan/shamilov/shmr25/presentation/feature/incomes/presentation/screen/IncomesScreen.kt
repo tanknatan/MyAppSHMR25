@@ -38,6 +38,7 @@ import com.natan.shamilov.shmr25.ui.TopGreenCard
 fun IncomesTodayScreen(
     modifier: Modifier = Modifier,
     viewModel: IncomesViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
+    onHistoryClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -48,7 +49,7 @@ fun IncomesTodayScreen(
                 Screen.Incomes.title,
                 Screen.Incomes.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { },
+                onNavigateClick = { onHistoryClick()},
             )
         },
         floatingActionButton = {

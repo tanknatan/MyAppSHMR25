@@ -21,12 +21,12 @@ fun NavGraphBuilder.incomesGraph(navController: NavController) {
     ) {
         composable(IncomesFlow.IncomesToday.route) {
 
-            IncomesTodayScreen()
+            IncomesTodayScreen(onHistoryClick = { navController.navigate(IncomesFlow.IncomesHistory.route) })
 
         }
 
         composable(IncomesFlow.IncomesHistory.route) {
-            IncomesHistoryScreen()
+            IncomesHistoryScreen(onBackPressed = { navController.popBackStack() })
         }
 
 

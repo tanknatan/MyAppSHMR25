@@ -26,7 +26,7 @@ fun NavGraphBuilder.expensesGraph(navController: NavController) {
         }
         composable(ExpensesFlow.ExpensesHistory.route) {
 
-            ExpensesHistoryScreen()
+            ExpensesHistoryScreen(onBackClick = { navController.popBackStack() })
 
         }
 

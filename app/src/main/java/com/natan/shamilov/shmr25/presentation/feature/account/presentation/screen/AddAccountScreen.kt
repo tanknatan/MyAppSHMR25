@@ -52,16 +52,17 @@ import kotlinx.coroutines.launch
 fun AddAccountScreen(
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
+    onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.Expenses.startIcone,
-                Screen.Expenses.title,
-                Screen.Expenses.endIcone,
-                onBackOrCanselClick = {},
+                Screen.AddAccount.startIcone,
+                Screen.AddAccount.title,
+                Screen.AddAccount.endIcone,
+                onBackOrCanselClick = {onBackPressed()},
                 onNavigateClick = { },
             )
         },

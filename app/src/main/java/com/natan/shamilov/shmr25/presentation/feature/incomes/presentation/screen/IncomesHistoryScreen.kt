@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen
+package com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.screen
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
@@ -9,9 +9,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -36,20 +43,20 @@ import java.util.Locale
 
 
 @Composable
-fun ExpensesHistoryScreen(
+fun IncomesHistoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: ExpensesViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
-    onBackClick: () -> Unit
+    viewModel: IncomesViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
+    onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.ExpensesHistory.startIcone,
-                Screen.ExpensesHistory.title,
-                Screen.ExpensesHistory.endIcone,
-                onBackOrCanselClick = {onBackClick()},
+                Screen.IncomesHistory.startIcone,
+                Screen.IncomesHistory.title,
+                Screen.IncomesHistory.endIcone,
+                onBackOrCanselClick = {onBackPressed()},
                 onNavigateClick = { },
             )
         },
@@ -79,7 +86,7 @@ fun ExpensesHistoryScreen(
 
             is State.Content -> {
 
-                ExpensesHistoryContent(
+                IncomesHistoryContent(
                     innerPadding,
                     viewModel = viewModel
                 )
@@ -88,27 +95,28 @@ fun ExpensesHistoryScreen(
     }
 }
 
-
 @Composable
-fun ExpensesHistoryContent(
+fun IncomesHistoryContent(
     paddingValues: PaddingValues,
-    viewModel: ExpensesViewModel,
+    viewModel: IncomesViewModel,
 ) {
-    val total by viewModel.sumOfExpenses.collectAsStateWithLifecycle()
-    val myExpenses by viewModel.myExpenses.collectAsStateWithLifecycle()
-
-    var startDateMillis by remember { mutableStateOf<Long?>(null) }
-    var endDateMillis by remember { mutableStateOf<Long?>(null) }
+    val total by viewModel.sumOfIncomes.collectAsStateWithLifecycle()
+    val myIncomes by viewModel.myIncomes.collectAsStateWithLifecycle()
 
     var showDialog by remember { mutableStateOf(false) }
     var currentPicker by remember { mutableStateOf(DateType.START) }
 
+    var startDateMillis by remember { mutableStateOf<Long?>(null) }
+    var endDateMillis by remember { mutableStateOf<Long?>(null) }
+
     val dateFormatter = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+
     val formattedStartDate = startDateMillis?.let { dateFormatter.format(Date(it)) } ?: "Выберите дату"
     val formattedEndDate = endDateMillis?.let { dateFormatter.format(Date(it)) } ?: "Выберите дату"
 
     Column(modifier = Modifier.padding(paddingValues)) {
 
+        // Карточка начала периода
         TopGreenCard(
             title = stringResource(R.string.start_date),
             cucurrency = formattedStartDate,
@@ -118,6 +126,7 @@ fun ExpensesHistoryContent(
             }
         )
 
+        // Карточка конца периода
         TopGreenCard(
             title = stringResource(R.string.end_date),
             cucurrency = formattedEndDate,
@@ -132,23 +141,22 @@ fun ExpensesHistoryContent(
             amount = total
         )
 
+        // Список операций
         LazyColumn {
-            items(
-                items = myExpenses,
-                key = { it.id }
-            ) { expense ->
+            items(myIncomes, key = { it.id }) { income ->
                 AppCard(
-                    title = expense.category.name,
-                    amount = expense.amount,
-                    subAmount = "Октябрь 2022", // можно заменить на formatDate(expense.date)
-                    avatarEmoji = expense.category.emoji,
-                    subtitle = expense.comment,
+                    title = income.category.name,
+                    amount = income.amount,
+                    subAmount = "Октябрь 2022", // можно заменить на дату income
+                    avatarEmoji = income.category.emoji,
+                    subtitle = income.comment,
                     canNavigate = true,
                     onNavigateClick = {},
                 )
             }
         }
 
+        // Диалог выбора даты
         if (showDialog) {
             CustomDatePickerDialog(
                 initialDate = when (currentPicker) {
@@ -173,7 +181,51 @@ fun ExpensesHistoryContent(
     }
 }
 
+// enum для выбора типа даты
 enum class DateType {
     START, END
 }
 
+
+//@Composable
+//fun IncomesHistoryContent(
+//    paddingValues: PaddingValues,
+//    viewModel: IncomesViewModel,
+//) {
+//    val total by viewModel.sumOfIncomes.collectAsStateWithLifecycle()
+//    val myIncomes by viewModel.myIncomes.collectAsStateWithLifecycle()
+//
+//    Column(modifier = Modifier.padding(paddingValues)) {
+//        TopGreenCard(
+//            title = stringResource(R.string.start_date),
+//            amount = total,
+//            onNavigateClick = {}
+//
+//        )
+//        TopGreenCard(
+//            title = stringResource(R.string.end_date),
+//            amount = total,
+//            onNavigateClick = {}
+//        )
+//        TopGreenCard(
+//            title = stringResource(R.string.sum),
+//            amount = total
+//        )
+//
+//        LazyColumn {
+//            items(
+//                items = myIncomes,
+//                key = { income -> income.id }) { income ->
+//                AppCard(
+//                    title = income.category.name,
+//                    amount = income.amount,
+//                    subAmount = "Октябрь 2022",
+//                    avatarEmoji = income.category.emoji,
+//                    subtitle = income.comment,
+//                    canNavigate = true,
+//                    onNavigateClick = {},
+//                )
+//            }
+//        }
+//    }
+//}

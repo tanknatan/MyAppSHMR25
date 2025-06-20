@@ -32,14 +32,16 @@ sealed class Screen(
             R.drawable.ic_analytics,
             R.drawable.ic_back
         )
+
     object Account : Screen(route = ACCOUNT_ROUTE, title = R.string.my_account, R.drawable.ic_edit, null)
     object AddAccount :
         Screen(
             route = ACCOUNT_ROUTE,
             title = R.string.add_account,
+            R.drawable.ic_accept,
             R.drawable.ic_close,
-            R.drawable.ic_accept
         )
+
     object Categories : Screen(route = CATEGORIES_ROUTE, title = R.string.my_categories, null, null)
     object Options : Screen(route = OPTIONS_ROUTE, title = R.string.options, null, null)
 

@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
 import com.natan.shamilov.shmr25.presentation.navigation.AppGraph
 import com.natan.shamilov.shmr25.ui.theme.MyAppSHMR25Theme
 import dagger.hilt.android.AndroidEntryPoint

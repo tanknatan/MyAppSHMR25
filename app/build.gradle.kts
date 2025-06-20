@@ -55,19 +55,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
     //Hilt
     implementation(libs.hilt.core)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-
     //navigation
-    implementation("androidx.navigation:navigation-compose:2.9.0")
-
-    implementation("androidx.compose.material3:material3")
-
+    implementation(libs.androidx.navigation.compose)
+    //Material
+    implementation(libs.material3)
     //Lottie
     implementation(libs.lottie)
     //Splash
     implementation(libs.splash)
+    //Network
+    implementation(libs.retrofit.core)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.logging)
+    implementation(libs.moshi.kotlin)
+    kapt(libs.moshi.codegen)
+    //coroutines
+    implementation(libs.kotlinx.coroutines.android)
 }

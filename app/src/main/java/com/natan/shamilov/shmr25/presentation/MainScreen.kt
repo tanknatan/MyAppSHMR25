@@ -1,10 +1,16 @@
 package com.natan.shamilov.shmr25.presentation
 
-import androidx.compose.foundation.Image
+import android.util.Log
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -13,33 +19,28 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.presentation.navigation.MainNavigation
+import com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation.accountGraph
+import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.screen.CategoriesScreen
+import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.ExpensesFlow
+import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.expensesGraph
+import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navigation.incomesGraph
+import com.natan.shamilov.shmr25.presentation.feature.option.OptionScreen
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
-import com.natan.shamilov.shmr25.presentation.navigation.Screen.Companion.areScreenWithFab
 import com.natan.shamilov.shmr25.presentation.navigation.rememberNavigationState
-import com.natan.shamilov.shmr25.presentation.screens.account.AccountScreen
-import com.natan.shamilov.shmr25.presentation.screens.categories.CategoriesScreen
-import com.natan.shamilov.shmr25.presentation.screens.expenses.ExpensesScreen
-import com.natan.shamilov.shmr25.presentation.screens.incomes.IncomesScreen
-import com.natan.shamilov.shmr25.presentation.screens.option.OptionsScreen
-import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.ui.theme.BottomBarBackground
 import com.natan.shamilov.shmr25.ui.theme.rodotoFont
 
 @Composable
-fun MainScreen() {
+fun MainScreen(modifier: Modifier = Modifier) {
     val navigationState = rememberNavigationState()
     val navBackStackEntry = navigationState.navHostController.currentBackStackEntryAsState()
-    val currentScreen = Screen.fromRoute(navBackStackEntry.value?.destination?.route)
 
     val navigationList = listOf(
         NavigationItem.Expenses,
@@ -49,17 +50,7 @@ fun MainScreen() {
         NavigationItem.Options
     )
     Scaffold(
-        topBar = {
-            if (currentScreen != null) {
-                CustomTopAppBar(
-                    currentScreen.startIcone,
-                    currentScreen.title,
-                    currentScreen.endIcone,
-                    onBackOrCanselClick = {},
-                    onNavigateClick = { },
-                )
-            }
-        },
+        modifier = Modifier.fillMaxSize(),
         bottomBar = {
             NavigationBar(
                 modifier = Modifier.navigationBarsPadding(),
@@ -73,23 +64,26 @@ fun MainScreen() {
                     NavigationBarItem(
                         selected = selected,
                         onClick = {
-                            if (!selected) navigationState.bottomNavigate(item.screen.route)
+                            val result = navBackStackEntry.value?.destination?.hierarchy?.map {
+                                it.route
+                            }
+                            if (!selected) navigationState.bottomNavigate(item.screen)
+
+                            if (result != null) {
+                                Log.d("Navigation", result.toList().toString())
+                            }
                         },
                         icon = {
-                            Image(
+                            Icon(
                                 painter = painterResource(item.iconId),
                                 contentDescription = null,
-                                colorFilter = if (selected) {
-                                    ColorFilter.tint(
-                                        MaterialTheme.colorScheme.primary
-                                    )
-                                } else null
-                            )
+
+                                )
                         },
                         label = {
                             Text(
                                 text = stringResource(item.label),
-                                fontSize = 12.sp,
+                                style = MaterialTheme.typography.labelMedium,
                                 fontFamily = rodotoFont,
                             )
                         },
@@ -101,30 +95,27 @@ fun MainScreen() {
                 }
             }
         },
-        floatingActionButton = {
-            if (currentScreen?.areScreenWithFab() == true) {
-                FloatingActionButton(
-                    onClick = {},
-                    shape = CircleShape,
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    elevation = FloatingActionButtonDefaults.elevation(
-                        defaultElevation = 0.dp,
-                        focusedElevation = 0.dp,
-                        hoveredElevation = 0.dp,
-                    )
-                ) {
-                    Image(painter = painterResource(R.drawable.ic_plus), contentDescription = null)
-                }
+        contentWindowInsets = WindowInsets.navigationBars
+    ) { innerPadding ->
+        NavHost(
+            modifier = modifier
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .imePadding(),
+            navController = navigationState.navHostController,
+            startDestination = ExpensesFlow.ExpensesGraph.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
+            expensesGraph(navController = navigationState.navHostController)
+            incomesGraph(navController = navigationState.navHostController)
+            composable(Screen.Categories.route) {
+                CategoriesScreen()
+            }
+            accountGraph(navController = navigationState.navHostController)
+            composable(Screen.Options.route) {
+                OptionScreen()
             }
         }
-    ) { innerPadding ->
-        MainNavigation(
-            navController = navigationState.navHostController,
-            expensesScreenContent = {ExpensesScreen(paddingValues = innerPadding)},
-            incomesScreenContent = {IncomesScreen(paddingValues = innerPadding)},
-            accountScreenContent = { AccountScreen(paddingValues = innerPadding) },
-            categoriesScreenContent = { CategoriesScreen(paddingValues = innerPadding) },
-            optionsScreenContent = { OptionsScreen(innerPadding) },
-        )
     }
 }

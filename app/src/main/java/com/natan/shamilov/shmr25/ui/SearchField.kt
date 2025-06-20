@@ -18,6 +18,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.R
@@ -51,7 +52,7 @@ fun SearchField(
             modifier = Modifier.fillMaxWidth(),
             placeholder = {
                 Text(
-                    text = "Найти статью",
+                    text = stringResource(R.string.find_category),
                     fontSize = 16.sp,
                     color = Color(0xFF49454F),
                     style  = MaterialTheme.typography.bodyLarge,

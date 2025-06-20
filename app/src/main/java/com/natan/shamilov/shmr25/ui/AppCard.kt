@@ -313,6 +313,3 @@ fun AppCardPreview() {
     }
 }
 
-fun Int.toCurrencyString(currency: String = "₽"): String {
-    return "%,d".format(this).replace(',', ' ') + " $currency"
-}

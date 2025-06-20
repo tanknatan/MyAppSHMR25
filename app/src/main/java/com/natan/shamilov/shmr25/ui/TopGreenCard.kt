@@ -43,9 +43,16 @@ fun TopGreenCard(
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dep),
+        modifier = if (onNavigateClick != null) {
+            Modifier
+                .fillMaxWidth()
+                .height(56.dep)
+                .clickable {onNavigateClick() }
+        } else {
+            Modifier
+                .fillMaxWidth()
+                .height(56.dep)
+        },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary
         ),
@@ -121,13 +128,12 @@ fun TopGreenCard(
                 Spacer(modifier = Modifier.width(8.dp))
             }
 
-            if (canNavigate && onNavigateClick != null) {
+            if (canNavigate) {
                 Image(
                     painter = painterResource(R.drawable.ic_more),
                     contentDescription = "Подробнее",
                     modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onNavigateClick() },
+                        .size(24.dp),
                 )
             }
         }

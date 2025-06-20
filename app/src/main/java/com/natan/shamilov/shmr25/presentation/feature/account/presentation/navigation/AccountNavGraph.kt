@@ -1,0 +1,33 @@
+package com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation
+
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.AccountScreen
+import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.AddAccountScreen
+
+fun NavGraphBuilder.accountGraph(navController: NavController) {
+
+    navigation(
+        route = AccountFlow.AccountGraph.route,
+        startDestination = AccountFlow.Account.route,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None }
+    ) {
+
+        composable(AccountFlow.Account.route) {
+
+            AccountScreen(onFABClick = {
+                navController.navigate(AccountFlow.AddAccount.route)
+            })
+        }
+
+        composable(AccountFlow.AddAccount.route) {
+
+            AddAccountScreen()
+        }
+    }
+}

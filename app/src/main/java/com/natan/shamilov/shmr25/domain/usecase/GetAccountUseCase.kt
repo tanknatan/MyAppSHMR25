@@ -5,9 +5,9 @@ import com.natan.shamilov.shmr25.domain.entity.Account
 import javax.inject.Inject
 
 class GetAccountUseCase @Inject constructor(
-    private val repository: FinanceRepository
+    private val repository: FinanceRepository,
 ) {
-    operator fun invoke(): Account {
+    operator fun invoke(): List<Account> {
         return repository.getAccount()
     }
 }

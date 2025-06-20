@@ -12,7 +12,7 @@ interface FinanceRepository {
 
     fun getIncomesList(): List<Income>
 
-    fun getAccount(): Account
+    fun getAccount(): List<Account>
 
     fun getCategoriesList(): List<Category>
 }

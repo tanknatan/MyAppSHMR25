@@ -35,17 +35,25 @@ import com.natan.shamilov.shmr25.ui.theme.rodotoFont
 @Composable
 fun TopGreenCard(
     title: String,
-    amount: Int? = null,
+    amount: Double? = null,
     cucurrency: String? = null,
+    currency: String? = null,
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
     onNavigateClick: (() -> Unit)? = null,
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dep),
+        modifier = if (onNavigateClick != null) {
+            Modifier
+                .fillMaxWidth()
+                .height(56.dep)
+                .clickable {onNavigateClick() }
+        } else {
+            Modifier
+                .fillMaxWidth()
+                .height(56.dep)
+        },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondary
         ),
@@ -89,7 +97,6 @@ fun TopGreenCard(
                 }
                 Spacer(modifier = Modifier.width(12.dp))
             }
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -99,10 +106,9 @@ fun TopGreenCard(
                     fontFamily = rodotoFont,
                 )
             }
-
             if (amount != null) {
                 Text(
-                    text = amount.toCurrencyString(),
+                    text = amount.toCurrencyString(currency = currency?.toCurrencySymbol() ?: "₽"),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
                     color = Color(0xFF1D1B20),
@@ -121,13 +127,12 @@ fun TopGreenCard(
                 Spacer(modifier = Modifier.width(8.dp))
             }
 
-            if (canNavigate && onNavigateClick != null) {
+            if (canNavigate) {
                 Image(
                     painter = painterResource(R.drawable.ic_more),
                     contentDescription = "Подробнее",
                     modifier = Modifier
-                        .size(24.dp)
-                        .clickable { onNavigateClick() },
+                        .size(24.dp),
                 )
             }
         }

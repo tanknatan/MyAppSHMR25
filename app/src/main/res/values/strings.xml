@@ -23,4 +23,9 @@
     <string name="language">Язык</string>
     <string name="about_app">О программе</string>
     <string name="total">Всего</string>
+    <string name="find_category">Найти статью</string>
+    <string name="sum">Сумма</string>
+    <string name="start_date">Начало</string>
+    <string name="end_date">Конец</string>
+    <string name="add_account">Добавить счет</string>
 </resources>

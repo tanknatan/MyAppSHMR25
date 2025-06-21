@@ -2,15 +2,15 @@ package com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navi
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.screen.IncomesHistoryScreen
 import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.screen.IncomesTodayScreen
+import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
 
-fun NavGraphBuilder.incomesGraph(navController: NavController) {
+fun NavGraphBuilder.incomesGraph(navController: NavigationState) {
 
 
     navigation(
@@ -21,12 +21,12 @@ fun NavGraphBuilder.incomesGraph(navController: NavController) {
     ) {
         composable(IncomesFlow.IncomesToday.route) {
 
-            IncomesTodayScreen(onHistoryClick = { navController.navigate(IncomesFlow.IncomesHistory.route) })
+            IncomesTodayScreen(onHistoryClick = { navController.navigateSingleTopTo(IncomesFlow.IncomesHistory) })
 
         }
 
         composable(IncomesFlow.IncomesHistory.route) {
-            IncomesHistoryScreen(onBackPressed = { navController.popBackStack() })
+            IncomesHistoryScreen(onBackPressed = { navController.navHostController.popBackStack() })
         }
 
 

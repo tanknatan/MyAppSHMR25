@@ -13,7 +13,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -31,6 +33,7 @@ import com.natan.shamilov.shmr25.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.ui.TopGreenCard
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -73,7 +76,7 @@ fun ExpensesHistoryScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error") // Пока так
+                    Text(text = "Нет сети")
                 }
             }
 
@@ -95,17 +98,42 @@ fun ExpensesHistoryContent(
     viewModel: ExpensesViewModel,
 ) {
     val total by viewModel.sumOfExpenses.collectAsStateWithLifecycle()
-    val myExpenses by viewModel.myExpenses.collectAsStateWithLifecycle()
+    val myExpenses by viewModel.myExpensesByPeriod.collectAsStateWithLifecycle()
 
-    var startDateMillis by remember { mutableStateOf<Long?>(null) }
-    var endDateMillis by remember { mutableStateOf<Long?>(null) }
+    var startDateMillis by remember {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        mutableLongStateOf(calendar.timeInMillis)
+    }
+
+    var endDateMillis by remember {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 23)
+        calendar.set(Calendar.MINUTE, 59)
+        calendar.set(Calendar.SECOND, 59)
+        calendar.set(Calendar.MILLISECOND, 999)
+        mutableStateOf(calendar.timeInMillis)
+    }
 
     var showDialog by remember { mutableStateOf(false) }
     var currentPicker by remember { mutableStateOf(DateType.START) }
 
-    val dateFormatter = remember { SimpleDateFormat("dd MMM yyyy", Locale.getDefault()) }
+    val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
     val formattedStartDate = startDateMillis?.let { dateFormatter.format(Date(it)) } ?: "Выберите дату"
-    val formattedEndDate = endDateMillis?.let { dateFormatter.format(Date(it)) } ?: "Выберите дату"
+    val formattedEndDate = endDateMillis?.let { dateFormatter.format(Date(it)) }
+        ?: "Выберите дату"
+
+
+    LaunchedEffect(startDateMillis, endDateMillis) {
+        viewModel.loadExpensesByPeriod(
+            startDate = formattedStartDate,
+            endDate = formattedEndDate
+        )
+    }
 
     Column(modifier = Modifier.padding(paddingValues)) {
 
@@ -140,7 +168,7 @@ fun ExpensesHistoryContent(
                 AppCard(
                     title = expense.category.name,
                     amount = expense.amount,
-                    subAmount = "Октябрь 2022", // можно заменить на formatDate(expense.date)
+                    subAmount = expense.createdAt,
                     avatarEmoji = expense.category.emoji,
                     subtitle = expense.comment,
                     canNavigate = true,
@@ -157,15 +185,12 @@ fun ExpensesHistoryContent(
                 },
                 onDismissRequest = { showDialog = false },
                 onClear = {
-                    when (currentPicker) {
-                        DateType.START -> startDateMillis = null
-                        DateType.END -> endDateMillis = null
-                    }
+
                 },
                 onDateSelected = {
                     when (currentPicker) {
-                        DateType.START -> startDateMillis = it
-                        DateType.END -> endDateMillis = it
+                        DateType.START -> startDateMillis = it!!
+                        DateType.END -> endDateMillis = it!!
                     }
                 }
             )

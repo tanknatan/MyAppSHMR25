@@ -2,15 +2,15 @@ package com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.nav
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen.ExpensesHistoryScreen
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen.ExpensesTodayScreen
+import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
 
-fun NavGraphBuilder.expensesGraph(navController: NavController) {
+fun NavGraphBuilder.expensesGraph(navController: NavigationState) {
 
 
     navigation(
@@ -21,12 +21,12 @@ fun NavGraphBuilder.expensesGraph(navController: NavController) {
     ) {
         composable(ExpensesFlow.ExpensesToday.route) {
 
-            ExpensesTodayScreen(onHistoryClick = { navController.navigate(ExpensesFlow.ExpensesHistory.route) })
+            ExpensesTodayScreen(onHistoryClick = { navController.navigateSingleTopTo(ExpensesFlow.ExpensesHistory) })
 
         }
         composable(ExpensesFlow.ExpensesHistory.route) {
 
-            ExpensesHistoryScreen(onBackClick = { navController.popBackStack() })
+            ExpensesHistoryScreen(onBackClick = { navController.navHostController.popBackStack() })
 
         }
 

@@ -84,7 +84,7 @@ fun AccountScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error") // Пока так
+                    Text(text = "Нет сети")
                 }
             }
 
@@ -114,6 +114,7 @@ fun AccountContent(viewModel: AccountViewModel, paddingValues: PaddingValues) {
             TopGreenCard(
                 title = account.name,
                 amount = account.balance,
+                currency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {},
                 avatarEmoji = "\uD83D\uDCB0"

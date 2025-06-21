@@ -40,7 +40,7 @@ import com.natan.shamilov.shmr25.ui.theme.rodotoFont
 fun AppCard(
     title: String,
     subtitle: String? = null,
-    amount: Int? = null,
+    amount: Double? = null,
     subAmount: String? = null,
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
@@ -303,7 +303,7 @@ fun AppCardPreview() {
     MyAppSHMR25Theme {
         AppCard(
             avatarEmoji = "\uD83D\uDCB0",
-            amount = 5000000,
+            amount = 5000000.0,
             subtitle = "ООО \"Компания\"",
             canNavigate = true,
             onNavigateClick = {},

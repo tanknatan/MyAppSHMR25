@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen
 
 import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,19 +9,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,11 +28,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.commo.State
 import com.natan.shamilov.shmr25.presentation.MainActivity
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
@@ -52,7 +47,7 @@ import kotlinx.coroutines.launch
 fun AddAccountScreen(
     modifier: Modifier = Modifier,
     viewModel: AccountViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,7 +57,7 @@ fun AddAccountScreen(
                 Screen.AddAccount.startIcone,
                 Screen.AddAccount.title,
                 Screen.AddAccount.endIcone,
-                onBackOrCanselClick = {onBackPressed()},
+                onBackOrCanselClick = { onBackPressed() },
                 onNavigateClick = { },
             )
         },
@@ -86,7 +81,7 @@ fun AddAccountScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error") // Пока так
+                    Text(text = "Нет сети")
                 }
             }
 
@@ -94,7 +89,8 @@ fun AddAccountScreen(
 
                 AddAccountContent(
                     paddingValues = innerPadding,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    onBack = { onBackPressed() },
                 )
             }
         }
@@ -106,7 +102,10 @@ fun AddAccountScreen(
 fun AddAccountContent(
     viewModel: AccountViewModel,
     paddingValues: PaddingValues,
+    onBack: () -> Unit
 ) {
+    val accountCreated by viewModel.createAccountComplete.collectAsStateWithLifecycle()
+
     var accountName by remember { mutableStateOf("") }
     var balance by remember { mutableStateOf("") }
     var selectedCurrency by remember { mutableStateOf<CurrencyOption?>(null) }
@@ -116,6 +115,12 @@ fun AddAccountContent(
             accountName.isNotBlank() &&
                     balance.isNotBlank() &&
                     selectedCurrency != null
+        }
+    }
+    LaunchedEffect(accountCreated) {
+        if (accountCreated){
+            viewModel.resetCreateAccountComplete()
+            onBack()
         }
     }
 
@@ -172,7 +177,7 @@ fun AddAccountContent(
         )
         Spacer(Modifier.height(20.dp))
         Button(
-            onClick = { /* действие */ },
+            onClick = { viewModel.createAccount(accountName, balance, selectedCurrency!!.code) },
             shape = RoundedCornerShape(percent = 50), // скруглённые боковины
             modifier = Modifier
                 .fillMaxWidth()

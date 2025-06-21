@@ -11,39 +11,39 @@ sealed class Screen(
 ) :
     commoScreen(route) {
 
-    object Main : Screen(MAIN_ROUTE)
+    data object Main : Screen(MAIN_ROUTE)
 
-    object Splash : Screen(SPLASH_ROUTE)
+    data object Splash : Screen(SPLASH_ROUTE)
 
-    object Expenses : Screen(route = EXPENSES_ROUTE, title = R.string.expenses_today, R.drawable.ic_history, null)
-    object ExpensesHistory :
+    data object Expenses : Screen(route = EXPENSES_ROUTE, title = R.string.expenses_today, R.drawable.ic_history, null)
+    data object ExpensesHistory :
         Screen(
             route = EXPENSES_HISTORY_ROUTE,
             title = R.string.my_history,
             R.drawable.ic_analytics,
-            R.drawable.ic_back
+            R.drawable.ic_back,
         )
 
-    object Incomes : Screen(route = INCOMES_ROUTE, title = R.string.incomes_today, R.drawable.ic_history, null)
-    object IncomesHistory :
+    data object Incomes : Screen(route = INCOMES_ROUTE, title = R.string.incomes_today, R.drawable.ic_history, null)
+    data object IncomesHistory :
         Screen(
             route = INCOMES_HISTORY_ROUTE,
             title = R.string.my_history,
             R.drawable.ic_analytics,
-            R.drawable.ic_back
+            R.drawable.ic_back,
         )
 
-    object Account : Screen(route = ACCOUNT_ROUTE, title = R.string.my_account, R.drawable.ic_edit, null)
-    object AddAccount :
+    data object Account : Screen(route = ACCOUNT_ROUTE, title = R.string.my_account, R.drawable.ic_edit, null)
+    data object AddAccount :
         Screen(
             route = ACCOUNT_ROUTE,
             title = R.string.add_account,
-            R.drawable.ic_accept,
+            null,
             R.drawable.ic_close,
         )
 
-    object Categories : Screen(route = CATEGORIES_ROUTE, title = R.string.my_categories, null, null)
-    object Options : Screen(route = OPTIONS_ROUTE, title = R.string.options, null, null)
+    data object Categories : Screen(route = CATEGORIES_ROUTE, title = R.string.my_categories, null, null)
+    data object Options : Screen(route = OPTIONS_ROUTE, title = R.string.options, null, null)
 
 
     companion object {
@@ -66,16 +66,5 @@ sealed class Screen(
             return screens.find { it.route == baseRoute }
         }
 
-        fun Screen.areScreenWithFab(): Boolean {
-            return this in listOf(
-                Expenses,
-                Incomes,
-                Account,
-            )
-        }
-
-        fun Screen.areSplashScreen(): Boolean {
-            return this == Splash
-        }
     }
 }

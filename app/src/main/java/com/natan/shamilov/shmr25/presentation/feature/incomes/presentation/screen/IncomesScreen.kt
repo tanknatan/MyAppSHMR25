@@ -87,7 +87,7 @@ fun IncomesTodayScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Error") // Пока так
+                    Text(text = "Нет сети")
                 }
             }
 

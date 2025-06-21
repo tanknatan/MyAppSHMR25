@@ -33,8 +33,13 @@ class NavigationState(
     }
 
     fun navigateSingleTopTo(screen: Screen) {
+        val currentRoute = navHostController.currentBackStackEntry?.destination?.route ?: return
         navHostController.navigate(screen.route) {
-            launchSingleTop = true
+            popUpTo(currentRoute){
+                saveState = false
+            }
+
+            launchSingleTop = false
         }
     }
 }

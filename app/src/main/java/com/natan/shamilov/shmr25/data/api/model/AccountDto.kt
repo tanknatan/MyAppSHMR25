@@ -1,3 +1,4 @@
+
 package com.natan.shamilov.shmr25.data.api.model
 
 import com.squareup.moshi.Json

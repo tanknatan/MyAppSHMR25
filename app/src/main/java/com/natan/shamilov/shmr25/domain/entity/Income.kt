@@ -1,9 +1,10 @@
 package com.natan.shamilov.shmr25.domain.entity
 
 data class Income(
-    val id: Int,
+    val id: Long,
     val category: Category,
-    val amount: Int,
-    val comment: String = ""
+    val amount: Double,
+    val comment: String = "",
+    val createdAt: String
 ) {
 }

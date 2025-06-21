@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -184,13 +185,13 @@ fun CustomDatePickerDialog(
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(7),
-                    modifier = Modifier.height(280.dp),
+                    modifier = Modifier.height(300.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     // Заголовки дней недели (начиная с понедельника)
                     items(dayHeaders.size) { index ->
                         Box(
-                            modifier = Modifier.size(40.dp),
+                            modifier = Modifier.size(40.dp).aspectRatio(1f),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
@@ -214,7 +215,7 @@ fun CustomDatePickerDialog(
 
                     // Пустые ячейки до первого числа
                     items(firstDayOffset) {
-                        Box(modifier = Modifier.size(40.dp))
+                        Box(modifier = Modifier.size(40.dp).aspectRatio(1f))
                     }
 
                     // Дни месяца
@@ -231,7 +232,7 @@ fun CustomDatePickerDialog(
                         Box(
                             contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(40.dp).aspectRatio(1f)
                                 .clip(CircleShape)
                                 .background(if (isSelected) Color(0xFF00C853) else Color.Transparent)
                                 .clickable {
@@ -251,75 +252,6 @@ fun CustomDatePickerDialog(
                         }
                     }
                 }
-
-
-//                LazyVerticalGrid(
-//                    columns = GridCells.Fixed(7),
-//                    modifier = Modifier.height(280.dp),
-//                    horizontalArrangement = Arrangement.Center
-//                ) {
-//                    // ✅ Заголовки дней недели
-//                    items(dayHeaders.size) { index ->
-//                        Box(
-//                            modifier = Modifier
-//                                .size(40.dp),
-//                            contentAlignment = Alignment.Center
-//                        ) {
-//                            Text(
-//                                text = dayHeaders[index],
-//                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-//                                color = Color.Gray
-//                            )
-//                        }
-//                    }
-//
-//                    // 📌 Пустые ячейки до первого дня месяца
-//                    val firstDayOffset = Calendar.getInstance().apply {
-//                        set(Calendar.YEAR, displayedYear)
-//                        set(Calendar.MONTH, displayedMonth)
-//                        set(Calendar.DAY_OF_MONTH, 1)
-//                    }.get(Calendar.DAY_OF_WEEK) - 1 // Sunday = 1, Saturday = 7
-//
-//                    items(firstDayOffset) {
-//                        Box(modifier = Modifier.size(40.dp)) // пустая ячейка
-//                    }
-//
-//                    // 📅 Дни месяца
-//                    items(days.size) { index ->
-//                        val day = index + 1
-//                        val isSelected = Calendar.getInstance().apply {
-//                            timeInMillis = selectedDate
-//                        }.let {
-//                            it.get(Calendar.DAY_OF_MONTH) == day &&
-//                                    it.get(Calendar.MONTH) == displayedMonth &&
-//                                    it.get(Calendar.YEAR) == displayedYear
-//                        }
-//
-//                        Box(
-//                            contentAlignment = Alignment.Center,
-//                            modifier = Modifier
-//                                .size(40.dp)
-//                                .clip(CircleShape)
-//                                .background(if (isSelected) Color(0xFF00C853) else Color.Transparent)
-//                                .clickable {
-//                                    val selectedCal = Calendar.getInstance().apply {
-//                                        set(Calendar.YEAR, displayedYear)
-//                                        set(Calendar.MONTH, displayedMonth)
-//                                        set(Calendar.DAY_OF_MONTH, day)
-//                                    }
-//                                    selectedDate = selectedCal.timeInMillis
-//                                }
-//                        ) {
-//                            Text(
-//                                text = day.toString(),
-//                                color = if (isSelected) Color.White else Color.Black,
-//                                style = MaterialTheme.typography.bodyMedium
-//                            )
-//                        }
-//                    }
-//                }
-
-                Spacer(modifier = Modifier.height(8.dp))
 
                 // Кнопки внизу
                 Row(

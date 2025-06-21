@@ -2,14 +2,14 @@ package com.natan.shamilov.shmr25.presentation.feature.account.presentation.navi
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.AccountScreen
 import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.AddAccountScreen
+import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
-fun NavGraphBuilder.accountGraph(navController: NavController) {
+fun NavGraphBuilder.accountGraph(navController: NavigationState) {
 
     navigation(
         route = AccountFlow.AccountGraph.route,
@@ -21,14 +21,14 @@ fun NavGraphBuilder.accountGraph(navController: NavController) {
         composable(AccountFlow.Account.route) {
 
             AccountScreen(onFABClick = {
-                navController.navigate(AccountFlow.AddAccount.route)
+                navController.navigateSingleTopTo(AccountFlow.AddAccount)
             })
         }
 
         composable(AccountFlow.AddAccount.route) {
 
             AddAccountScreen(onBackPressed = {
-                navController.popBackStack()
+                navController.navHostController.popBackStack()
             })
         }
     }

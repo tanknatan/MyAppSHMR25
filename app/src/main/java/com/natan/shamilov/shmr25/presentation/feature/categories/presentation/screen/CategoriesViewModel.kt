@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.natan.shamilov.shmr25.data.api.Result
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
@@ -25,18 +26,28 @@ class CategoriesViewModel @Inject constructor(
 
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    init {
-        getCategories()
-    }
 
     init {
-        getCategories()
+        loadCategories()
     }
 
-    private fun getCategories() {
+    private fun loadCategories() {
         viewModelScope.launch {
-            _myCategories.value = getCategoriesListUseCase()
-            _uiState.value = State.Content
+            _uiState.value = State.Loading
+
+            when (val result = getCategoriesListUseCase()) {
+                is Result.Success -> {
+                    _myCategories.value = result.data
+                    _uiState.value = State.Content
+                }
+                is Result.Error -> {
+                    _uiState.value = State.Error
+                }
+                is Result.Loading -> {
+                    _uiState.value =  State.Loading
+                }
+            }
         }
     }
+
 }

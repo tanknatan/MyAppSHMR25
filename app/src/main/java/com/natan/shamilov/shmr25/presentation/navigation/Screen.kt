@@ -1,18 +1,49 @@
 package com.natan.shamilov.shmr25.presentation.navigation
 
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.commo.Screen as commoScreen
 
-sealed class Screen(val route: String, val title: Int? = null, val endIcone: Int? = null, val startIcone: Int? = null) {
-    
-    object Main : Screen(MAIN_ROUTE)
+sealed class Screen(
+    override val route: String,
+    val title: Int? = null,
+    val endIcone: Int? = null,
+    val startIcone: Int? = null,
+) :
+    commoScreen(route) {
 
-    object Splash : Screen(SPLASH_ROUTE)
+    data object Main : Screen(MAIN_ROUTE)
 
-    object Expenses : Screen(EXPENSES_ROUTE, R.string.expenses_today, R.drawable.ic_history, null)
-    object Incomes : Screen(INCOMES_ROUTE, R.string.incomes_today, R.drawable.ic_history, null)
-    object Account : Screen(ACCOUNT_ROUTE, R.string.my_account, R.drawable.ic_edit, null)
-    object Categories : Screen(CATEGORIES_ROUTE, R.string.my_categories, null, null)
-    object Options : Screen(OPTIONS_ROUTE, R.string.options, null, null)
+    data object Splash : Screen(SPLASH_ROUTE)
+
+    data object Expenses : Screen(route = EXPENSES_ROUTE, title = R.string.expenses_today, R.drawable.ic_history, null)
+    data object ExpensesHistory :
+        Screen(
+            route = EXPENSES_HISTORY_ROUTE,
+            title = R.string.my_history,
+            R.drawable.ic_analytics,
+            R.drawable.ic_back,
+        )
+
+    data object Incomes : Screen(route = INCOMES_ROUTE, title = R.string.incomes_today, R.drawable.ic_history, null)
+    data object IncomesHistory :
+        Screen(
+            route = INCOMES_HISTORY_ROUTE,
+            title = R.string.my_history,
+            R.drawable.ic_analytics,
+            R.drawable.ic_back,
+        )
+
+    data object Account : Screen(route = ACCOUNT_ROUTE, title = R.string.my_account, R.drawable.ic_edit, null)
+    data object AddAccount :
+        Screen(
+            route = ACCOUNT_ROUTE,
+            title = R.string.add_account,
+            null,
+            R.drawable.ic_close,
+        )
+
+    data object Categories : Screen(route = CATEGORIES_ROUTE, title = R.string.my_categories, null, null)
+    data object Options : Screen(route = OPTIONS_ROUTE, title = R.string.options, null, null)
 
 
     companion object {
@@ -21,7 +52,9 @@ sealed class Screen(val route: String, val title: Int? = null, val endIcone: Int
         const val SPLASH_ROUTE = "splash"
 
         const val EXPENSES_ROUTE = "expenses"
+        const val EXPENSES_HISTORY_ROUTE = "expenses_history"
         const val INCOMES_ROUTE = "incomes"
+        const val INCOMES_HISTORY_ROUTE = "incomes_history"
         const val ACCOUNT_ROUTE = "account"
         const val CATEGORIES_ROUTE = "categories"
         const val OPTIONS_ROUTE = "options"
@@ -33,12 +66,5 @@ sealed class Screen(val route: String, val title: Int? = null, val endIcone: Int
             return screens.find { it.route == baseRoute }
         }
 
-        fun Screen.areScreenWithFab(): Boolean {
-            return this in listOf(
-                Expenses,
-                Incomes,
-                Account,
-            )
-        }
     }
 }

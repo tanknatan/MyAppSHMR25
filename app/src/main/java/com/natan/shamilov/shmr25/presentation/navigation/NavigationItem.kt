@@ -1,35 +1,43 @@
 package com.natan.shamilov.shmr25.presentation.navigation
 
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation.AccountFlow
+import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.ExpensesFlow
+import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navigation.IncomesFlow
+import com.natan.shamilov.shmr25.commo.Screen as commoScreen
 
 sealed class NavigationItem(
-    val screen: Screen,
+    val screen: commoScreen,
     val label: Int,
-    val iconId: Int
+    val iconId: Int,
 ) {
-    data object Expenses: NavigationItem(
-        Screen.Expenses,
-        R.string.expenses,
-        R.drawable.expenses
+    data object Expenses : NavigationItem(
+        ExpensesFlow.ExpensesGraph,
+        label = R.string.expenses,
+        iconId = R.drawable.expenses
     )
-    data object Incomes: NavigationItem(
-        Screen.Incomes,
-        R.string.incomes,
-        R.drawable.incomes
+
+    data object Incomes : NavigationItem(
+        IncomesFlow.IncomesGraph,
+        label = R.string.incomes,
+        iconId = R.drawable.incomes
     )
-    data object Account: NavigationItem(
-        Screen.Account,
-        R.string.account,
-        R.drawable.account
+
+    data object Account : NavigationItem(
+        AccountFlow.AccountGraph,
+        label = R.string.account,
+        iconId = R.drawable.account
     )
-    data object Categories: NavigationItem(
+
+    data object Categories : NavigationItem(
         Screen.Categories,
-        R.string.categories,
-        R.drawable.categories
+        label = R.string.categories,
+        iconId = R.drawable.categories
     )
-    data object Options: NavigationItem(
+
+    data object Options : NavigationItem(
         Screen.Options,
-        R.string.options,
-        R.drawable.options
+        label = R.string.options,
+        iconId = R.drawable.options
     )
 }

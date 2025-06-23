@@ -16,28 +16,6 @@ fun MainNavigation(
     categoriesScreenContent: @Composable () -> Unit,
     optionsScreenContent: @Composable () -> Unit,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Expenses.route,
-        enterTransition =  { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-    ) {
-        composable(Screen.Expenses.route) {
-            expensesScreenContent()
-        }
-        composable(Screen.Incomes.route) {
-            incomesScreenContent()
-        }
-        composable(Screen.Account.route) {
-            accountScreenContent()
-        }
-        composable(Screen.Categories.route) {
-            categoriesScreenContent()
-        }
-        composable(Screen.Options.route) {
-            optionsScreenContent()
-        }
 
-    }
 
 }

@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.natan.shamilov.shmr25.presentation.MainScreen
-import com.natan.shamilov.shmr25.presentation.screens.splash.SplashScreen
+import com.natan.shamilov.shmr25.presentation.feature.splash.SplashScreen
 
 
 @Composable

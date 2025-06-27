@@ -15,11 +15,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation.accountGraph
+import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.navigation.catigoriesGraph
 import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.screen.CategoriesScreen
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.expensesGraph
 import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navigation.incomesGraph
-import com.natan.shamilov.shmr25.presentation.feature.option.OptionScreen
+import com.natan.shamilov.shmr25.presentation.feature.option.presentation.navigation.optionsGraph
+import com.natan.shamilov.shmr25.presentation.feature.option.presentation.screen.OptionScreen
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.presentation.navigation.rememberNavigationState
@@ -56,17 +58,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
             navController = navigationState.navHostController,
             startDestination = ExpensesFlow.ExpensesGraph.route,
             enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
+            exitTransition = { ExitTransition.None }
         ) {
             expensesGraph(navController = navigationState)
             incomesGraph(navController = navigationState)
-            composable(Screen.Categories.route) {
-                CategoriesScreen()
-            }
             accountGraph(navController = navigationState)
-            composable(Screen.Options.route) {
-                OptionScreen()
-            }
+            catigoriesGraph(navController = navigationState)
+            optionsGraph(navController = navigationState)
         }
     }
 }

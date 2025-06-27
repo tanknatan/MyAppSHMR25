@@ -1,10 +1,8 @@
 package com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation
 
-import com.natan.shamilov.shmr25.commo.Screen
+import com.natan.shamilov.shmr25.common.Screen
 
-
-
-sealed class ExpensesFlow(override val route: String) : Screen(route) {
+sealed class ExpensesFlow(override val route: String) : Screen {
 
     data object ExpensesGraph : ExpensesFlow(EXPENSES_GRAP)
 

@@ -44,7 +44,7 @@ fun SearchField(
                     strokeWidth = strokeWidth
                 )
             }
-            .padding( horizontal = 8.dp)
+            .padding(horizontal = 8.dp)
     ) {
         TextField(
             value = query,
@@ -55,8 +55,8 @@ fun SearchField(
                     text = stringResource(R.string.find_category),
                     fontSize = 16.sp,
                     color = Color(0xFF49454F),
-                    style  = MaterialTheme.typography.bodyLarge,
-                    fontFamily = rodotoFont,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontFamily = rodotoFont
                 )
             },
             colors = TextFieldDefaults.colors(
@@ -67,7 +67,7 @@ fun SearchField(
                 focusedPlaceholderColor = Color(0xFFECE6F0),
                 unfocusedPlaceholderColor = Color(0xFFECE6F0),
                 focusedContainerColor = Color(0xFFECE6F0),
-                unfocusedContainerColor = Color(0xFFECE6F0),
+                unfocusedContainerColor = Color(0xFFECE6F0)
             ),
             singleLine = true
         )
@@ -77,7 +77,7 @@ fun SearchField(
             contentDescription = null,
             modifier = Modifier.align(Alignment.CenterEnd)
                 .padding(end = 10.dp)
-                .clickable{}
+                .clickable {}
         )
     }
 }

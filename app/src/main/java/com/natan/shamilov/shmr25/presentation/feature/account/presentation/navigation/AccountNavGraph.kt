@@ -10,23 +10,19 @@ import com.natan.shamilov.shmr25.presentation.feature.account.presentation.scree
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
 fun NavGraphBuilder.accountGraph(navController: NavigationState) {
-
     navigation(
         route = AccountFlow.AccountGraph.route,
         startDestination = AccountFlow.Account.route,
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None }
     ) {
-
         composable(AccountFlow.Account.route) {
-
             AccountScreen(onFABClick = {
                 navController.navigateSingleTopTo(AccountFlow.AddAccount)
             })
         }
 
         composable(AccountFlow.AddAccount.route) {
-
             AddAccountScreen(onBackPressed = {
                 navController.navHostController.popBackStack()
             })

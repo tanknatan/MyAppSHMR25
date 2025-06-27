@@ -40,7 +40,7 @@ fun TopGreenCard(
     currency: String? = null,
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
-    onNavigateClick: (() -> Unit)? = null,
+    onNavigateClick: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -48,7 +48,7 @@ fun TopGreenCard(
             Modifier
                 .fillMaxWidth()
                 .height(56.dep)
-                .clickable {onNavigateClick() }
+                .clickable { onNavigateClick() }
         } else {
             Modifier
                 .fillMaxWidth()
@@ -63,7 +63,7 @@ fun TopGreenCard(
             hoveredElevation = 0.dp,
             focusedElevation = 0.dp,
             draggedElevation = 0.dp,
-            disabledElevation = 0.dp,
+            disabledElevation = 0.dp
         ),
         shape = RectangleShape
     ) {
@@ -103,7 +103,7 @@ fun TopGreenCard(
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
                     color = Color(0xFF1D1B20),
-                    fontFamily = rodotoFont,
+                    fontFamily = rodotoFont
                 )
             }
             if (amount != null) {
@@ -112,7 +112,7 @@ fun TopGreenCard(
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
                     color = Color(0xFF1D1B20),
-                    fontFamily = rodotoFont,
+                    fontFamily = rodotoFont
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
@@ -122,7 +122,7 @@ fun TopGreenCard(
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
                     color = Color(0xFF1D1B20),
-                    fontFamily = rodotoFont,
+                    fontFamily = rodotoFont
                 )
                 Spacer(modifier = Modifier.width(8.dp))
             }
@@ -132,7 +132,7 @@ fun TopGreenCard(
                     painter = painterResource(R.drawable.ic_more),
                     contentDescription = "Подробнее",
                     modifier = Modifier
-                        .size(24.dp),
+                        .size(24.dp)
                 )
             }
         }

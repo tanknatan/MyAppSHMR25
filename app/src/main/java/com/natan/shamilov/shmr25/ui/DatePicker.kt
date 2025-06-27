@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,14 +47,13 @@ import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Locale
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDatePickerDialog(
     onDismissRequest: () -> Unit,
     onDateSelected: (Long?) -> Unit,
     onClear: () -> Unit,
-    initialDate: Long? = null,
+    initialDate: Long? = null
 ) {
     val calendar = remember { Calendar.getInstance() }
     initialDate?.let { calendar.timeInMillis = it }
@@ -81,7 +80,7 @@ fun CustomDatePickerDialog(
     }
     val yearRange = (2000..2100).toList()
 
-    AlertDialog(
+    BasicAlertDialog(
         onDismissRequest = onDismissRequest,
 //        confirmButton = {},
 //        dismissButton = {},
@@ -109,7 +108,10 @@ fun CustomDatePickerDialog(
                                 displayedMonth -= 1
                             }
                         }) {
-                            Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Previous month")
+                            Icon(
+                                Icons.Default.KeyboardArrowLeft,
+                                contentDescription = "Previous month"
+                            )
                         }
 
                         Box {
@@ -141,14 +143,20 @@ fun CustomDatePickerDialog(
                                 displayedMonth += 1
                             }
                         }) {
-                            Icon(Icons.Default.KeyboardArrowRight, contentDescription = "Next month")
+                            Icon(
+                                Icons.Default.KeyboardArrowRight,
+                                contentDescription = "Next month"
+                            )
                         }
                     }
 
                     // Год
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         IconButton(onClick = { displayedYear-- }) {
-                            Icon(Icons.Default.KeyboardArrowLeft, contentDescription = "Previous year")
+                            Icon(
+                                Icons.Default.KeyboardArrowLeft,
+                                contentDescription = "Previous year"
+                            )
                         }
 
                         Box {
@@ -196,7 +204,9 @@ fun CustomDatePickerDialog(
                         ) {
                             Text(
                                 text = dayHeaders[index],
-                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontWeight = FontWeight.SemiBold
+                                ),
                                 color = Color.Gray
                             )
                         }
@@ -234,7 +244,9 @@ fun CustomDatePickerDialog(
                             modifier = Modifier
                                 .size(40.dp).aspectRatio(1f)
                                 .clip(CircleShape)
-                                .background(if (isSelected) Color(0xFF00C853) else Color.Transparent)
+                                .background(
+                                    if (isSelected) Color(0xFF00C853) else Color.Transparent
+                                )
                                 .clickable {
                                     val selectedCal = Calendar.getInstance().apply {
                                         set(Calendar.YEAR, displayedYear)
@@ -283,4 +295,3 @@ fun CustomDatePickerDialog(
         }
     )
 }
-

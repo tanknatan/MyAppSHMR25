@@ -22,7 +22,7 @@ import com.natan.shamilov.shmr25.ui.theme.rodotoFont
 
 @Composable
 fun MyNavigationBar(
-    navigationList : List<NavigationItem>,
+    navigationList: List<NavigationItem>,
     navigationState: NavigationState,
     navBackStackEntry: State<NavBackStackEntry?>
 ) {
@@ -50,20 +50,19 @@ fun MyNavigationBar(
                 icon = {
                     Icon(
                         painter = painterResource(item.iconId),
-                        contentDescription = null,
-
-                        )
+                        contentDescription = null
+                    )
                 },
                 label = {
                     Text(
                         text = stringResource(item.label),
                         style = MaterialTheme.typography.labelMedium,
-                        fontFamily = rodotoFont,
+                        fontFamily = rodotoFont
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.secondary,
+                    indicatorColor = MaterialTheme.colorScheme.secondary
                 )
             )
         }

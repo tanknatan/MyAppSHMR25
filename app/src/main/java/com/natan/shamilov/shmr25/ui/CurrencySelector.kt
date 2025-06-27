@@ -18,7 +18,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -62,7 +61,11 @@ fun CurrencySelectorButton(
             ) {
                 Text(
                     text = selectedCurrency?.let { "${it.name} ${it.symbol}" } ?: "Выбрать валюту",
-                    color = if (selectedCurrency != null) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (selectedCurrency != null) {
+                        MaterialTheme.colorScheme.onSurface
+                    } else {
+                        MaterialTheme.colorScheme.onSurfaceVariant
+                    }
                 )
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
@@ -73,13 +76,12 @@ fun CurrencySelectorButton(
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CurrencyBottomSheet(
     onDismiss: () -> Unit,
     onCurrencySelected: (CurrencyOption) -> Unit,
-    sheetState: SheetState,
+    sheetState: SheetState
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -118,6 +120,7 @@ fun CurrencyBottomSheet(
                         .fillMaxWidth()
                         .height(72.dp)
                         .background(color = Color(0xffE46962))
+                        .padding(horizontal = 12.dp)
                         .clickable { onDismiss() },
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
@@ -133,7 +136,3 @@ fun CurrencyBottomSheet(
         }
     }
 }
-
-
-
-

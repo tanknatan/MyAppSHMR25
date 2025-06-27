@@ -1,6 +1,5 @@
 package com.natan.shamilov.shmr25.di
 
-
 import com.natan.shamilov.shmr25.data.repositorys.FinanceRepositoryImpl
 import com.natan.shamilov.shmr25.domain.FinanceRepository
 import dagger.Binds

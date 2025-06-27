@@ -45,7 +45,7 @@ fun AppCard(
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
     onNavigateClick: (() -> Unit)? = null,
-    isSetting: Boolean = false,
+    isSetting: Boolean = false
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -67,7 +67,7 @@ fun AppCard(
             hoveredElevation = 0.dp,
             focusedElevation = 0.dp,
             draggedElevation = 0.dp,
-            disabledElevation = 0.dp,
+            disabledElevation = 0.dp
         ),
         shape = RectangleShape
     ) {
@@ -97,7 +97,7 @@ fun AppCard(
                         .background(MaterialTheme.colorScheme.secondary),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(avatarEmoji, fontSize = 19.sp,  fontFamily = rodotoFont,)
+                    Text(avatarEmoji, fontSize = 19.sp, fontFamily = rodotoFont)
                 }
                 Spacer(modifier = Modifier.width(12.dp))
             }
@@ -107,7 +107,7 @@ fun AppCard(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
-                    fontFamily = rodotoFont,
+                    fontFamily = rodotoFont
 
                 )
                 if (!subtitle.isNullOrEmpty()) {
@@ -116,7 +116,7 @@ fun AppCard(
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontFamily = rodotoFont,
+                        fontFamily = rodotoFont
                     )
                 }
             }
@@ -129,7 +129,7 @@ fun AppCard(
                         text = amount.toCurrencyString(),
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 16.sp,
-                        fontFamily = rodotoFont,
+                        fontFamily = rodotoFont
                     )
                     if (!subAmount.isNullOrEmpty()) {
                         Text(
@@ -138,7 +138,7 @@ fun AppCard(
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = TextAlign.End,
-                            fontFamily = rodotoFont,
+                            fontFamily = rodotoFont
                         )
                     }
                 }
@@ -151,17 +151,16 @@ fun AppCard(
                         painter = painterResource(R.drawable.ic_category_more),
                         contentDescription = null,
                         modifier = Modifier
-                            .size(24.dp),
+                            .size(24.dp)
                     )
                 } else {
                     Image(
                         painter = painterResource(R.drawable.ic_more),
                         contentDescription = "Подробнее",
                         modifier = Modifier
-                            .size(24.dp),
+                            .size(24.dp)
                     )
                 }
-
             }
         }
     }
@@ -175,7 +174,7 @@ fun AppListItem(
     subAmount: String? = null,
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
-    onNavigateClick: (() -> Unit)? = null,
+    onNavigateClick: (() -> Unit)? = null
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Box(
@@ -296,7 +295,6 @@ fun AppListItem(
     }
 }
 
-
 @Preview
 @Composable
 fun AppCardPreview() {
@@ -312,4 +310,3 @@ fun AppCardPreview() {
         )
     }
 }
-

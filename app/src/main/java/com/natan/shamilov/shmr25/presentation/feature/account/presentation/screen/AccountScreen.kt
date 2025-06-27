@@ -1,43 +1,40 @@
 package com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen
 
-import androidx.activity.compose.LocalActivity
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.commo.State
-import com.natan.shamilov.shmr25.presentation.MainActivity
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.ui.TopGreenCard
-
 
 @Composable
 fun AccountScreen(
     modifier: Modifier = Modifier,
-    viewModel: AccountViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
+    viewModel: AccountViewModel = hiltViewModel(),
     onFABClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Инициализируем ViewModel при первом показе экрана
+    LaunchedEffect(Unit) {
+        viewModel.initialize()
+    }
 
     Scaffold(
         topBar = {
@@ -46,23 +43,11 @@ fun AccountScreen(
                 Screen.Account.title,
                 Screen.Account.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { },
+                onNavigateClick = { }
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {onFABClick()},
-                shape = CircleShape,
-                containerColor = MaterialTheme.colorScheme.primary,
-                elevation = FloatingActionButtonDefaults.elevation(
-                    defaultElevation = 0.dp,
-                    focusedElevation = 0.dp,
-                    hoveredElevation = 0.dp,
-                )
-            ) {
-                Image(painter = painterResource(R.drawable.ic_plus), contentDescription = null)
-            }
-
+            MyFloatingActionButton({ onFABClick() })
         }
     ) { innerPadding ->
         when (uiState) {
@@ -89,7 +74,6 @@ fun AccountScreen(
             }
 
             is State.Content -> {
-
                 AccountContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel
@@ -98,7 +82,6 @@ fun AccountScreen(
         }
     }
 }
-
 
 @Composable
 fun AccountContent(viewModel: AccountViewModel, paddingValues: PaddingValues) {
@@ -124,7 +107,7 @@ fun AccountContent(viewModel: AccountViewModel, paddingValues: PaddingValues) {
                 title = "Валюта",
                 cucurrency = account.currency,
                 canNavigate = true,
-                onNavigateClick = {},
+                onNavigateClick = {}
             )
         }
     }

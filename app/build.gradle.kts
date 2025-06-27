@@ -1,9 +1,13 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     kotlin("kapt")
+    id("io.gitlab.arturbosch.detekt") version "1.23.5"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
 android {
@@ -18,12 +22,31 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Читаем API_TOKEN из local.properties
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+        buildConfigField(
+            "String",
+            "API_TOKEN",
+            "\"${localProperties.getProperty("API_TOKEN", "")}\""
+        )
     }
 
     buildTypes {
         release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isDebuggable = true
         }
     }
     compileOptions {
@@ -32,9 +55,46 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+        freeCompilerArgs += listOf(
+            "-opt-in=kotlin.RequiresOptIn",
+            "-Xjvm-default=all"
+        )
     }
     buildFeatures {
         compose = true
+        buildConfig = true // Включаем генерацию BuildConfig
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+}
+
+ktlint {
+    android.set(true)
+    verbose.set(true)
+    filter {
+        exclude { element -> element.file.path.contains("build/") }
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(files("$projectDir/config/detekt/detekt.yml"))
+    baseline = file("$projectDir/config/detekt/baseline.xml")
+}
+
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+    reports {
+        html.required.set(true)
+        xml.required.set(false)
+        txt.required.set(true)
+        sarif.required.set(false)
     }
 }
 
@@ -55,25 +115,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    //Hilt
+    // Hilt
     implementation(libs.hilt.core)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-    //navigation
+    // navigation
     implementation(libs.androidx.navigation.compose)
-    //Material
+    // Material
     implementation(libs.material3)
-    //Lottie
+    // Lottie
     implementation(libs.lottie)
-    //Splash
+    // Splash
     implementation(libs.splash)
-    //Network
+    // Network
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.moshi)
     implementation(libs.okhttp.core)
     implementation(libs.okhttp.logging)
     implementation(libs.moshi.kotlin)
     kapt(libs.moshi.codegen)
-    //coroutines
+    // coroutines
     implementation(libs.kotlinx.coroutines.android)
 }

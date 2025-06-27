@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 
 @Immutable
-object AppThemeImpl: AppTheme {
+object AppThemeImpl : AppTheme {
 
 //    @Stable
 //    private val fontFamily = FontFamily(
@@ -18,7 +18,7 @@ object AppThemeImpl: AppTheme {
     override val colors = AppColors(
         primary = PrimaryGreen,
         secondary = SecondaryGreen,
-        borderGrey = BorderGrey,
+        borderGrey = BorderGrey
     )
 
 //    @Stable

@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.screen
 
 import android.util.Log
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -26,27 +24,27 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.commo.State
-import com.natan.shamilov.shmr25.presentation.MainActivity
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen.DateType
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.ui.AppCard
 import com.natan.shamilov.shmr25.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.ui.TopGreenCard
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun IncomesHistoryScreen(
     modifier: Modifier = Modifier,
-    viewModel: IncomesViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
-    onBackPressed: () -> Unit
+    viewModel: IncomesHistoryViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.initialize()
+    }
 
     Scaffold(
         topBar = {
@@ -54,10 +52,10 @@ fun IncomesHistoryScreen(
                 Screen.IncomesHistory.startIcone,
                 Screen.IncomesHistory.title,
                 Screen.IncomesHistory.endIcone,
-                onBackOrCanselClick = {onBackPressed()},
-                onNavigateClick = { },
+                onBackOrCanselClick = { onBackPressed() },
+                onNavigateClick = { }
             )
-        },
+        }
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
@@ -83,7 +81,6 @@ fun IncomesHistoryScreen(
             }
 
             is State.Content -> {
-
                 IncomesHistoryContent(
                     innerPadding,
                     viewModel = viewModel
@@ -96,37 +93,18 @@ fun IncomesHistoryScreen(
 @Composable
 fun IncomesHistoryContent(
     paddingValues: PaddingValues,
-    viewModel: IncomesViewModel,
+    viewModel: IncomesHistoryViewModel,
 ) {
     val total by viewModel.sumOfIncomesByPeriod.collectAsStateWithLifecycle()
     val myIncomes by viewModel.myIncomesByPeriod.collectAsStateWithLifecycle()
 
-    var startDateMillis by remember {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.DAY_OF_MONTH, 1)
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-        mutableLongStateOf(calendar.timeInMillis)
-    }
-
-    var endDateMillis by remember {
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 59)
-        calendar.set(Calendar.MILLISECOND, 999)
-        mutableStateOf(calendar.timeInMillis)
-    }
+    val startDateMillis by viewModel.startDateMillis.collectAsStateWithLifecycle()
+    val endDateMillis by viewModel.endDateMillis.collectAsStateWithLifecycle()
+    val formattedStartDate = viewModel.formattedStartDate
+    val formattedEndDate = viewModel.formattedEndDate
 
     var showDialog by remember { mutableStateOf(false) }
-    var currentPicker by remember { mutableStateOf(com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen.DateType.START) }
-
-    val dateFormatter = remember { SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) }
-    val formattedStartDate = startDateMillis?.let { dateFormatter.format(Date(it)) } ?: "Выберите дату"
-    val formattedEndDate = endDateMillis?.let { dateFormatter.format(Date(it)) }
-        ?: "Выберите дату"
+    var currentPicker by remember { mutableStateOf(DateType.START) }
 
     LaunchedEffect(startDateMillis, endDateMillis) {
         Log.d("Date", "startDateMillis: $startDateMillis, endDateMillis: $endDateMillis")
@@ -136,9 +114,7 @@ fun IncomesHistoryContent(
         )
     }
 
-
     Column(modifier = Modifier.padding(paddingValues)) {
-
         TopGreenCard(
             title = stringResource(R.string.start_date),
             cucurrency = formattedStartDate,
@@ -168,11 +144,13 @@ fun IncomesHistoryContent(
                 AppCard(
                     title = income.category.name,
                     amount = income.amount,
-                    subAmount = income.createdAt,
+                    subAmount = OffsetDateTime.parse(income.createdAt)
+                        .toLocalTime()
+                        .format(DateTimeFormatter.ofPattern("H:mm")),
                     avatarEmoji = income.category.emoji,
                     subtitle = income.comment,
                     canNavigate = true,
-                    onNavigateClick = {},
+                    onNavigateClick = {}
                 )
             }
         }
@@ -185,60 +163,15 @@ fun IncomesHistoryContent(
                 },
                 onDismissRequest = { showDialog = false },
                 onClear = {
-
                 },
                 onDateSelected = {
                     when (currentPicker) {
-                        DateType.START -> startDateMillis = it!!
-                        DateType.END -> endDateMillis = it!!
+                        DateType.START -> viewModel.updateStartDate(it!!)
+                        DateType.END -> viewModel.updateEndDate(it!!)
                     }
+                    showDialog = false
                 }
             )
         }
     }
 }
-
-
-
-//@Composable
-//fun IncomesHistoryContent(
-//    paddingValues: PaddingValues,
-//    viewModel: IncomesViewModel,
-//) {
-//    val total by viewModel.sumOfIncomes.collectAsStateWithLifecycle()
-//    val myIncomes by viewModel.myIncomes.collectAsStateWithLifecycle()
-//
-//    Column(modifier = Modifier.padding(paddingValues)) {
-//        TopGreenCard(
-//            title = stringResource(R.string.start_date),
-//            amount = total,
-//            onNavigateClick = {}
-//
-//        )
-//        TopGreenCard(
-//            title = stringResource(R.string.end_date),
-//            amount = total,
-//            onNavigateClick = {}
-//        )
-//        TopGreenCard(
-//            title = stringResource(R.string.sum),
-//            amount = total
-//        )
-//
-//        LazyColumn {
-//            items(
-//                items = myIncomes,
-//                key = { income -> income.id }) { income ->
-//                AppCard(
-//                    title = income.category.name,
-//                    amount = income.amount,
-//                    subAmount = "Октябрь 2022",
-//                    avatarEmoji = income.category.emoji,
-//                    subtitle = income.comment,
-//                    canNavigate = true,
-//                    onNavigateClick = {},
-//                )
-//            }
-//        }
-//    }
-//}

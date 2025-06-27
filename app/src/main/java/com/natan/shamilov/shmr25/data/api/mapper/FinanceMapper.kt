@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.data.mapper
+package com.natan.shamilov.shmr25.data.api.mapper
 
 import com.natan.shamilov.shmr25.data.api.model.AccountDto
 import com.natan.shamilov.shmr25.data.api.model.CategoryDto
@@ -35,7 +35,7 @@ class FinanceMapper @Inject constructor() {
             category = mapCategoryDtoToDomain(category),
             amount = amount.toDouble(),
             comment = comment,
-            createdAt = transactionDate.substring(0, 10)
+            createdAt = transactionDate
         )
     }
 
@@ -45,7 +45,7 @@ class FinanceMapper @Inject constructor() {
             category = mapCategoryDtoToDomain(category),
             amount = amount.toDouble(),
             comment = comment,
-            createdAt = transactionDate.substring(0, 10)
+            createdAt = transactionDate
         )
     }
-} 
+}

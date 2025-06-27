@@ -1,6 +1,5 @@
 package com.natan.shamilov.shmr25.presentation.feature.categories.presentation.screen
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,20 +21,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.commo.State
-import com.natan.shamilov.shmr25.presentation.MainActivity
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.ui.AppCard
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.ui.SearchField
 
-
 @Composable
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
-    viewModel: CategoriesViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
+    viewModel: CategoriesViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // Инициализируем ViewModel при первом показе экрана
+    LaunchedEffect(Unit) {
+        viewModel.initialize()
+    }
 
     Scaffold(
         topBar = {
@@ -43,9 +46,9 @@ fun CategoriesScreen(
                 Screen.Categories.title,
                 Screen.Categories.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { },
+                onNavigateClick = { }
             )
-        },
+        }
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
@@ -71,7 +74,6 @@ fun CategoriesScreen(
             }
 
             is State.Content -> {
-
                 CategoriesContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel
@@ -81,10 +83,11 @@ fun CategoriesScreen(
     }
 }
 
-
 @Composable
-fun CategoriesContent(viewModel: CategoriesViewModel = hiltViewModel(), paddingValues: PaddingValues) {
-
+fun CategoriesContent(
+    viewModel: CategoriesViewModel = hiltViewModel(),
+    paddingValues: PaddingValues
+) {
     val myCategories by viewModel.myCategories.collectAsStateWithLifecycle()
     var query by remember { mutableStateOf("") }
 
@@ -101,7 +104,7 @@ fun CategoriesContent(viewModel: CategoriesViewModel = hiltViewModel(), paddingV
             ) { category ->
                 AppCard(
                     title = category.name,
-                    avatarEmoji = category.emoji,
+                    avatarEmoji = category.emoji
                 )
             }
         }

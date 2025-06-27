@@ -6,7 +6,6 @@ import androidx.navigation.compose.composable
 import com.natan.shamilov.shmr25.presentation.MainScreen
 import com.natan.shamilov.shmr25.presentation.feature.splash.SplashScreen
 
-
 @Composable
 fun AppGraph() {
     val navigationState = rememberNavigationState()
@@ -24,5 +23,4 @@ fun AppGraph() {
             MainScreen()
         }
     }
-
 }

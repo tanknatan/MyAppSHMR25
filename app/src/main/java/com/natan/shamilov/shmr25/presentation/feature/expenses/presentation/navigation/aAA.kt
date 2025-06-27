@@ -9,10 +9,7 @@ import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.scre
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen.ExpensesTodayScreen
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
-
 fun NavGraphBuilder.expensesGraph(navController: NavigationState) {
-
-
     navigation(
         route = ExpensesFlow.ExpensesGraph.route,
         startDestination = ExpensesFlow.ExpensesToday.route,
@@ -20,15 +17,13 @@ fun NavGraphBuilder.expensesGraph(navController: NavigationState) {
         exitTransition = { ExitTransition.None }
     ) {
         composable(ExpensesFlow.ExpensesToday.route) {
-
-            ExpensesTodayScreen(onHistoryClick = { navController.navigateSingleTopTo(ExpensesFlow.ExpensesHistory) })
-
+            ExpensesTodayScreen(
+                onHistoryClick = { navController.navigateSingleTopTo(ExpensesFlow.ExpensesHistory) },
+                onFABClick = { }
+            )
         }
         composable(ExpensesFlow.ExpensesHistory.route) {
-
             ExpensesHistoryScreen(onBackClick = { navController.navHostController.popBackStack() })
-
         }
-
     }
 }

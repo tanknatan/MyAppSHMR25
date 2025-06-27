@@ -28,7 +28,7 @@ import com.natan.shamilov.shmr25.ui.theme.rodotoFont
 fun ThemeCard(
     title: String,
     isDarkTheme: Boolean,
-    onToggle: (Boolean) -> Unit,
+    onToggle: (Boolean) -> Unit
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -44,7 +44,7 @@ fun ThemeCard(
             hoveredElevation = 0.dp,
             focusedElevation = 0.dp,
             draggedElevation = 0.dp,
-            disabledElevation = 0.dp,
+            disabledElevation = 0.dp
         ),
         shape = RectangleShape
     ) {
@@ -65,13 +65,12 @@ fun ThemeCard(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
-                    fontFamily = rodotoFont,
+                    fontFamily = rodotoFont
 
                 )
             }
@@ -86,7 +85,6 @@ fun ThemeCard(
                     uncheckedTrackColor = Color(0xFFE6E0E9)
                 )
             )
-
         }
     }
 }

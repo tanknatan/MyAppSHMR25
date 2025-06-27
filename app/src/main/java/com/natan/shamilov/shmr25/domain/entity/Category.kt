@@ -5,5 +5,4 @@ data class Category(
     val name: String,
     val emoji: String,
     val isIncome: Boolean
-) {
-}
+)

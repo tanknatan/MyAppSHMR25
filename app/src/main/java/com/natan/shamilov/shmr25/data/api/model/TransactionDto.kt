@@ -13,4 +13,4 @@ data class TransactionDto(
     @Json(name = "comment") val comment: String,
     @Json(name = "createdAt") val createdAt: String,
     @Json(name = "updatedAt") val updatedAt: String
-) 
+)

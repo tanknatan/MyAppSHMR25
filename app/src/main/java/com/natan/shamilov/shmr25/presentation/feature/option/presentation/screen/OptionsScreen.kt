@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.presentation.feature.option
+package com.natan.shamilov.shmr25.presentation.feature.option.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,12 +17,10 @@ import com.natan.shamilov.shmr25.ui.AppCard
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.ui.ThemeCard
 
-
 @Composable
 fun OptionScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
-
     Scaffold(
         topBar = {
             CustomTopAppBar(
@@ -30,19 +28,16 @@ fun OptionScreen(
                 Screen.Options.title,
                 Screen.Options.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { },
+                onNavigateClick = { }
             )
-        },
+        }
     ) { innerPadding ->
 
         OptionsContent(
-            paddingValues = innerPadding,
+            paddingValues = innerPadding
         )
-
-
     }
 }
-
 
 @Composable
 fun OptionsContent(paddingValues: PaddingValues) {
@@ -54,7 +49,7 @@ fun OptionsContent(paddingValues: PaddingValues) {
         R.string.password,
         R.string.sync,
         R.string.language,
-        R.string.about_app,
+        R.string.about_app
     )
     Column(modifier = Modifier.padding(paddingValues)) {
         ThemeCard(

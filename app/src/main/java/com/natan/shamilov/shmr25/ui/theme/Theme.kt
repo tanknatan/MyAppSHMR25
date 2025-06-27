@@ -16,15 +16,15 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = PrimaryGreen,
     secondary = SecondaryGreen,
-    //borderGrey = BorderGrey,
-    background = Black,
+    // borderGrey = BorderGrey,
+    background = Black
 )
 
 private val LightColorScheme = lightColorScheme(
     primary = PrimaryGreen,
     secondary = SecondaryGreen,
-    //borderGrey = BorderGrey,
-    background = White,
+    // borderGrey = BorderGrey,
+    background = White
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -46,7 +46,7 @@ fun MyAppSHMR25Theme(
 ) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
+            //val context = LocalContext.current
             if (darkTheme) LightColorScheme else LightColorScheme
         }
 
@@ -92,27 +92,27 @@ fun Theme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        //LocalAppTypography provides appTheme.typography,
-        LocalAppColors provides appTheme.colors,
-        //LocalAppShapes provides appTheme.shapes,
-        //LocalAppElevations provides appTheme.elevations
+        // LocalAppTypography provides appTheme.typography,
+        LocalAppColors provides appTheme.colors
+        // LocalAppShapes provides appTheme.shapes,
+        // LocalAppElevations provides appTheme.elevations
     ) {
-        //ProvideTextStyle(value = Theme.typography.body, content = content)
+        // ProvideTextStyle(value = Theme.typography.body, content = content)
     }
 }
 
-//val LocalAppTypography = staticCompositionLocalOf<AppTypography> {
+// val LocalAppTypography = staticCompositionLocalOf<AppTypography> {
 //    error("No AppTypography provided")
-//}
+// }
 
 val LocalAppColors = staticCompositionLocalOf<AppColors> {
     error("No AppColors provided")
 }
 
-//val LocalAppShapes = staticCompositionLocalOf<AppShapes> {
+// val LocalAppShapes = staticCompositionLocalOf<AppShapes> {
 //    error("No AppShapes provided")
-//}
+// }
 //
-//val LocalAppElevations = staticCompositionLocalOf<AppElevations> {
+// val LocalAppElevations = staticCompositionLocalOf<AppElevations> {
 //    error("No AppElevations provided")
-//}
+// }

@@ -1,15 +1,17 @@
 package com.natan.shamilov.shmr25.presentation.navigation
 
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.common.Screen as commoScreen
 import com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation.AccountFlow
+import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.navigation.CategoriesFlow
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navigation.IncomesFlow
-import com.natan.shamilov.shmr25.commo.Screen as commoScreen
+import com.natan.shamilov.shmr25.presentation.feature.option.presentation.navigation.OptionsFlow
 
 sealed class NavigationItem(
     val screen: commoScreen,
     val label: Int,
-    val iconId: Int,
+    val iconId: Int
 ) {
     data object Expenses : NavigationItem(
         ExpensesFlow.ExpensesGraph,
@@ -30,13 +32,13 @@ sealed class NavigationItem(
     )
 
     data object Categories : NavigationItem(
-        Screen.Categories,
+        CategoriesFlow.CategoriesGraph,
         label = R.string.categories,
         iconId = R.drawable.categories
     )
 
     data object Options : NavigationItem(
-        Screen.Options,
+        OptionsFlow.Options,
         label = R.string.options,
         iconId = R.drawable.options
     )

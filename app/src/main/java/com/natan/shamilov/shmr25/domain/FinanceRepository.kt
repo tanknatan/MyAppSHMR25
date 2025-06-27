@@ -1,21 +1,21 @@
 package com.natan.shamilov.shmr25.domain
 
-
-import com.natan.shamilov.shmr25.commo.State
+import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.data.api.Result
 import com.natan.shamilov.shmr25.domain.entity.Account
 import com.natan.shamilov.shmr25.domain.entity.Category
 import com.natan.shamilov.shmr25.domain.entity.Expense
 import com.natan.shamilov.shmr25.domain.entity.Income
-import com.natan.shamilov.shmr25.data.api.Result
 import kotlinx.coroutines.flow.StateFlow
 
 interface FinanceRepository {
 
     val completeAccAndTransactionDataLoadingFlow: StateFlow<State>
+    val completeExpensesByPeriodLoadingFlow: StateFlow<State>
 
-    fun getExpensesList(): List<Expense>
+    suspend fun getExpensesList(): List<Expense>
 
-    fun getIncomesList(): List<Income>
+    suspend fun getIncomesList(): List<Income>
 
     suspend fun loadTodayTransactions(): Result<Unit>
 
@@ -29,7 +29,7 @@ interface FinanceRepository {
         endDate: String
     ): Result<List<Income>>
 
-    fun getAccountsList(): List<Account>
+    suspend fun getAccountsList(): List<Account>
 
     suspend fun loadAccountsList(): Result<Unit>
 

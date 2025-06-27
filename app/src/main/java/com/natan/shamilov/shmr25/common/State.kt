@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.commo
+package com.natan.shamilov.shmr25.common
 
 sealed interface State {
 

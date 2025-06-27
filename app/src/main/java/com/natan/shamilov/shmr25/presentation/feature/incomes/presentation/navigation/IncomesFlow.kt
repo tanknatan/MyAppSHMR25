@@ -1,10 +1,8 @@
 package com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navigation
 
-import com.natan.shamilov.shmr25.commo.Screen
+import com.natan.shamilov.shmr25.common.Screen
 
-
-
-sealed class IncomesFlow(override val route: String) : Screen(route) {
+sealed class IncomesFlow(override val route: String) : Screen {
 
     data object IncomesGraph : IncomesFlow(INCOMES_GRAP)
 

@@ -35,10 +35,11 @@ fun CustomSearchBar(
     onValueChange: (String) -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    val padding = if (query.isEmpty())
+    val padding = if (query.isEmpty()) {
         PaddingValues(15.dp)
-    else
+    } else {
         PaddingValues(top = 15.dp, start = 15.dp, bottom = 15.dp)
+    }
 
     BasicTextField(
         modifier = Modifier
@@ -82,8 +83,7 @@ private fun BoxScope.TrailingIcon(
             imageVector = Icons.Default.Search,
             contentDescription = null
         )
-    }
-    else {
+    } else {
         IconButton(
             modifier = Modifier.align(Alignment.CenterEnd),
             onClick = onClear

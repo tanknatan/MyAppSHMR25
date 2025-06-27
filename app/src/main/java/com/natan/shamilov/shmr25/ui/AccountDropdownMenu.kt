@@ -39,7 +39,7 @@ fun AccountDropdownMenu(
     accounts: List<Account>,
     selectedAccount: Account?,
     onAccountSelected: (Account) -> Unit,
-    modifier: Modifier = Modifier, // ← обязательно
+    modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -68,7 +68,7 @@ fun AccountDropdownMenu(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .heightIn(max = 300.dp) // 👈 безопасная высота
+                    .heightIn(max = 300.dp)
             ) {
                 val scrollState = rememberScrollState()
                 Column(

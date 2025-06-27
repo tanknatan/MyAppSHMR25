@@ -1,6 +1,5 @@
 package com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen
 
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -31,8 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.commo.State
-import com.natan.shamilov.shmr25.presentation.MainActivity
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.ui.AccountNameInput
 import com.natan.shamilov.shmr25.ui.BalanceInput
@@ -42,12 +40,11 @@ import com.natan.shamilov.shmr25.ui.CurrencySelectorButton
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun AddAccountScreen(
     modifier: Modifier = Modifier,
-    viewModel: AccountViewModel = hiltViewModel(LocalActivity.current!! as MainActivity),
-    onBackPressed: () -> Unit,
+    viewModel: AddAccountViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -58,9 +55,9 @@ fun AddAccountScreen(
                 Screen.AddAccount.title,
                 Screen.AddAccount.endIcone,
                 onBackOrCanselClick = { onBackPressed() },
-                onNavigateClick = { },
+                onNavigateClick = { }
             )
-        },
+        }
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
@@ -86,11 +83,10 @@ fun AddAccountScreen(
             }
 
             is State.Content -> {
-
                 AddAccountContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel,
-                    onBack = { onBackPressed() },
+                    onBack = { onBackPressed() }
                 )
             }
         }
@@ -100,7 +96,7 @@ fun AddAccountScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddAccountContent(
-    viewModel: AccountViewModel,
+    viewModel: AddAccountViewModel,
     paddingValues: PaddingValues,
     onBack: () -> Unit
 ) {
@@ -113,17 +109,16 @@ fun AddAccountContent(
     val isFormValid by remember(accountName, balance, selectedCurrency) {
         derivedStateOf {
             accountName.isNotBlank() &&
-                    balance.isNotBlank() &&
-                    selectedCurrency != null
+                balance.isNotBlank() &&
+                selectedCurrency != null
         }
     }
     LaunchedEffect(accountCreated) {
-        if (accountCreated){
+        if (accountCreated) {
             viewModel.resetCreateAccountComplete()
             onBack()
         }
     }
-
 
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
@@ -192,8 +187,5 @@ fun AddAccountContent(
         ) {
             Text(text = "Создать счёт")
         }
-
-
     }
 }
-

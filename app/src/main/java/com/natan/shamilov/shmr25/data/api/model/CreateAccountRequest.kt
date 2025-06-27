@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.data.network.model
+package com.natan.shamilov.shmr25.data.api.model
 
 data class CreateAccountRequest(
     val name: String,

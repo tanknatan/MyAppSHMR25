@@ -9,10 +9,7 @@ import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.scree
 import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.screen.IncomesTodayScreen
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
-
 fun NavGraphBuilder.incomesGraph(navController: NavigationState) {
-
-
     navigation(
         route = IncomesFlow.IncomesGraph.route,
         startDestination = IncomesFlow.IncomesToday.route,
@@ -20,15 +17,14 @@ fun NavGraphBuilder.incomesGraph(navController: NavigationState) {
         exitTransition = { ExitTransition.None }
     ) {
         composable(IncomesFlow.IncomesToday.route) {
-
-            IncomesTodayScreen(onHistoryClick = { navController.navigateSingleTopTo(IncomesFlow.IncomesHistory) })
-
+            IncomesTodayScreen(
+                onHistoryClick = { navController.navigateSingleTopTo(IncomesFlow.IncomesHistory) },
+                onFABClick = {}
+            )
         }
 
         composable(IncomesFlow.IncomesHistory.route) {
             IncomesHistoryScreen(onBackPressed = { navController.navHostController.popBackStack() })
         }
-
-
     }
 }

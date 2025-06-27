@@ -31,10 +31,10 @@ fun BalanceInput(
                     .let { raw ->
                         val parts = raw.split('.', limit = 2)
                         when (parts.size) {
-                            1 -> parts[0] // только целая часть
+                            1 -> parts[0]
                             2 -> {
-                                val decimals = parts[1].take(2) // не более 2 знаков после точки
-                                "${parts[0]}.${decimals}"
+                                val decimals = parts[1].take(2)
+                                "${parts[0]}.$decimals"
                             }
                             else -> raw // fallback
                         }
@@ -62,7 +62,7 @@ fun BalanceInput(
                         )
                     }
                 }
-            },
+            }
         )
         if (isError) {
             Text(
@@ -74,4 +74,3 @@ fun BalanceInput(
         }
     }
 }
-

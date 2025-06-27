@@ -11,7 +11,7 @@ data class AppColors(
     @Stable
     val secondary: Color,
     @Stable
-    val borderGrey: Color,
+    val borderGrey: Color
 ) {
 //    val backgroundElevatedCardColors: CardColors
 //        @Composable

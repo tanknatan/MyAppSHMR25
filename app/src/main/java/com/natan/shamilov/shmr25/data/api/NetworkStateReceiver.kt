@@ -1,12 +1,10 @@
-package com.natan.shamilov.shmr25.data.network
+package com.natan.shamilov.shmr25.data.api
 
-import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
-import android.provider.Settings
+import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,40 +14,49 @@ import javax.inject.Singleton
 @Singleton
 class NetworkStateReceiver @Inject constructor(
     private val context: Context
-) : BroadcastReceiver() {
-
-    private val _isNetworkAvailable = MutableStateFlow(checkNetworkAvailability())
+) {
+    private var connectivityManager: ConnectivityManager
+    private val _isNetworkAvailable = MutableStateFlow(false)
     val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
 
+    private var networkCallback: ConnectivityManager.NetworkCallback
+
     init {
-        val filter = IntentFilter().apply {
-            addAction(ConnectivityManager.CONNECTIVITY_ACTION)
-            addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        // Инициализируем состояние сети синхронно для быстрого старта
+        _isNetworkAvailable.value = checkNetworkAvailabilitySync()
+
+        networkCallback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                _isNetworkAvailable.value = true
+            }
+
+            override fun onLost(network: Network) {
+                _isNetworkAvailable.value = checkNetworkAvailabilitySync()
+            }
+
+            override fun onCapabilitiesChanged(
+                network: Network,
+                networkCapabilities: NetworkCapabilities
+            ) {
+                _isNetworkAvailable.value = checkNetworkAvailabilitySync()
+            }
         }
-        context.registerReceiver(this, filter)
+
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+        connectivityManager.registerNetworkCallback(request, networkCallback)
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
-        _isNetworkAvailable.value = checkNetworkAvailability()
-    }
-
-    private fun checkNetworkAvailability(): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val isAirplaneModeOn = Settings.Global.getInt(
-            context.contentResolver,
-            Settings.Global.AIRPLANE_MODE_ON, 0
-        ) != 0
-
-        if (isAirplaneModeOn) return false
-
+    private fun checkNetworkAvailabilitySync(): Boolean {
         val network = connectivityManager.activeNetwork ?: return false
         val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-
         return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     fun unregister() {
-        context.unregisterReceiver(this)
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
-} 
+}

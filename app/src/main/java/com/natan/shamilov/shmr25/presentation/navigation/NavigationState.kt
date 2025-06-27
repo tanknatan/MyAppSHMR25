@@ -2,12 +2,10 @@ package com.natan.shamilov.shmr25.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.natan.shamilov.shmr25.commo.Screen
-
+import com.natan.shamilov.shmr25.common.Screen
 
 class NavigationState(
     val navHostController: NavHostController
@@ -27,7 +25,6 @@ class NavigationState(
         navHostController.navigate(screen.route) {
             popUpTo(currentRoute) {
                 inclusive = true
-
             }
         }
     }
@@ -35,7 +32,7 @@ class NavigationState(
     fun navigateSingleTopTo(screen: Screen) {
         val currentRoute = navHostController.currentBackStackEntry?.destination?.route ?: return
         navHostController.navigate(screen.route) {
-            popUpTo(currentRoute){
+            popUpTo(currentRoute) {
                 saveState = false
             }
 
@@ -46,7 +43,7 @@ class NavigationState(
 
 @Composable
 fun rememberNavigationState(
-    navHostController: NavHostController = rememberNavController(),
+    navHostController: NavHostController = rememberNavController()
 ): NavigationState {
     return remember {
         NavigationState(navHostController)

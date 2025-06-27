@@ -30,7 +30,7 @@ fun CustomTopAppBar(
     title: Int?,
     endIcone: Int?,
     onBackOrCanselClick: (() -> Unit)?,
-    onNavigateClick: (() -> Unit)?,
+    onNavigateClick: (() -> Unit)?
 ) {
     Row(
         modifier = Modifier
@@ -64,7 +64,7 @@ fun CustomTopAppBar(
                 textAlign = TextAlign.Center,
                 text = stringResource(title),
                 fontSize = 22.sp,
-                fontFamily = rodotoFont,
+                fontFamily = rodotoFont
             )
         }
         if (endIcone == null || onNavigateClick == null) {

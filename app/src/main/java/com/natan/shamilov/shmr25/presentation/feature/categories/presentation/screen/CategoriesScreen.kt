@@ -88,7 +88,7 @@ fun CategoriesContent(
     viewModel: CategoriesViewModel = hiltViewModel(),
     paddingValues: PaddingValues
 ) {
-    val myCategories by viewModel.myCategories.collectAsStateWithLifecycle()
+    val myCategories by viewModel.categories.collectAsStateWithLifecycle()
     var query by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(paddingValues)) {

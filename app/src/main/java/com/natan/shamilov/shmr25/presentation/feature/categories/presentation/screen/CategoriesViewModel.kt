@@ -7,16 +7,14 @@ import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.data.api.Result
 import com.natan.shamilov.shmr25.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.domain.entity.Category
-import com.natan.shamilov.shmr25.domain.usecase.GetCategoriesListUseCase
+import com.natan.shamilov.shmr25.presentation.feature.categories.domain.usecase.GetCategoriesListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
@@ -27,14 +25,14 @@ class CategoriesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private val _myCategories = MutableStateFlow<List<Category>>(emptyList())
-    val myCategories: StateFlow<List<Category>> = _myCategories.asStateFlow()
+    private val _categories = MutableStateFlow<List<Category>>(emptyList())
+    val categories: StateFlow<List<Category>> = _categories.asStateFlow()
 
     private var dataLoadingJob: Job? = null
+    private var networkJob: Job? = null
 
     init {
-        // Только подписываемся на сеть, но не загружаем данные сразу
-        viewModelScope.launch {
+        networkJob = viewModelScope.launch {
             networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
                 if (isAvailable && _uiState.value == State.Error) {
                     loadCategories()
@@ -48,38 +46,34 @@ class CategoriesViewModel @Inject constructor(
     }
 
     private fun loadCategories() {
-        // Отменяем предыдущую задачу если она существует
         dataLoadingJob?.cancel()
-        dataLoadingJob = viewModelScope.launch(Dispatchers.IO) {
+        
+        dataLoadingJob = viewModelScope.launch {
             try {
-                withContext(Dispatchers.Main) {
-                    _uiState.value = State.Loading
-                }
+                _uiState.value = State.Loading
 
                 when (val result = getCategoriesListUseCase()) {
                     is Result.Success -> {
-                        withContext(Dispatchers.Main) {
-                            _myCategories.value = result.data
+                        if (result.data.isEmpty()) {
+                            _uiState.value = State.Content // Пустой список категорий - это валидное состояние
+                            Log.d("CategoriesViewModel", "Список категорий пуст")
+                        } else {
+                            _categories.value = result.data
                             _uiState.value = State.Content
                         }
                     }
                     is Result.Error -> {
-                        withContext(Dispatchers.Main) {
-                            _uiState.value = State.Error
-                        }
+                        _uiState.value = State.Error
+                        Log.e("CategoriesViewModel", "Ошибка загрузки категорий: ${result.exception.message}")
                     }
                     is Result.Loading -> {
-                        withContext(Dispatchers.Main) {
-                            _uiState.value = State.Loading
-                        }
+                        _uiState.value = State.Loading
                     }
                 }
             } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) {
-                    Log.d("CategoriesViewModel", "Загрузка категорий отменена")
-                } else {
-                    Log.e("CategoriesViewModel", "Ошибка при загрузке категорий: ${e.message}")
-                }
+                if (e is kotlinx.coroutines.CancellationException) throw e
+                _uiState.value = State.Error
+                Log.e("CategoriesViewModel", "Неожиданная ошибка при загрузке категорий", e)
             }
         }
     }
@@ -88,5 +82,6 @@ class CategoriesViewModel @Inject constructor(
         super.onCleared()
         Log.d("CategoriesViewModel", "ViewModel уничтожен, отменяем все задачи")
         dataLoadingJob?.cancel()
+        networkJob?.cancel()
     }
 }

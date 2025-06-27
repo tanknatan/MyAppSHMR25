@@ -30,4 +30,9 @@
     <string name="add_account">Добавить счет</string>
     <string name="expenses_history">История расходов</string>
     <string name="incomes_history">История доходов</string>
+    <string name="history">История</string>
+    <string name="total_expenses">Общая сумма расходов</string>
+    <string name="total_incomes">Общая сумма доходов</string>
+    <string name="balance">Баланс</string>
+    <string name="no_network">Нет сети</string>
 </resources>

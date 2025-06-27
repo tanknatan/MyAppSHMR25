@@ -4,6 +4,7 @@ import android.content.Context
 import com.natan.shamilov.shmr25.BuildConfig
 import com.natan.shamilov.shmr25.data.api.FinanceApi
 import com.natan.shamilov.shmr25.data.api.NetworkStateReceiver
+import com.natan.shamilov.shmr25.presentation.feature.history.data.api.HistoryApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -65,6 +66,11 @@ object NetworkModule {
     @Singleton
     fun provideFinanceApi(retrofit: Retrofit): FinanceApi =
         retrofit.create(FinanceApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideHistoryApi(retrofit: Retrofit): HistoryApi =
+        retrofit.create(HistoryApi::class.java)
 
     @Provides
     @Singleton

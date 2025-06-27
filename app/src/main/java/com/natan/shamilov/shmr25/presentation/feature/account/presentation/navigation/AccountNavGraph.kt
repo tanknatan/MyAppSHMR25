@@ -5,8 +5,8 @@ import androidx.compose.animation.ExitTransition
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.AccountScreen
-import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.AddAccountScreen
+import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.accounts.AccountScreen
+import com.natan.shamilov.shmr25.presentation.feature.account.presentation.screen.addAccount.AddAccountScreen
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationState
 
 fun NavGraphBuilder.accountGraph(navController: NavigationState) {

@@ -102,7 +102,7 @@ fun ExpensesTodayContent(
     viewModel: ExpensesViewModel,
 ) {
     val total by viewModel.sumOfExpenses.collectAsStateWithLifecycle()
-    val myExpenses by viewModel.myExpenses.collectAsStateWithLifecycle()
+    val myExpenses by viewModel.expenses.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(

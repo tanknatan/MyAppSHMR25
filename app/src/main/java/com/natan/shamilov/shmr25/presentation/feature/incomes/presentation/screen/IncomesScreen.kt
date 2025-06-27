@@ -89,7 +89,7 @@ fun IncomesTodayScreen(
 @Composable
 fun IncomesContent(viewModel: IncomesViewModel, paddingValues: PaddingValues) {
     val total by viewModel.sumOfIncomes.collectAsStateWithLifecycle()
-    val myExpenses by viewModel.myIncomes.collectAsStateWithLifecycle()
+    val myIncomes by viewModel.incomes.collectAsStateWithLifecycle()
 
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
@@ -99,12 +99,12 @@ fun IncomesContent(viewModel: IncomesViewModel, paddingValues: PaddingValues) {
 
         LazyColumn {
             items(
-                items = myExpenses,
-                key = { expense -> expense.id }
-            ) { expense ->
+                items = myIncomes,
+                key = { incomes -> incomes.id }
+            ) { incomes ->
                 AppCard(
-                    title = expense.category.name,
-                    amount = expense.amount,
+                    title = incomes.category.name,
+                    amount = incomes.amount,
                     canNavigate = true,
                     onNavigateClick = {}
                 )

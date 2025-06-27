@@ -24,13 +24,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.presentation.feature.history.domain.DateType
 import com.natan.shamilov.shmr25.presentation.feature.history.domain.HistoryType
+import com.natan.shamilov.shmr25.presentation.feature.history.domain.model.HistoryData
 import com.natan.shamilov.shmr25.ui.AppCard
 import com.natan.shamilov.shmr25.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.ui.TopGreenCard
-import java.time.OffsetDateTime
+import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -42,8 +45,8 @@ fun HistoryScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(type) {
-        viewModel.initialize(type)
+    LaunchedEffect(Unit) {
+        viewModel.initialize()
     }
 
     Scaffold(
@@ -79,14 +82,15 @@ fun HistoryScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Нет сети")
+                    Text(text = stringResource(R.string.no_network))
                 }
             }
 
             is State.Content -> {
                 HistoryContent(
                     paddingValues = innerPadding,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    type = type
                 )
             }
         }
@@ -96,73 +100,107 @@ fun HistoryScreen(
 @Composable
 private fun HistoryContent(
     paddingValues: PaddingValues,
-    viewModel: HistoryViewModel
+    viewModel: HistoryViewModel,
+    type: HistoryType
 ) {
-    val total by viewModel.sumOfItems.collectAsStateWithLifecycle()
-    val items by viewModel.historyItems.collectAsStateWithLifecycle()
-    val startDateMillis by viewModel.startDateMillis.collectAsStateWithLifecycle()
-    val endDateMillis by viewModel.endDateMillis.collectAsStateWithLifecycle()
-    val formattedStartDate = viewModel.formattedStartDate
-    val formattedEndDate = viewModel.formattedEndDate
-
+    val historyData by viewModel.historyData.collectAsStateWithLifecycle()
+    val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()
+    val endDate by viewModel.selectedPeriodEnd.collectAsStateWithLifecycle()
+    
     var showDialog by remember { mutableStateOf(false) }
-    var currentPicker by remember { mutableStateOf(DateType.START) }
+    var isStartDatePicker by remember { mutableStateOf(true) }
+
+    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+    val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
 
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
             title = stringResource(R.string.start_date),
-            cucurrency = formattedStartDate,
+            cucurrency = Instant.ofEpochMilli(startDate)
+                .atZone(ZoneId.systemDefault())
+                .format(dateFormatter),
             onNavigateClick = {
-                currentPicker = DateType.START
+                isStartDatePicker = true
                 showDialog = true
             }
         )
 
         TopGreenCard(
             title = stringResource(R.string.end_date),
-            cucurrency = formattedEndDate,
+            cucurrency = Instant.ofEpochMilli(endDate)
+                .atZone(ZoneId.systemDefault())
+                .format(dateFormatter),
             onNavigateClick = {
-                currentPicker = DateType.END
+                isStartDatePicker = false
                 showDialog = true
             }
         )
 
-        TopGreenCard(
-            title = stringResource(R.string.sum),
-            amount = total
-        )
+        historyData?.let { data ->
+            // Показываем соответствующую сумму в зависимости от типа
+            TopGreenCard(
+                title = stringResource(
+                    when (type) {
+                        HistoryType.EXPENSE -> R.string.total_expenses
+                        HistoryType.INCOME -> R.string.total_incomes
+                    }
+                ),
+                amount = when (type) {
+                    HistoryType.EXPENSE -> data.totalExpenses
+                    HistoryType.INCOME -> data.totalIncomes
+                }
+            )
 
-        LazyColumn {
-            items(
-                items = items,
-                key = { it.id }
-            ) { item ->
-                AppCard(
-                    title = item.category.name,
-                    amount = item.amount,
-                    subAmount = OffsetDateTime.parse(item.createdAt)
-                        .toLocalTime()
-                        .format(DateTimeFormatter.ofPattern("H:mm")),
-                    avatarEmoji = item.category.emoji,
-                    subtitle = item.comment,
-                    canNavigate = true,
-                    onNavigateClick = {}
-                )
+            LazyColumn {
+                // Показываем только соответствующие транзакции в зависимости от типа
+                when (type) {
+                    HistoryType.EXPENSE -> {
+                        items(
+                            items = data.expenses,
+                            key = { "expense_${it.id}" }
+                        ) { expense ->
+                            AppCard(
+                                title = expense.category.name,
+                                amount = -expense.amount,
+                                subAmount = LocalDateTime.parse(expense.createdAt, isoFormatter).format(timeFormatter),
+                                avatarEmoji = expense.category.emoji,
+                                subtitle = expense.comment,
+                                canNavigate = true,
+                                onNavigateClick = {}
+                            )
+                        }
+                    }
+                    HistoryType.INCOME -> {
+                        items(
+                            items = data.incomes,
+                            key = { "income_${it.id}" }
+                        ) { income ->
+                            AppCard(
+                                title = income.category.name,
+                                amount = income.amount,
+                                subAmount = LocalDateTime.parse(income.createdAt, isoFormatter).format(timeFormatter),
+                                avatarEmoji = income.category.emoji,
+                                subtitle = income.comment,
+                                canNavigate = true,
+                                onNavigateClick = {}
+                            )
+                        }
+                    }
+                }
             }
         }
 
         if (showDialog) {
             CustomDatePickerDialog(
-                initialDate = when (currentPicker) {
-                    DateType.START -> startDateMillis
-                    DateType.END -> endDateMillis
-                },
+                initialDate = if (isStartDatePicker) startDate else endDate,
                 onDismissRequest = { showDialog = false },
                 onClear = {},
-                onDateSelected = {
-                    when (currentPicker) {
-                        DateType.START -> viewModel.updateStartDate(it!!)
-                        DateType.END -> viewModel.updateEndDate(it!!)
+                onDateSelected = { selectedDate ->
+                    if (isStartDatePicker) {
+                        viewModel.updatePeriod(selectedDate!!, endDate)
+                    } else {
+                        viewModel.updatePeriod(startDate, selectedDate!!)
                     }
                     showDialog = false
                 }

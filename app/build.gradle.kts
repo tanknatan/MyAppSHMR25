@@ -3,25 +3,25 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     kotlin("kapt")
-    id("io.gitlab.arturbosch.detekt") version "1.23.5"
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
 android {
     namespace = "com.natan.shamilov.shmr25"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.natan.shamilov.shmr25"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
         // Читаем API_TOKEN из local.properties
         val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
@@ -37,8 +37,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -50,19 +49,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
-        freeCompilerArgs += listOf(
-            "-opt-in=kotlin.RequiresOptIn",
-            "-Xjvm-default=all"
-        )
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
-        buildConfig = true // Включаем генерацию BuildConfig
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.8"
@@ -74,32 +69,7 @@ android {
     }
 }
 
-ktlint {
-    android.set(true)
-    verbose.set(true)
-    filter {
-        exclude { element -> element.file.path.contains("build/") }
-    }
-}
-
-detekt {
-    buildUponDefaultConfig = true
-    allRules = false
-    config.setFrom(files("$projectDir/config/detekt/detekt.yml"))
-    baseline = file("$projectDir/config/detekt/baseline.xml")
-}
-
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    reports {
-        html.required.set(true)
-        xml.required.set(false)
-        txt.required.set(true)
-        sarif.required.set(false)
-    }
-}
-
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

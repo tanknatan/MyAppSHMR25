@@ -7,9 +7,9 @@ import com.natan.shamilov.shmr25.common.HistoryScreenEntity
 import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.data.api.Result
-import com.natan.shamilov.shmr25.domain.entity.Expense
-import com.natan.shamilov.shmr25.domain.usecase.ChekcExpensesByPeriodLoadingUseCase
 import com.natan.shamilov.shmr25.domain.usecase.LoadExpensesByPeriodUseCase
+import com.natan.shamilov.shmr25.domain.usecase.LoadIncomesByPeriodUseCase
+import com.natan.shamilov.shmr25.presentation.feature.history.domain.HistoryType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,20 +26,19 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val loadExpensesByPeriodUseCase: LoadExpensesByPeriodUseCase,
-    private val networkStateReceiver: NetworkStateReceiver,
-    private val chekcExpensesByPeriodLoadingUseCase: ChekcExpensesByPeriodLoadingUseCase,
+    private val loadIncomesByPeriodUseCase: LoadIncomesByPeriodUseCase,
+    private val networkStateReceiver: NetworkStateReceiver
 ) : ViewModel() {
 
-    private val _myExpensesByPeriod = MutableStateFlow<List<HistoryScreenEntity>>(emptyList())
-    val myExpensesByPeriod: StateFlow<List<HistoryScreenEntity>> = _myExpensesByPeriod.asStateFlow()
+    private val _historyItems = MutableStateFlow<List<HistoryScreenEntity>>(emptyList())
+    val historyItems: StateFlow<List<HistoryScreenEntity>> = _historyItems.asStateFlow()
 
-    private val _sumOfExpensesByPeriod = MutableStateFlow<Double>(0.0)
-    val sumOfExpensesByPeriod: StateFlow<Double> = _sumOfExpensesByPeriod.asStateFlow()
+    private val _sumOfItems = MutableStateFlow<Double>(0.0)
+    val sumOfItems: StateFlow<Double> = _sumOfItems.asStateFlow()
 
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    // Управление датами
     private val _startDateMillis = MutableStateFlow(initializeStartDate())
     val startDateMillis: StateFlow<Long> = _startDateMillis.asStateFlow()
 
@@ -55,56 +54,57 @@ class HistoryViewModel @Inject constructor(
         get() = dateFormatter.format(Date(_endDateMillis.value))
 
     private var networkJob: Job? = null
+    private lateinit var currentType: HistoryType
 
-    init {
-        // Только подписываемся на сеть, но не загружаем данные сразу
+    fun initialize(type: HistoryType) {
+        currentType = type
+        setupNetworkMonitoring()
+        loadHistory(formattedStartDate, formattedEndDate)
+    }
+
+    private fun setupNetworkMonitoring() {
         networkJob = viewModelScope.launch {
             networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
                 if (isAvailable && _uiState.value == State.Error) {
-                    loadExpensesByPeriod(formattedStartDate, formattedEndDate)
+                    loadHistory(formattedStartDate, formattedEndDate)
                 }
             }
         }
     }
 
-    fun initialize() {
-        Log.d("ExpensesHistoryViewModel", "startDateMillis: $startDateMillis, endDateMillis: $endDateMillis")
-        Log.d("ExpensesHistoryViewModel", "startDateMillis: $formattedStartDate, endDateMillis: $formattedEndDate")
-        loadExpensesByPeriod(formattedStartDate, formattedEndDate)
-    }
-
     fun updateStartDate(dateMillis: Long) {
         _startDateMillis.value = dateMillis
-        loadExpensesByPeriod(formattedStartDate, formattedEndDate)
+        loadHistory(formattedStartDate, formattedEndDate)
     }
 
     fun updateEndDate(dateMillis: Long) {
         _endDateMillis.value = dateMillis
-        loadExpensesByPeriod(formattedStartDate, formattedEndDate)
+        loadHistory(formattedStartDate, formattedEndDate)
     }
 
-    fun loadExpensesByPeriod(
+    private fun loadHistory(
         startDate: String,
         endDate: String
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = loadExpensesByPeriodUseCase(
-                startDate = startDate,
-                endDate = endDate
-            )
+            _uiState.value = State.Loading
+            
+            val result = when (currentType) {
+                HistoryType.EXPENSE -> loadExpensesByPeriodUseCase(startDate, endDate)
+                HistoryType.INCOME -> loadIncomesByPeriodUseCase(startDate, endDate)
+            }
+
             when (result) {
                 is Result.Error -> {
-                    Log.d("ExpensesHistoryViewModel", "${result.exception}.")
+                    Log.e("HistoryViewModel", "Error loading history: ${result.exception}")
                     _uiState.value = State.Error
                 }
-
                 is Result.Loading -> {
+                    _uiState.value = State.Loading
                 }
-
-                is Result.Success<List<Expense>> -> {
-                    Log.d("ExpensesHistoryViewModel", "Загружены расходы за период")
-                    _myExpensesByPeriod.value = result.data
-                    _sumOfExpensesByPeriod.value = myExpensesByPeriod.value.sumOf { it.amount }
+                is Result.Success -> {
+                    _historyItems.value = result.data
+                    _sumOfItems.value = result.data.sumOf { it.amount }
                     _uiState.value = State.Content
                 }
             }
@@ -113,7 +113,6 @@ class HistoryViewModel @Inject constructor(
 
     private fun initializeStartDate(): Long {
         val calendar = Calendar.getInstance()
-        // Устанавливаем на 1-е число текущего месяца
         calendar.set(Calendar.DAY_OF_MONTH, 1)
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
@@ -124,7 +123,6 @@ class HistoryViewModel @Inject constructor(
 
     private fun initializeEndDate(): Long {
         val calendar = Calendar.getInstance()
-        // Устанавливаем на текущий день
         calendar.set(Calendar.HOUR_OF_DAY, 23)
         calendar.set(Calendar.MINUTE, 59)
         calendar.set(Calendar.SECOND, 59)
@@ -134,6 +132,6 @@ class HistoryViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        Log.d("ExpensesHistoryViewModel", "ViewModel уничтожен, отменяем все задачи")
+        networkJob?.cancel()
     }
 }

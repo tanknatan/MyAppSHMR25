@@ -28,4 +28,6 @@
     <string name="start_date">Начало</string>
     <string name="end_date">Конец</string>
     <string name="add_account">Добавить счет</string>
+    <string name="expenses_history">История расходов</string>
+    <string name="incomes_history">История доходов</string>
 </resources>

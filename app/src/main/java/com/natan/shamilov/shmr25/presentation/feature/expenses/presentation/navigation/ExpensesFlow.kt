@@ -8,14 +8,11 @@ sealed class ExpensesFlow(override val route: String) : Screen {
 
     data object ExpensesToday : ExpensesFlow(EXPENSESTODAY_ROUTE)
 
-    data object ExpensesHistory : ExpensesFlow(EXPENSESHISTORY_ROUTE)
-
     data object MyExpenses : ExpensesFlow(MYEXPENSES_ROUTE)
 
     companion object {
         const val EXPENSES_GRAP = "expenses_graph"
         const val EXPENSESTODAY_ROUTE = "expenses_today_route"
-        const val EXPENSESHISTORY_ROUTE = "expenses_history_route"
         const val MYEXPENSES_ROUTE = "my_expenses_route"
     }
 }

@@ -24,8 +24,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.screen.ExpensesHistoryViewModel
-import com.natan.shamilov.shmr25.presentation.navigation.Screen
+import com.natan.shamilov.shmr25.presentation.feature.history.domain.DateType
+import com.natan.shamilov.shmr25.presentation.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.ui.AppCard
 import com.natan.shamilov.shmr25.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.ui.CustomTopAppBar
@@ -37,21 +37,24 @@ import java.time.format.DateTimeFormatter
 fun HistoryScreen(
     modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
-    onBackClick: () -> Unit,
+    type: HistoryType,
+    onBackClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Инициализируем ViewModel при первом показе экрана
-    LaunchedEffect(Unit) {
-        viewModel.initialize()
+    LaunchedEffect(type) {
+        viewModel.initialize(type)
     }
 
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.ExpensesHistory.startIcone,
-                Screen.ExpensesHistory.title,
-                Screen.ExpensesHistory.endIcone,
+                startIcone = R.drawable.ic_back,
+                title = when (type) {
+                    HistoryType.EXPENSE -> R.string.expenses_history
+                    HistoryType.INCOME -> R.string.incomes_history
+                },
+                endIcone = R.drawable.ic_analytics,
                 onBackOrCanselClick = { onBackClick() },
                 onNavigateClick = { }
             )
@@ -82,7 +85,7 @@ fun HistoryScreen(
 
             is State.Content -> {
                 HistoryContent(
-                    innerPadding,
+                    paddingValues = innerPadding,
                     viewModel = viewModel
                 )
             }
@@ -91,12 +94,12 @@ fun HistoryScreen(
 }
 
 @Composable
-fun HistoryContent(
+private fun HistoryContent(
     paddingValues: PaddingValues,
-    viewModel: HistoryViewModel,
+    viewModel: HistoryViewModel
 ) {
-    val total by viewModel.sumOfExpensesByPeriod.collectAsStateWithLifecycle()
-    val myExpenses by viewModel.myExpensesByPeriod.collectAsStateWithLifecycle()
+    val total by viewModel.sumOfItems.collectAsStateWithLifecycle()
+    val items by viewModel.historyItems.collectAsStateWithLifecycle()
     val startDateMillis by viewModel.startDateMillis.collectAsStateWithLifecycle()
     val endDateMillis by viewModel.endDateMillis.collectAsStateWithLifecycle()
     val formattedStartDate = viewModel.formattedStartDate
@@ -131,17 +134,17 @@ fun HistoryContent(
 
         LazyColumn {
             items(
-                items = myExpenses,
+                items = items,
                 key = { it.id }
-            ) { expense ->
+            ) { item ->
                 AppCard(
-                    title = expense.category.name,
-                    amount = expense.amount,
-                    subAmount = OffsetDateTime.parse(expense.createdAt)
+                    title = item.category.name,
+                    amount = item.amount,
+                    subAmount = OffsetDateTime.parse(item.createdAt)
                         .toLocalTime()
                         .format(DateTimeFormatter.ofPattern("H:mm")),
-                    avatarEmoji = expense.category.emoji,
-                    subtitle = expense.comment,
+                    avatarEmoji = item.category.emoji,
+                    subtitle = item.comment,
                     canNavigate = true,
                     onNavigateClick = {}
                 )
@@ -155,8 +158,7 @@ fun HistoryContent(
                     DateType.END -> endDateMillis
                 },
                 onDismissRequest = { showDialog = false },
-                onClear = {
-                },
+                onClear = {},
                 onDateSelected = {
                     when (currentPicker) {
                         DateType.START -> viewModel.updateStartDate(it!!)
@@ -167,8 +169,4 @@ fun HistoryContent(
             )
         }
     }
-}
-
-enum class DateType {
-    START, END
 }

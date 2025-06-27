@@ -35,8 +35,17 @@ class NavigationState(
             popUpTo(currentRoute) {
                 saveState = false
             }
+            launchSingleTop = true
+        }
+    }
 
-            launchSingleTop = false
+    fun navigateSingleTopTo(route: String) {
+        val currentRoute = navHostController.currentBackStackEntry?.destination?.route ?: return
+        navHostController.navigate(route) {
+            popUpTo(currentRoute) {
+                saveState = false
+            }
+            launchSingleTop = true
         }
     }
 }

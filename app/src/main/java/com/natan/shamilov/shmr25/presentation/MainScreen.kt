@@ -16,14 +16,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.navigation.catigoriesGraph
-import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.screen.CategoriesScreen
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.presentation.feature.expenses.presentation.navigation.expensesGraph
+import com.natan.shamilov.shmr25.presentation.feature.history.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.presentation.feature.incomes.presentation.navigation.incomesGraph
 import com.natan.shamilov.shmr25.presentation.feature.option.presentation.navigation.optionsGraph
-import com.natan.shamilov.shmr25.presentation.feature.option.presentation.screen.OptionScreen
 import com.natan.shamilov.shmr25.presentation.navigation.NavigationItem
-import com.natan.shamilov.shmr25.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.presentation.navigation.rememberNavigationState
 import com.natan.shamilov.shmr25.ui.MyNavigationBar
 
@@ -65,6 +63,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             accountGraph(navController = navigationState)
             catigoriesGraph(navController = navigationState)
             optionsGraph(navController = navigationState)
+            historyGraph(navController = navigationState)
         }
     }
 }

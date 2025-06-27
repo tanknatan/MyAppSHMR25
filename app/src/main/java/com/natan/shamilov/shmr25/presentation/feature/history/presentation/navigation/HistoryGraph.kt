@@ -29,8 +29,6 @@ fun NavGraphBuilder.historyGraph(navController: NavigationState) {
             HistoryType.valueOf(it)
         } ?: HistoryType.EXPENSE
         
-        val from = backStackEntry.arguments?.getString(HistoryFlow.FROM_KEY) ?: ""
-        
         HistoryScreen(
             type = type,
             onBackClick = { navController.navHostController.popBackStack() }

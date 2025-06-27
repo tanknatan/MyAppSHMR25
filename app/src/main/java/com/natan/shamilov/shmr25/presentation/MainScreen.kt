@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.natan.shamilov.shmr25.presentation.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.presentation.feature.categories.presentation.navigation.catigoriesGraph

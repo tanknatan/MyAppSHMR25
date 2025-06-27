@@ -3,17 +3,14 @@ package com.natan.shamilov.shmr25.data.repositorys
 import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.data.api.FinanceApi
 import com.natan.shamilov.shmr25.data.api.Result
-import com.natan.shamilov.shmr25.data.api.model.TransactionDto
 import com.natan.shamilov.shmr25.data.api.mapper.FinanceMapper
 import com.natan.shamilov.shmr25.data.api.model.CreateAccountRequest
+import com.natan.shamilov.shmr25.data.api.model.TransactionDto
 import com.natan.shamilov.shmr25.domain.FinanceRepository
 import com.natan.shamilov.shmr25.domain.entity.Account
 import com.natan.shamilov.shmr25.domain.entity.Category
 import com.natan.shamilov.shmr25.domain.entity.Expense
 import com.natan.shamilov.shmr25.domain.entity.Income
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -21,6 +18,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 class FinanceRepositoryImpl @Inject constructor(
     private val api: FinanceApi,
@@ -91,7 +91,7 @@ class FinanceRepositoryImpl @Inject constructor(
             }
         }.awaitAll().flatten()
         val sortedList = expensesList.sortedByDescending { expense ->
-            LocalDate.parse(expense.createdAt.substring(0, 10), formatter)
+            LocalDate.parse(expense.createdAt.substring(START_OF_DATA_IN_RESPONSE, END_OF_DATA_IN_RESPONSE), formatter)
         }
         sortedList
     }
@@ -116,7 +116,7 @@ class FinanceRepositoryImpl @Inject constructor(
             }
         }.awaitAll().flatten()
         val sortedList = incomeList.sortedByDescending { income ->
-            LocalDate.parse(income.createdAt.substring(0, 10), formatter)
+            LocalDate.parse(income.createdAt.substring(START_OF_DATA_IN_RESPONSE, END_OF_DATA_IN_RESPONSE), formatter)
         }
         sortedList
     }
@@ -167,5 +167,10 @@ class FinanceRepositoryImpl @Inject constructor(
         api.getCategories().map { dto ->
             mapper.mapCategoryDtoToDomain(dto)
         }
+    }
+
+    companion object {
+        private const val START_OF_DATA_IN_RESPONSE = 0
+        private const val END_OF_DATA_IN_RESPONSE = 10
     }
 }

@@ -10,7 +10,6 @@ import com.natan.shamilov.shmr25.domain.usecase.CheckAccAndTransactionDataLoadin
 import com.natan.shamilov.shmr25.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.domain.usecase.LoadIncomesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,12 +17,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @HiltViewModel
 class IncomesViewModel @Inject constructor(
     private val getIncomesListUseCase: GetIncomesListUseCase,
     private val checkAccAndTransactionDataLoadingUseCase: CheckAccAndTransactionDataLoadingUseCase,
-    private val loadIncomesByPeriodUseCase: LoadIncomesByPeriodUseCase,
     private val networkStateReceiver: NetworkStateReceiver
 ) : ViewModel() {
 
@@ -62,7 +61,7 @@ class IncomesViewModel @Inject constructor(
         dataLoadingJob?.cancel()
         dataLoadingJob = viewModelScope.launch(Dispatchers.IO) {
             checkAccAndTransactionDataLoadingUseCase().collect {
-                    _uiState.value = it
+                _uiState.value = it
 
                 when (it) {
                     State.Content -> {

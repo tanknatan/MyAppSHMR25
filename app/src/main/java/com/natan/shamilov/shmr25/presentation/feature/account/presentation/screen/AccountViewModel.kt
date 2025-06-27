@@ -22,7 +22,6 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
-    private val createAccountUseCase: CreateAccountUseCase,
     private val checkAccAndTransactionDataLoadingUseCase: CheckAccAndTransactionDataLoadingUseCase,
     private val networkStateReceiver: NetworkStateReceiver
 ) : ViewModel() {

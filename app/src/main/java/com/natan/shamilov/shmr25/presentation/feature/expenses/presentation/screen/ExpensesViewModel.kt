@@ -4,15 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.data.api.Result
 import com.natan.shamilov.shmr25.data.api.NetworkStateReceiver
+import com.natan.shamilov.shmr25.data.api.Result
 import com.natan.shamilov.shmr25.domain.entity.Expense
 import com.natan.shamilov.shmr25.domain.usecase.CheckAccAndTransactionDataLoadingUseCase
 import com.natan.shamilov.shmr25.domain.usecase.GetExpensesListUseCase
 import com.natan.shamilov.shmr25.domain.usecase.LoadAccountsListUseCase
 import com.natan.shamilov.shmr25.domain.usecase.LoadTodayTransactionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @HiltViewModel
 class ExpensesViewModel @Inject constructor(
@@ -88,7 +88,7 @@ class ExpensesViewModel @Inject constructor(
             }
         }
     }
-     fun loadDataInBackground() {
+    fun loadDataInBackground() {
         // Отменяем предыдущую задачу если она существует
         dataLoadingJob?.cancel()
         dataLoadingJob = viewModelScope.launch(Dispatchers.IO) {

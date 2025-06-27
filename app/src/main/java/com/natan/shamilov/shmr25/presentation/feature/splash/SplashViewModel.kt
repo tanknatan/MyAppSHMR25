@@ -32,11 +32,6 @@ class SplashViewModel @Inject constructor(
         loadDataInBackground()
     }
 
-    fun onAnimationComplete() {
-        Log.d("SplashViewModel", "Анимация завершена, переходим к главному экрану")
-        _uiState.value = true
-    }
-
     private fun loadDataInBackground() {
         // Отменяем предыдущую задачу если она существует
         dataLoadingJob?.cancel()

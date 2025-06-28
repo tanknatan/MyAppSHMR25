@@ -28,4 +28,10 @@
     <string name="start_date">Начало</string>
     <string name="end_date">Конец</string>
     <string name="add_account">Добавить счет</string>
+    <string name="expenses_history">История расходов</string>
+    <string name="incomes_history">История доходов</string>
+    <string name="history">История</string>
+    <string name="balance">Баланс</string>
+    <string name="no_network">Нет сети</string>
+    <string name="total_amount">Сумма</string>
 </resources>

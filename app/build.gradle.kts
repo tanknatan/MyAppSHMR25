@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -18,12 +20,33 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+        // Читаем API_TOKEN из local.properties
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+        buildConfigField(
+            "String",
+            "API_TOKEN",
+            "\"${localProperties.getProperty("API_TOKEN", "")}\""
+        )
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        debug {
+            isMinifyEnabled = false
+            isDebuggable = true
         }
     }
     compileOptions {
@@ -35,11 +58,11 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -55,25 +78,25 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    //Hilt
+    // Hilt
     implementation(libs.hilt.core)
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
-    //navigation
+    // navigation
     implementation(libs.androidx.navigation.compose)
-    //Material
+    // Material
     implementation(libs.material3)
-    //Lottie
+    // Lottie
     implementation(libs.lottie)
-    //Splash
+    // Splash
     implementation(libs.splash)
-    //Network
+    // Network
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.moshi)
     implementation(libs.okhttp.core)
     implementation(libs.okhttp.logging)
     implementation(libs.moshi.kotlin)
     kapt(libs.moshi.codegen)
-    //coroutines
+    // coroutines
     implementation(libs.kotlinx.coroutines.android)
 }

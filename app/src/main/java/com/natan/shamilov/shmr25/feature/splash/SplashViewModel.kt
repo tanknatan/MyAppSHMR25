@@ -16,6 +16,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel для сплэш-экрана.
+ * Ответственность: Управление начальной загрузкой данных приложения,
+ * включая загрузку списка счетов и транзакций. Обеспечивает параллельную
+ * загрузку данных во время отображения сплэш-экрана.
+ */
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val loadAccountsListUseCase: LoadAccountsListUseCase,
@@ -35,14 +41,11 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun loadDataInBackground() {
-        // Отменяем предыдущую задачу если она существует
         dataLoadingJob?.cancel()
         dataLoadingJob = viewModelScope.launch(Dispatchers.IO) {
             try {
-                // Загружаем список аккаунтов
                 when (val accountsResult = loadAccountsListUseCase()) {
                     is Result.Success -> {
-                        // Загружаем транзакции для всех аккаунтов
                         loadTransactionsForAccounts()
                         _uiState.value = true
                     }
@@ -51,11 +54,9 @@ class SplashViewModel @Inject constructor(
                         _uiState.value = true
                     }
                     is Result.Loading -> {
-                        // Ничего не делаем, ждем результата
                     }
                 }
             } catch (e: Exception) {
-                Log.e("SplashViewModel", "Неожиданная ошибка при загрузке данных", e)
                 _uiState.value = true
             }
         }
@@ -72,7 +73,6 @@ class SplashViewModel @Inject constructor(
                     Log.e("SplashViewModel", "Ошибка загрузки расходов: ${expensesResult.exception.message}")
                 }
                 is Result.Loading -> {
-                    // Ничего не делаем, ждем результата
                 }
             }
 
@@ -85,7 +85,6 @@ class SplashViewModel @Inject constructor(
                     Log.e("SplashViewModel", "Ошибка загрузки доходов: ${incomesResult.exception.message}")
                 }
                 is Result.Loading -> {
-                    // Ничего не делаем, ждем результата
                 }
             }
         } catch (e: Exception) {

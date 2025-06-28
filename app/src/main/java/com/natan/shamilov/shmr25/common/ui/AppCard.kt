@@ -32,6 +32,20 @@ import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.ui.theme.dep
 import com.natan.shamilov.shmr25.common.ui.theme.rodotoFont
 
+/**
+ * Универсальная карточка приложения.
+ * Отображает информацию в виде карточки с возможностью настройки заголовка,
+ * подзаголовка, суммы, дополнительной суммы и эмодзи-аватара.
+ *
+ * @param title Основной заголовок карточки
+ * @param subtitle Подзаголовок (опционально)
+ * @param amount Числовое значение суммы (опционально)
+ * @param subAmount Дополнительная текстовая информация о сумме (опционально)
+ * @param avatarEmoji Эмодзи для аватара (опционально)
+ * @param canNavigate Флаг, указывающий возможность навигации
+ * @param onNavigateClick Callback для обработки нажатия при навигации
+ * @param isSetting Флаг, указывающий является ли карточка элементом настроек
+ */
 @JvmOverloads
 @Composable
 fun AppCard(

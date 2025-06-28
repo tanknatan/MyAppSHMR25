@@ -8,6 +8,11 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
+/**
+ * Определяет контракт для взаимодействия с API счетов.
+ * Ответственность: Описание доступных HTTP-эндпоинтов для операций со счетами
+ * (получение списка, создание, удаление).
+ */
 interface AccountApi {
     @GET("accounts")
     suspend fun getAccountsList(): List<AccountDto>
@@ -21,8 +26,4 @@ interface AccountApi {
     suspend fun deleteAccount(
         @Query("id") accountId: Int
     )
-
-    companion object {
-        const val BASE_URL = "https://shmr-finance.ru/api/v1/"
-    }
-} 
+}

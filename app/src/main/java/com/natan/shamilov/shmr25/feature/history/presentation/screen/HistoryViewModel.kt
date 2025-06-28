@@ -3,9 +3,10 @@ package com.natan.shamilov.shmr25.feature.history.presentation.screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.app.data.api.Result
+import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryData
 import com.natan.shamilov.shmr25.feature.history.domain.usecase.GetHistoryByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,10 +17,37 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+/**
+ * Модель данных для отображения на UI
+ */
+data class HistoryUiModel(
+    val items: List<HistoryItem>,
+    val totalAmount: Double
+)
+
+/**
+ * Элемент истории для отображения
+ */
+data class HistoryItem(
+    val id: Long,
+    val title: String,
+    val amount: Double,
+    val time: String,
+    val emoji: String,
+    val comment: String?
+)
+
+/**
+ * ViewModel для экрана истории транзакций.
+ * Ответственность: Управление данными и состоянием UI для отображения истории транзакций,
+ * включая загрузку транзакций за выбранный период, обработку сетевых ошибок,
+ * и управление выбором периода для фильтрации.
+ */
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
@@ -27,7 +55,8 @@ class HistoryViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _historyData = MutableStateFlow<HistoryData?>(null)
-    val historyData: StateFlow<HistoryData?> = _historyData.asStateFlow()
+    private val _historyUiModel = MutableStateFlow<HistoryUiModel?>(null)
+    val historyUiModel: StateFlow<HistoryUiModel?> = _historyUiModel.asStateFlow()
 
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
@@ -44,6 +73,7 @@ class HistoryViewModel @Inject constructor(
 
     private var dataLoadingJob: Job? = null
     private var networkJob: Job? = null
+    private var historyType: HistoryType = HistoryType.EXPENSE
 
     init {
         networkJob = viewModelScope.launch {
@@ -55,7 +85,8 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    fun initialize() {
+    fun initialize(type: HistoryType) {
+        historyType = type
         loadHistory()
     }
 
@@ -65,26 +96,52 @@ class HistoryViewModel @Inject constructor(
         loadHistory()
     }
 
+    /**
+     * Очищает дату начала периода, устанавливая её на начало текущего месяца
+     */
+    fun clearStartDate() {
+        val startOfMonth = LocalDate.now()
+            .withDayOfMonth(1)
+            .atStartOfDay(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        updatePeriod(startOfMonth, _selectedPeriodEnd.value)
+    }
+
+    /**
+     * Очищает дату конца периода, устанавливая её на текущий момент
+     */
+    fun clearEndDate() {
+        val now = LocalDateTime.now()
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
+
+        updatePeriod(_selectedPeriodStart.value, now)
+    }
+
     private fun loadHistory() {
         dataLoadingJob?.cancel()
-        
+
         dataLoadingJob = viewModelScope.launch {
             try {
                 _uiState.value = State.Loading
-                
+
                 val startLocalDate = Instant.ofEpochMilli(_selectedPeriodStart.value)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
                 val endLocalDate = Instant.ofEpochMilli(_selectedPeriodEnd.value)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
-                
+
                 val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
                 val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
-                
+
                 when (val result = getHistoryByPeriodUseCase(startDate, endDate)) {
                     is Result.Success -> {
                         _historyData.value = result.data
+                        updateUiModel(result.data)
                         _uiState.value = State.Content
                     }
                     is Result.Error -> {
@@ -101,6 +158,42 @@ class HistoryViewModel @Inject constructor(
                 Log.e("HistoryViewModel", "Неожиданная ошибка при загрузке истории", e)
             }
         }
+    }
+
+    private fun updateUiModel(data: HistoryData) {
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
+
+        val (items, total) = when (historyType) {
+            HistoryType.EXPENSE -> {
+                val expenseItems = data.expenses.map { expense ->
+                    HistoryItem(
+                        id = expense.id,
+                        title = expense.category.name,
+                        amount = -expense.amount,
+                        time = LocalDateTime.parse(expense.createdAt, isoFormatter).format(timeFormatter),
+                        emoji = expense.category.emoji,
+                        comment = expense.comment
+                    )
+                }
+                Pair(expenseItems, -data.totalExpenses)
+            }
+            HistoryType.INCOME -> {
+                val incomeItems = data.incomes.map { income ->
+                    HistoryItem(
+                        id = income.id,
+                        title = income.category.name,
+                        amount = income.amount,
+                        time = LocalDateTime.parse(income.createdAt, isoFormatter).format(timeFormatter),
+                        emoji = income.category.emoji,
+                        comment = income.comment
+                    )
+                }
+                Pair(incomeItems, data.totalIncomes)
+            }
+        }
+
+        _historyUiModel.value = HistoryUiModel(items, total)
     }
 
     override fun onCleared() {

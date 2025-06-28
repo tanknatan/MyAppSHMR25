@@ -11,9 +11,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Отслеживает состояние сетевого подключения устройства.
+ * Ответственность: Мониторинг доступности сети и оповещение подписчиков об изменениях
+ * состояния подключения через StateFlow.
+ */
 @Singleton
 class NetworkStateReceiver @Inject constructor(
-    private val context: Context
+    context: Context
 ) {
     private var connectivityManager: ConnectivityManager
     private val _isNetworkAvailable = MutableStateFlow(false)

@@ -6,6 +6,19 @@ import androidx.navigation.compose.composable
 import com.natan.shamilov.shmr25.app.MainScreen
 import com.natan.shamilov.shmr25.feature.splash.SplashScreen
 
+/**
+ * Корневой навигационный граф приложения.
+ * Ответственность: Определение основной навигационной структуры приложения,
+ * включая стартовый экран (splash) и основной экран приложения.
+ *
+ * Навигационный граф включает:
+ * - Splash экран как начальную точку входа
+ * - Основной экран приложения с нижней навигацией
+ *
+ * Использует [NavigationState] для управления навигацией между экранами
+ * и обработки специфических паттернов навигации (например, удаление splash
+ * экрана из бэкстека после перехода на основной экран).
+ */
 @Composable
 fun AppGraph() {
     val navigationState = rememberNavigationState()

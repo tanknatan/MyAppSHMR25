@@ -30,8 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.navigation.Screen
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.common.ui.AccountNameInput
 import com.natan.shamilov.shmr25.common.ui.BalanceInput
 import com.natan.shamilov.shmr25.common.ui.CurrencyBottomSheet
@@ -40,6 +40,12 @@ import com.natan.shamilov.shmr25.common.ui.CurrencySelectorButton
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import kotlinx.coroutines.launch
 
+/**
+ * Composable функция для экрана добавления нового счета.
+ * Ответственность: Отображение UI формы создания счета, включая поля ввода,
+ * обработку пользовательского ввода и отображение различных состояний экрана
+ * (загрузка, ошибка, контент).
+ */
 @Composable
 fun AddAccountScreen(
     modifier: Modifier = Modifier,

@@ -10,6 +10,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.R
 
+/**
+ * Кастомная плавающая кнопка действия (FAB).
+ * Отображает круглую кнопку с иконкой плюса в цветах приложения.
+ * Не имеет тени для соответствия плоскому дизайну.
+ *
+ * @param onFabClick Callback, вызываемый при нажатии на кнопку
+ */
 @Composable
 fun MyFloatingActionButton(onFabClick: () -> Unit) {
     FloatingActionButton(

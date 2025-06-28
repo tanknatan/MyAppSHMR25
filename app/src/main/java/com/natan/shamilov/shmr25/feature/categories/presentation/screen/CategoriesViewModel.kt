@@ -3,19 +3,25 @@ package com.natan.shamilov.shmr25.feature.categories.presentation.screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
+import com.natan.shamilov.shmr25.app.data.api.Result
 import com.natan.shamilov.shmr25.common.Category
 import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.feature.categories.domain.usecase.GetCategoriesListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+/**
+ * ViewModel для экрана категорий.
+ * Ответственность: Управление данными и состоянием UI для отображения списка категорий,
+ * включая загрузку категорий, обработку сетевых ошибок и обновление данных
+ * при изменении состояния сети.
+ */
 @HiltViewModel
 class CategoriesViewModel @Inject constructor(
     private val getCategoriesListUseCase: GetCategoriesListUseCase,
@@ -47,7 +53,7 @@ class CategoriesViewModel @Inject constructor(
 
     private fun loadCategories() {
         dataLoadingJob?.cancel()
-        
+
         dataLoadingJob = viewModelScope.launch {
             try {
                 _uiState.value = State.Loading

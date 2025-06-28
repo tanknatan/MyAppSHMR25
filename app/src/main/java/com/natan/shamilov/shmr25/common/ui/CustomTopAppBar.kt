@@ -24,6 +24,16 @@ import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.common.ui.theme.dep
 import com.natan.shamilov.shmr25.common.ui.theme.rodotoFont
 
+/**
+ * Кастомная верхняя панель приложения (TopAppBar).
+ * Отображает панель с настраиваемыми иконками и заголовком.
+ *
+ * @param startIcone Ресурс для начальной иконки (обычно кнопка "назад" или "закрыть")
+ * @param title Ресурс для текста заголовка
+ * @param endIcone Ресурс для конечной иконки (необязательно)
+ * @param onBackOrCanselClick Callback для обработки нажатия на начальную иконку
+ * @param onNavigateClick Callback для обработки нажатия на конечную иконку
+ */
 @Composable
 fun CustomTopAppBar(
     startIcone: Int?,

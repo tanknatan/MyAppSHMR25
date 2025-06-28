@@ -16,6 +16,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel для экрана добавления нового счета.
+ * Ответственность: Управление бизнес-логикой и состоянием UI при создании нового счета,
+ * включая валидацию данных, обработку сетевых запросов и отображение состояния загрузки.
+ */
 @HiltViewModel
 class AddAccountViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,

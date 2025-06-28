@@ -18,16 +18,36 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
+/**
+ * Модуль Hilt для настройки сетевых зависимостей.
+ * Ответственность: Предоставление и конфигурация всех необходимых компонентов
+ * для работы с сетью, включая HTTP-клиент, сериализацию JSON и API-интерфейсы.
+ *
+ * Модуль устанавливается в SingletonComponent, обеспечивая единые экземпляры
+ * сетевых компонентов на протяжении всего жизненного цикла приложения.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 class NetworkModule {
 
+    /**
+     * Предоставляет экземпляр Moshi для сериализации/десериализации JSON.
+     * Настроен для работы с Kotlin-классами через KotlinJsonAdapterFactory.
+     *
+     * @return Настроенный экземпляр Moshi
+     */
     @Provides
     @Singleton
     fun provideMoshi(): Moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
 
+    /**
+     * Предоставляет интерцептор для добавления токена авторизации.
+     * Добавляет Bearer-токен из BuildConfig в заголовок каждого запроса.
+     *
+     * @return Интерцептор для авторизации
+     */
     @Provides
     @Singleton
     fun provideAuthInterceptor(): Interceptor = Interceptor { chain ->
@@ -38,6 +58,13 @@ class NetworkModule {
         chain.proceed(newRequest)
     }
 
+    /**
+     * Предоставляет настроенный клиент OkHttp.
+     * Включает интерцептор авторизации и логирования для отладки.
+     *
+     * @param authInterceptor Интерцептор для авторизации
+     * @return Настроенный клиент OkHttp
+     */
     @Provides
     @Singleton
     fun provideOkHttpClient(authInterceptor: Interceptor): OkHttpClient {
@@ -50,6 +77,14 @@ class NetworkModule {
             .build()
     }
 
+    /**
+     * Предоставляет настроенный экземпляр Retrofit.
+     * Конфигурирует Retrofit с базовым URL, клиентом OkHttp и конвертером Moshi.
+     *
+     * @param okHttpClient HTTP-клиент для выполнения запросов
+     * @param moshi Конвертер JSON
+     * @return Настроенный экземпляр Retrofit
+     */
     @Provides
     @Singleton
     fun provideRetrofit(
@@ -61,11 +96,24 @@ class NetworkModule {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
+    /**
+     * Предоставляет реализацию API истории операций.
+     *
+     * @param retrofit Экземпляр Retrofit для создания API
+     * @return Реализация интерфейса HistoryApi
+     */
     @Provides
     @Singleton
     fun provideHistoryApi(retrofit: Retrofit): HistoryApi =
         retrofit.create(HistoryApi::class.java)
 
+    /**
+     * Предоставляет приёмник состояния сети.
+     * Используется для отслеживания состояния подключения к интернету.
+     *
+     * @param context Контекст приложения
+     * @return Экземпляр NetworkStateReceiver
+     */
     @Provides
     @Singleton
     fun provideNetworkStateReceiver(
@@ -73,6 +121,7 @@ class NetworkModule {
     ): NetworkStateReceiver = NetworkStateReceiver(context)
 
     companion object {
+        /** Базовый URL для API */
         const val BASE_URL = "https://shmr-finance.ru/api/v1/"
     }
 }

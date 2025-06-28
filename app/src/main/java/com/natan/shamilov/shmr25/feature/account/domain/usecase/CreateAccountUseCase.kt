@@ -12,4 +12,4 @@ class CreateAccountUseCase @Inject constructor(
         balance: String,
         currency: String
     ): Result<Unit> = repository.createAccount(name, balance, currency)
-} 
+}

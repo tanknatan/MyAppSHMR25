@@ -10,6 +10,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/**
+ * Реализация репозитория для работы со счетами.
+ * Ответственность: Управление данными счетов, включая кэширование в памяти и
+ * синхронизацию с удаленным API. Предоставляет единый интерфейс для доступа к данным
+ * счетов из разных источников.
+ */
 class AccountRepositoryImpl @Inject constructor(
     private val api: AccountApi,
     private val mapper: FinanceMapper
@@ -52,4 +58,4 @@ class AccountRepositoryImpl @Inject constructor(
         loadAccountsList()
         return result
     }
-} 
+}

@@ -3,9 +3,9 @@ package com.natan.shamilov.shmr25.feature.incomes.presentation.screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.app.data.api.Result
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase
@@ -19,6 +19,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+/**
+ * ViewModel для экрана доходов.
+ * Ответственность: Управление данными и состоянием UI для отображения списка доходов,
+ * включая загрузку доходов за определенный период, обработку сетевых ошибок
+ * и обновление данных при изменении состояния сети.
+ */
 @HiltViewModel
 class IncomesViewModel @Inject constructor(
     private val getIncomesListUseCase: GetIncomesListUseCase,
@@ -54,13 +60,12 @@ class IncomesViewModel @Inject constructor(
 
     private fun loadIncomes() {
         dataLoadingJob?.cancel()
-        
         dataLoadingJob = viewModelScope.launch {
             try {
                 _uiState.value = State.Loading
-                
+
                 val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
-                
+
                 when (val result = loadIncomesByPeriodUseCase(today, today)) {
                     is Result.Success -> {
                         val incomes = getIncomesListUseCase()

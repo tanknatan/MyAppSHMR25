@@ -14,6 +14,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+/**
+ * Поле ввода для названия счета.
+ * Отображает текстовое поле с возможностью очистки и индикацией ошибки.
+ * Включает кнопку очистки, когда поле не пустое.
+ *
+ * @param accountName Текущее значение названия счета
+ * @param onNameChange Callback для обработки изменения текста
+ * @param isError Флаг, указывающий на наличие ошибки валидации
+ */
 @Composable
 fun AccountNameInput(
     accountName: String,

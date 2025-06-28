@@ -24,13 +24,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.common.ui.AppCard
 import com.natan.shamilov.shmr25.common.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.ui.TopGreenCard
+import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
@@ -44,7 +43,7 @@ fun HistoryScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.initialize()
+        viewModel.initialize(type)
     }
 
     Scaffold(
@@ -87,8 +86,7 @@ fun HistoryScreen(
             is State.Content -> {
                 HistoryContent(
                     paddingValues = innerPadding,
-                    viewModel = viewModel,
-                    type = type
+                    viewModel = viewModel
                 )
             }
         }
@@ -98,19 +96,16 @@ fun HistoryScreen(
 @Composable
 private fun HistoryContent(
     paddingValues: PaddingValues,
-    viewModel: HistoryViewModel,
-    type: HistoryType
+    viewModel: HistoryViewModel
 ) {
-    val historyData by viewModel.historyData.collectAsStateWithLifecycle()
+    val historyUiModel by viewModel.historyUiModel.collectAsStateWithLifecycle()
     val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()
     val endDate by viewModel.selectedPeriodEnd.collectAsStateWithLifecycle()
-    
+
     var showDialog by remember { mutableStateOf(false) }
     var isStartDatePicker by remember { mutableStateOf(true) }
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-    val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
 
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
@@ -135,56 +130,28 @@ private fun HistoryContent(
             }
         )
 
-        historyData?.let { data ->
-            // Показываем соответствующую сумму в зависимости от типа
+        historyUiModel?.let { model ->
             TopGreenCard(
-                title = stringResource(
-                    when (type) {
-                        HistoryType.EXPENSE -> R.string.total_expenses
-                        HistoryType.INCOME -> R.string.total_incomes
-                    }
-                ),
-                amount = when (type) {
-                    HistoryType.EXPENSE -> data.totalExpenses
-                    HistoryType.INCOME -> data.totalIncomes
-                }
+                title = stringResource(R.string.total_amount),
+                amount = model.totalAmount
             )
+        }
 
-            LazyColumn {
-                // Показываем только соответствующие транзакции в зависимости от типа
-                when (type) {
-                    HistoryType.EXPENSE -> {
-                        items(
-                            items = data.expenses,
-                            key = { "expense_${it.id}" }
-                        ) { expense ->
-                            AppCard(
-                                title = expense.category.name,
-                                amount = -expense.amount,
-                                subAmount = LocalDateTime.parse(expense.createdAt, isoFormatter).format(timeFormatter),
-                                avatarEmoji = expense.category.emoji,
-                                subtitle = expense.comment,
-                                canNavigate = true,
-                                onNavigateClick = {}
-                            )
-                        }
-                    }
-                    HistoryType.INCOME -> {
-                        items(
-                            items = data.incomes,
-                            key = { "income_${it.id}" }
-                        ) { income ->
-                            AppCard(
-                                title = income.category.name,
-                                amount = income.amount,
-                                subAmount = LocalDateTime.parse(income.createdAt, isoFormatter).format(timeFormatter),
-                                avatarEmoji = income.category.emoji,
-                                subtitle = income.comment,
-                                canNavigate = true,
-                                onNavigateClick = {}
-                            )
-                        }
-                    }
+        LazyColumn {
+            historyUiModel?.let { model ->
+                items(
+                    items = model.items,
+                    key = { "history_${it.id}" }
+                ) { item ->
+                    AppCard(
+                        title = item.title,
+                        amount = item.amount,
+                        subAmount = item.time,
+                        avatarEmoji = item.emoji,
+                        subtitle = item.comment,
+                        canNavigate = true,
+                        onNavigateClick = {}
+                    )
                 }
             }
         }
@@ -193,7 +160,14 @@ private fun HistoryContent(
             CustomDatePickerDialog(
                 initialDate = if (isStartDatePicker) startDate else endDate,
                 onDismissRequest = { showDialog = false },
-                onClear = {},
+                onClear = {
+                    if (isStartDatePicker) {
+                        viewModel.clearStartDate()
+                    } else {
+                        viewModel.clearEndDate()
+                    }
+                    showDialog = false
+                },
                 onDateSelected = { selectedDate ->
                     if (isStartDatePicker) {
                         viewModel.updatePeriod(selectedDate!!, endDate)
@@ -201,7 +175,7 @@ private fun HistoryContent(
                         viewModel.updatePeriod(startDate, selectedDate!!)
                     }
                     showDialog = false
-                }
+                },
             )
         }
     }

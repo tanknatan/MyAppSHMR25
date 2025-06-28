@@ -19,6 +19,12 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
+/**
+ * ViewModel для экрана расходов.
+ * Ответственность: Управление данными и состоянием UI для отображения списка расходов,
+ * включая загрузку расходов за определенный период, обработку сетевых ошибок
+ * и обновление данных при изменении состояния сети.
+ */
 @HiltViewModel
 class ExpensesViewModel @Inject constructor(
     private val getExpensesListUseCase: GetExpensesListUseCase,

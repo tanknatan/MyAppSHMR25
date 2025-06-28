@@ -3,20 +3,26 @@ package com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.app.data.api.Result
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.LoadAccountsListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.Job
+import javax.inject.Inject
 
+/**
+ * ViewModel для экрана счетов.
+ * Ответственность: Управление данными и состоянием UI для отображения списка счетов,
+ * включая загрузку счетов, выбор активного счета, обработку сетевых ошибок
+ * и обновление данных при изменении состояния сети.
+ */
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val getAccountUseCase: GetAccountUseCase,
@@ -56,11 +62,11 @@ class AccountViewModel @Inject constructor(
 
     private fun loadAccounts() {
         dataLoadingJob?.cancel()
-        
+
         dataLoadingJob = viewModelScope.launch {
             try {
                 _uiState.value = State.Loading
-                
+
                 // Сначала загружаем данные с сервера
                 when (val result = loadAccountsListUseCase()) {
                     is Result.Success -> {

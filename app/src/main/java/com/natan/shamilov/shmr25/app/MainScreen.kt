@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.natan.shamilov.shmr25.app.navigation.NavigationItem
+import com.natan.shamilov.shmr25.app.navigation.rememberNavigationState
 import com.natan.shamilov.shmr25.common.ui.MyNavigationBar
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.catigoriesGraph
@@ -21,9 +23,19 @@ import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.expens
 import com.natan.shamilov.shmr25.feature.history.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.incomesGraph
 import com.natan.shamilov.shmr25.feature.option.presentation.navigation.optionsGraph
-import com.natan.shamilov.shmr25.app.navigation.NavigationItem
-import com.natan.shamilov.shmr25.app.navigation.rememberNavigationState
 
+/**
+ * Основной экран приложения.
+ * Ответственность: Организация основного UI приложения, включая нижнюю навигационную
+ * панель и контейнер для отображения различных разделов приложения.
+ *
+ * Экран содержит:
+ * - Нижнюю навигационную панель с основными разделами (расходы, доходы, счета и т.д.)
+ * - Навигационный хост для отображения содержимого выбранного раздела
+ * - Настройку навигации между различными графами (expenses, incomes, account и т.д.)
+ *
+ * @param modifier Модификатор для настройки внешнего вида и поведения экрана
+ */
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     val navigationState = rememberNavigationState()

@@ -56,7 +56,8 @@ fun AppCard(
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
     onNavigateClick: (() -> Unit)? = null,
-    isSetting: Boolean = false
+    isSetting: Boolean = false,
+    currency: String? = null,
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -137,7 +138,7 @@ fun AppCard(
                     horizontalAlignment = Alignment.End
                 ) {
                     Text(
-                        text = amount.toCurrencyString(),
+                        text = amount.toCurrencyString(currency = currency ?: "₽"),
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 16.sp,
                         fontFamily = rodotoFont

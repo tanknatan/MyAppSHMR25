@@ -18,7 +18,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,7 +47,6 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun AddAccountScreen(
-    modifier: Modifier = Modifier,
     viewModel: AddAccountViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
 ) {
@@ -106,8 +104,6 @@ fun AddAccountContent(
     paddingValues: PaddingValues,
     onBack: () -> Unit,
 ) {
-    val accountCreated by viewModel.createAccountComplete.collectAsStateWithLifecycle()
-
     var accountName by remember { mutableStateOf("") }
     var balance by remember { mutableStateOf("") }
     var selectedCurrency by remember { mutableStateOf<CurrencyOption?>(null) }
@@ -117,12 +113,6 @@ fun AddAccountContent(
             accountName.isNotBlank() &&
                 balance.isNotBlank() &&
                 selectedCurrency != null
-        }
-    }
-    LaunchedEffect(accountCreated) {
-        if (accountCreated) {
-            viewModel.resetCreateAccountComplete()
-            onBack()
         }
     }
 

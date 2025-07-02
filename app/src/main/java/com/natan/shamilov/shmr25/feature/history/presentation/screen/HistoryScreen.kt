@@ -30,12 +30,12 @@ import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun HistoryScreen(
-    modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
     type: HistoryType,
     onBackClick: () -> Unit
@@ -102,6 +102,9 @@ private fun HistoryContent(
     val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()
     val endDate by viewModel.selectedPeriodEnd.collectAsStateWithLifecycle()
 
+    val timeFormatter = remember { DateTimeFormatter.ofPattern("HH:mm") }
+    val isoFormatter = remember { DateTimeFormatter.ISO_DATE_TIME }
+
     var showDialog by remember { mutableStateOf(false) }
     var isStartDatePicker by remember { mutableStateOf(true) }
 
@@ -144,13 +147,14 @@ private fun HistoryContent(
                     key = { "history_${it.id}" }
                 ) { item ->
                     AppCard(
-                        title = item.title,
+                        title = item.name,
                         amount = item.amount,
-                        subAmount = item.time,
+                        subAmount = LocalDateTime.parse(item.createdAt, isoFormatter).format(timeFormatter),
                         avatarEmoji = item.emoji,
                         subtitle = item.comment,
                         canNavigate = true,
-                        onNavigateClick = {}
+                        onNavigateClick = {},
+                        currency = item.currency
                     )
                 }
             }

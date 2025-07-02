@@ -36,4 +36,11 @@ interface AccountRepository {
      * @return результат операции
      */
     suspend fun deleteAccount(id: Int): Result<Unit>
+
+    suspend fun editAccount(
+        accountId: Int,
+        name: String,
+        balance: String,
+        currency: String
+    ): Result<Unit>
 }

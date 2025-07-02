@@ -1,5 +1,6 @@
 package com.natan.shamilov.shmr25.feature.expenses.presentation.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,12 +23,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.navigation.Screen
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.common.ui.AppCard
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.ui.TopGreenCard
+import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 
 @Composable
 fun ExpensesTodayScreen(
@@ -87,9 +89,12 @@ fun ExpensesTodayScreen(
             }
 
             is State.Content -> {
+                val total by viewModel.sumOfExpenses.collectAsStateWithLifecycle()
+                val myExpenses by viewModel.expenses.collectAsStateWithLifecycle()
                 ExpensesTodayContent(
-                    innerPadding,
-                    viewModel = viewModel
+                    paddingValues = innerPadding,
+                    total = total,
+                    myExpenses = myExpenses
                 )
             }
         }
@@ -99,11 +104,9 @@ fun ExpensesTodayScreen(
 @Composable
 fun ExpensesTodayContent(
     paddingValues: PaddingValues,
-    viewModel: ExpensesViewModel,
+    total: Double,
+    myExpenses: List<Expense>,
 ) {
-    val total by viewModel.sumOfExpenses.collectAsStateWithLifecycle()
-    val myExpenses by viewModel.expenses.collectAsStateWithLifecycle()
-
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
             title = stringResource(R.string.total),
@@ -116,13 +119,15 @@ fun ExpensesTodayContent(
                 key = { expense -> expense.id }
             ) { expense ->
                 AppCard(
-                    title = expense.category.name,
+                    title = expense.name,
                     amount = expense.amount,
-                    avatarEmoji = expense.category.emoji,
+                    avatarEmoji = expense.emoji,
                     subtitle = expense.comment,
                     canNavigate = true,
-                    onNavigateClick = {}
+                    onNavigateClick = {},
+                    currency = expense.currency
                 )
+                Log.d("ExpensesTodayScreen", "Expense: $expense")
             }
         }
     }

@@ -22,4 +22,4 @@ object AccountModule {
     @Provides
     @Singleton
     fun provideAccountRepository(repository: AccountRepositoryImpl): AccountRepository = repository
-} 
+}

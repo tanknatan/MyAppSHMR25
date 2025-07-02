@@ -16,18 +16,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.natan.shamilov.shmr25.app.navigation.Screen
 import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.common.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.ui.TopGreenCard
-import com.natan.shamilov.shmr25.app.navigation.Screen
 
 @Composable
 fun AccountScreen(
-    modifier: Modifier = Modifier,
     viewModel: AccountViewModel = hiltViewModel(),
     onFABClick: () -> Unit,
+    onEditAccountClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -43,7 +43,11 @@ fun AccountScreen(
                 Screen.Account.title,
                 Screen.Account.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { }
+                onNavigateClick = {
+                    viewModel.selectedAccount.value?.id?.let {
+                        onEditAccountClick(it.toString())
+                    }
+                }
             )
         },
         floatingActionButton = {

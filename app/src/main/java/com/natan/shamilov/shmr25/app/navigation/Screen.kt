@@ -73,6 +73,14 @@ sealed class Screen(
             R.drawable.ic_close
         )
 
+    data object EditAccount :
+        Screen(
+            route = EDIT_ACCOUNT_ROUTE,
+            title = R.string.edit_account,
+            R.drawable.ic_accept,
+            R.drawable.ic_back
+        )
+
     /** Экран категорий */
     data object Categories : Screen(
         route = CATEGORIES_ROUTE,
@@ -91,10 +99,14 @@ sealed class Screen(
 
         const val EXPENSES_ROUTE = "expenses"
         const val EXPENSES_HISTORY_ROUTE = "expenses_history"
+
         const val INCOMES_ROUTE = "incomes"
         const val INCOMES_HISTORY_ROUTE = "incomes_history"
+
         const val ACCOUNT_ROUTE = "account"
         const val ADD_ACCOUNT_ROUTE = "add_account"
+        const val EDIT_ACCOUNT_ROUTE = "edit_account"
+
         const val CATEGORIES_ROUTE = "categories"
         const val OPTIONS_ROUTE = "options"
     }

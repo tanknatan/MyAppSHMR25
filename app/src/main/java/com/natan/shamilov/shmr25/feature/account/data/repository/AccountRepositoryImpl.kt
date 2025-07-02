@@ -1,9 +1,10 @@
 package com.natan.shamilov.shmr25.feature.account.data.repository
 
 import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.mapper.FinanceMapper
 import com.natan.shamilov.shmr25.app.data.api.model.CreateAccountRequest
 import com.natan.shamilov.shmr25.feature.account.data.api.AccountApi
+import com.natan.shamilov.shmr25.feature.account.data.mapper.AccountMapper
+import com.natan.shamilov.shmr25.feature.account.data.model.AccountRequestBody
 import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
 import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,7 @@ import javax.inject.Inject
  */
 class AccountRepositoryImpl @Inject constructor(
     private val api: AccountApi,
-    private val mapper: FinanceMapper
+    private val mapper: AccountMapper
 ) : AccountRepository {
 
     private var accountsList = emptyList<Account>()
@@ -29,7 +30,7 @@ class AccountRepositoryImpl @Inject constructor(
 
     override suspend fun loadAccountsList() = Result.execute {
         accountsList = api.getAccountsList().map { dto ->
-            mapper.mapAccountDtoToDomain(dto)
+            mapper.mapDtoToDomain(dto)
         }
     }
 
@@ -57,5 +58,21 @@ class AccountRepositoryImpl @Inject constructor(
         }
         loadAccountsList()
         return result
+    }
+
+    override suspend fun editAccount(
+        accountId: Int,
+        name: String,
+        balance: String,
+        currency: String
+    ): Result<Unit> = Result.execute {
+        api.editAccount(
+            accoutId = accountId,
+            AccountRequestBody(
+                name = name,
+                balance = balance,
+                currency = currency
+            )
+        )
     }
 }

@@ -10,7 +10,6 @@ import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 import com.natan.shamilov.shmr25.feature.expenses.domain.usecase.GetExpensesListUseCase
 import com.natan.shamilov.shmr25.feature.expenses.domain.usecase.LoadExpensesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +28,7 @@ import javax.inject.Inject
 class ExpensesViewModel @Inject constructor(
     private val getExpensesListUseCase: GetExpensesListUseCase,
     private val loadExpensesByPeriodUseCase: LoadExpensesByPeriodUseCase,
-    private val networkStateReceiver: NetworkStateReceiver
+    private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
     private val _expenses = MutableStateFlow<List<Expense>>(emptyList())
     val expenses: StateFlow<List<Expense>> = _expenses.asStateFlow()
@@ -40,11 +39,8 @@ class ExpensesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private var dataLoadingJob: Job? = null
-    private var networkJob: Job? = null
-
     init {
-        networkJob = viewModelScope.launch {
+        viewModelScope.launch {
             networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
                 if (isAvailable && _uiState.value == State.Error) {
                     loadExpenses()
@@ -58,9 +54,7 @@ class ExpensesViewModel @Inject constructor(
     }
 
     private fun loadExpenses() {
-        dataLoadingJob?.cancel()
-
-        dataLoadingJob = viewModelScope.launch {
+        viewModelScope.launch {
             try {
                 _uiState.value = State.Loading
 
@@ -80,6 +74,7 @@ class ExpensesViewModel @Inject constructor(
                             _uiState.value = State.Content
                         }
                     }
+
                     is Result.Error -> {
                         // Пробуем получить данные из локальной БД
                         val cachedExpenses = getExpensesListUseCase()
@@ -93,6 +88,7 @@ class ExpensesViewModel @Inject constructor(
                             Log.e("ExpensesViewModel", "Ошибка загрузки расходов: ${result.exception.message}")
                         }
                     }
+
                     is Result.Loading -> {
                         _uiState.value = State.Loading
                     }
@@ -106,8 +102,7 @@ class ExpensesViewModel @Inject constructor(
     }
 
     fun loadDataInBackground() {
-        dataLoadingJob?.cancel()
-        dataLoadingJob = viewModelScope.launch {
+        viewModelScope.launch {
             try {
                 val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
                 when (val result = loadExpensesByPeriodUseCase(today, today)) {
@@ -116,9 +111,11 @@ class ExpensesViewModel @Inject constructor(
                         _expenses.value = expenses
                         _sumOfExpenses.value = expenses.sumOf { it.amount }
                     }
+
                     is Result.Error -> {
                         Log.w("ExpensesViewModel", "Ошибка фоновой загрузки: ${result.exception.message}")
                     }
+
                     is Result.Loading -> {
                         // Игнорируем состояние загрузки при фоновом обновлении
                     }
@@ -133,7 +130,5 @@ class ExpensesViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         Log.d("ExpensesViewModel", "ViewModel уничтожен, отменяем все задачи")
-        dataLoadingJob?.cancel()
-        networkJob?.cancel()
     }
 }

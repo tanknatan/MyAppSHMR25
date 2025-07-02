@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.navigation.Screen
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.common.ui.AppCard
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.ui.MyFloatingActionButton
@@ -29,7 +29,6 @@ import com.natan.shamilov.shmr25.common.ui.TopGreenCard
 
 @Composable
 fun IncomesTodayScreen(
-    modifier: Modifier = Modifier,
     viewModel: IncomesViewModel = hiltViewModel(),
     onHistoryClick: () -> Unit,
     onFABClick: () -> Unit
@@ -103,10 +102,11 @@ fun IncomesContent(viewModel: IncomesViewModel, paddingValues: PaddingValues) {
                 key = { incomes -> incomes.id }
             ) { incomes ->
                 AppCard(
-                    title = incomes.category.name,
+                    title = incomes.name,
                     amount = incomes.amount,
                     canNavigate = true,
-                    onNavigateClick = {}
+                    onNavigateClick = {},
+                    currency = incomes.currency
                 )
             }
         }

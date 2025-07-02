@@ -1,5 +1,6 @@
 package com.natan.shamilov.shmr25.app.data.api.model
 
+import com.natan.shamilov.shmr25.feature.categories.data.model.CategoryDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

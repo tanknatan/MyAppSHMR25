@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
 import com.natan.shamilov.shmr25.app.data.api.Result
 import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
-import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryData
+import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryItem
+import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryUiModel
 import com.natan.shamilov.shmr25.feature.history.domain.usecase.GetHistoryByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,26 +25,6 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
- * Модель данных для отображения на UI
- */
-data class HistoryUiModel(
-    val items: List<HistoryItem>,
-    val totalAmount: Double
-)
-
-/**
- * Элемент истории для отображения
- */
-data class HistoryItem(
-    val id: Long,
-    val title: String,
-    val amount: Double,
-    val time: String,
-    val emoji: String,
-    val comment: String?
-)
-
-/**
  * ViewModel для экрана истории транзакций.
  * Ответственность: Управление данными и состоянием UI для отображения истории транзакций,
  * включая загрузку транзакций за выбранный период, обработку сетевых ошибок,
@@ -51,10 +33,10 @@ data class HistoryItem(
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
-    private val networkStateReceiver: NetworkStateReceiver
+    private val getAccountUseCase: GetAccountUseCase,
+    private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
-    private val _historyData = MutableStateFlow<HistoryData?>(null)
     private val _historyUiModel = MutableStateFlow<HistoryUiModel?>(null)
     val historyUiModel: StateFlow<HistoryUiModel?> = _historyUiModel.asStateFlow()
 
@@ -71,12 +53,10 @@ class HistoryViewModel @Inject constructor(
     )
     val selectedPeriodEnd: StateFlow<Long> = _selectedPeriodEnd.asStateFlow()
 
-    private var dataLoadingJob: Job? = null
-    private var networkJob: Job? = null
     private var historyType: HistoryType = HistoryType.EXPENSE
 
     init {
-        networkJob = viewModelScope.launch {
+        viewModelScope.launch {
             networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
                 if (isAvailable && _uiState.value == State.Error) {
                     loadHistory()
@@ -122,9 +102,7 @@ class HistoryViewModel @Inject constructor(
     }
 
     private fun loadHistory() {
-        dataLoadingJob?.cancel()
-
-        dataLoadingJob = viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 _uiState.value = State.Loading
 
@@ -137,19 +115,30 @@ class HistoryViewModel @Inject constructor(
 
                 val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
                 val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
-
-                when (val result = getHistoryByPeriodUseCase(startDate, endDate)) {
-                    is Result.Success -> {
-                        _historyData.value = result.data
-                        updateUiModel(result.data)
-                        _uiState.value = State.Content
-                    }
+                val accounts = getAccountUseCase()
+                when (
+                    val historyListResult = getHistoryByPeriodUseCase(
+                        accounts = accounts,
+                        startDate = startDate,
+                        endDate = endDate,
+                        isIncome = historyType == HistoryType.INCOME
+                    )
+                ) {
                     is Result.Error -> {
                         _uiState.value = State.Error
-                        Log.e("HistoryViewModel", "Ошибка загрузки истории: ${result.exception.message}")
+                        Log.e("HistoryViewModel", "Ошибка загрузки истории: ${historyListResult.exception.message}")
                     }
-                    is Result.Loading -> {
+
+                    Result.Loading -> {
                         _uiState.value = State.Loading
+                    }
+
+                    is Result.Success<List<HistoryItem>> -> {
+                        _historyUiModel.value = HistoryUiModel(
+                            items = historyListResult.data,
+                            totalAmount = historyListResult.data.sumOf { it.amount }
+                        )
+                        _uiState.value = State.Content
                     }
                 }
             } catch (e: Exception) {
@@ -160,46 +149,8 @@ class HistoryViewModel @Inject constructor(
         }
     }
 
-    private fun updateUiModel(data: HistoryData) {
-        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm")
-        val isoFormatter = DateTimeFormatter.ISO_DATE_TIME
-
-        val (items, total) = when (historyType) {
-            HistoryType.EXPENSE -> {
-                val expenseItems = data.expenses.map { expense ->
-                    HistoryItem(
-                        id = expense.id,
-                        title = expense.category.name,
-                        amount = -expense.amount,
-                        time = LocalDateTime.parse(expense.createdAt, isoFormatter).format(timeFormatter),
-                        emoji = expense.category.emoji,
-                        comment = expense.comment
-                    )
-                }
-                Pair(expenseItems, -data.totalExpenses)
-            }
-            HistoryType.INCOME -> {
-                val incomeItems = data.incomes.map { income ->
-                    HistoryItem(
-                        id = income.id,
-                        title = income.category.name,
-                        amount = income.amount,
-                        time = LocalDateTime.parse(income.createdAt, isoFormatter).format(timeFormatter),
-                        emoji = income.category.emoji,
-                        comment = income.comment
-                    )
-                }
-                Pair(incomeItems, data.totalIncomes)
-            }
-        }
-
-        _historyUiModel.value = HistoryUiModel(items, total)
-    }
-
     override fun onCleared() {
         super.onCleared()
         Log.d("HistoryViewModel", "ViewModel уничтожен, отменяем все задачи")
-        dataLoadingJob?.cancel()
-        networkJob?.cancel()
     }
 }

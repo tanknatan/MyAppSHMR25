@@ -16,4 +16,4 @@ interface ExpensesRepository {
         startDate: String,
         endDate: String
     ): Result<List<Expense>>
-} 
+}

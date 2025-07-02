@@ -7,8 +7,10 @@ package com.natan.shamilov.shmr25.common
  */
 interface HistoryScreenEntity {
     val id: Long
-    val category: Category
+    val name: String
+    val emoji: String
     val amount: Double
+    val currency: String
     val comment: String
     val createdAt: String
 }

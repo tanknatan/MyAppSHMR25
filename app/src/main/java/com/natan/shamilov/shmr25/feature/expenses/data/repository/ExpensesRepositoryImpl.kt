@@ -1,12 +1,12 @@
 package com.natan.shamilov.shmr25.feature.expenses.data.repository
 
-import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.mapper.FinanceMapper
 import com.natan.shamilov.shmr25.app.data.api.model.TransactionDto
+import com.natan.shamilov.shmr25.common.State
 import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
 import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
 import com.natan.shamilov.shmr25.feature.expenses.data.api.ExpensesApi
+import com.natan.shamilov.shmr25.feature.expenses.data.mapper.ExpenseMapper
 import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 import com.natan.shamilov.shmr25.feature.expenses.domain.repository.ExpensesRepository
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class ExpensesRepositoryImpl @Inject constructor(
     private val api: ExpensesApi,
     private val accountRepository: AccountRepository,
-    private val mapper: FinanceMapper
+    private val mapper: ExpenseMapper
 ) : ExpensesRepository {
 
     private val today = LocalDate.now().toString()

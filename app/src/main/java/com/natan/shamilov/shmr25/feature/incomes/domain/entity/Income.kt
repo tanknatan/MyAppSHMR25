@@ -1,6 +1,5 @@
 package com.natan.shamilov.shmr25.feature.incomes.domain.entity
 
-import com.natan.shamilov.shmr25.common.Category
 import com.natan.shamilov.shmr25.common.HistoryScreenEntity
 
 /**
@@ -11,8 +10,10 @@ import com.natan.shamilov.shmr25.common.HistoryScreenEntity
  */
 data class Income(
     override val id: Long,
-    override val category: Category,
+    override val name: String,
+    override val emoji: String,
     override val amount: Double,
+    override val currency: String,
     override val comment: String = "",
-    override val createdAt: String
+    override val createdAt: String,
 ) : HistoryScreenEntity

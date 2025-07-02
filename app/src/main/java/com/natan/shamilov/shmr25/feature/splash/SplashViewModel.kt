@@ -9,7 +9,6 @@ import com.natan.shamilov.shmr25.feature.expenses.domain.repository.ExpensesRepo
 import com.natan.shamilov.shmr25.feature.incomes.domain.repository.IncomesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,13 +25,11 @@ import javax.inject.Inject
 class SplashViewModel @Inject constructor(
     private val loadAccountsListUseCase: LoadAccountsListUseCase,
     private val expensesRepository: ExpensesRepository,
-    private val incomesRepository: IncomesRepository
+    private val incomesRepository: IncomesRepository,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(false)
     val uiState: StateFlow<Boolean> = _uiState.asStateFlow()
-
-    private var dataLoadingJob: Job? = null
 
     init {
         Log.d("SplashViewModel", "Инициализация SplashViewModel")
@@ -41,18 +38,19 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun loadDataInBackground() {
-        dataLoadingJob?.cancel()
-        dataLoadingJob = viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 when (val accountsResult = loadAccountsListUseCase()) {
                     is Result.Success -> {
                         loadTransactionsForAccounts()
                         _uiState.value = true
                     }
+
                     is Result.Error -> {
                         Log.e("SplashViewModel", "Ошибка загрузки аккаунтов: ${accountsResult.exception.message}")
                         _uiState.value = true
                     }
+
                     is Result.Loading -> {
                     }
                 }
@@ -69,9 +67,11 @@ class SplashViewModel @Inject constructor(
                 is Result.Success -> {
                     Log.d("SplashViewModel", "Расходы успешно загружены")
                 }
+
                 is Result.Error -> {
                     Log.e("SplashViewModel", "Ошибка загрузки расходов: ${expensesResult.exception.message}")
                 }
+
                 is Result.Loading -> {
                 }
             }
@@ -81,9 +81,11 @@ class SplashViewModel @Inject constructor(
                 is Result.Success -> {
                     Log.d("SplashViewModel", "Доходы успешно загружены")
                 }
+
                 is Result.Error -> {
                     Log.e("SplashViewModel", "Ошибка загрузки доходов: ${incomesResult.exception.message}")
                 }
+
                 is Result.Loading -> {
                 }
             }
@@ -95,6 +97,5 @@ class SplashViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         Log.d("SplashViewModel", "ViewModel уничтожен, отменяем все задачи")
-        dataLoadingJob?.cancel()
     }
 }

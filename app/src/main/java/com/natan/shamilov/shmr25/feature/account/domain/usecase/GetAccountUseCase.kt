@@ -8,4 +8,4 @@ class GetAccountUseCase @Inject constructor(
     private val repository: AccountRepository
 ) {
     suspend operator fun invoke(): List<Account> = repository.getAccountsList()
-} 
+}

@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.categories.data.api
 
-import com.natan.shamilov.shmr25.app.data.api.model.CategoryDto
+import com.natan.shamilov.shmr25.feature.categories.data.model.CategoryDto
 import retrofit2.http.GET
 
 /**
@@ -11,7 +11,7 @@ import retrofit2.http.GET
 interface CategoriesApi {
     /**
      * Получает список всех категорий
-     * @return список категорий в формате DTO
+     * @return список категорий в формате
      */
     @GET("categories")
     suspend fun getCategories(): List<CategoryDto>

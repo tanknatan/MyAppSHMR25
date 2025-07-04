@@ -101,46 +101,40 @@ class HistoryViewModel @Inject constructor(
 
     private fun loadHistory() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _uiState.value = State.Loading
+            _uiState.value = State.Loading
 
-                val startLocalDate = Instant.ofEpochMilli(_selectedPeriodStart.value)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                val endLocalDate = Instant.ofEpochMilli(_selectedPeriodEnd.value)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
+            val startLocalDate = Instant.ofEpochMilli(_selectedPeriodStart.value)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+            val endLocalDate = Instant.ofEpochMilli(_selectedPeriodEnd.value)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
 
-                val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
-                val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
-                when (
-                    val historyListResult = getHistoryByPeriodUseCase(
-                        startDate = startDate,
-                        endDate = endDate,
-                        isIncome = historyType == HistoryType.INCOME
-                    )
-                ) {
-                    is Result.Error -> {
-                        _uiState.value = State.Error
-                        Log.e("HistoryViewModel", "Ошибка загрузки истории: ${historyListResult.exception.message}")
-                    }
-
-                    Result.Loading -> {
-                        _uiState.value = State.Loading
-                    }
-
-                    is Result.Success<List<HistoryItem>> -> {
-                        _historyUiModel.value = HistoryUiModel(
-                            items = historyListResult.data,
-                            totalAmount = historyListResult.data.sumOf { it.amount }
-                        )
-                        _uiState.value = State.Content
-                    }
+            val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
+            val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
+            when (
+                val historyListResult = getHistoryByPeriodUseCase(
+                    startDate = startDate,
+                    endDate = endDate,
+                    isIncome = historyType == HistoryType.INCOME
+                )
+            ) {
+                is Result.Error -> {
+                    _uiState.value = State.Error
+                    Log.e("HistoryViewModel", "Ошибка загрузки истории: ${historyListResult.exception.message}")
                 }
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                _uiState.value = State.Error
-                Log.e("HistoryViewModel", "Неожиданная ошибка при загрузке истории", e)
+
+                Result.Loading -> {
+                    _uiState.value = State.Loading
+                }
+
+                is Result.Success<List<HistoryItem>> -> {
+                    _historyUiModel.value = HistoryUiModel(
+                        items = historyListResult.data,
+                        totalAmount = historyListResult.data.sumOf { it.amount }
+                    )
+                    _uiState.value = State.Content
+                }
             }
         }
     }

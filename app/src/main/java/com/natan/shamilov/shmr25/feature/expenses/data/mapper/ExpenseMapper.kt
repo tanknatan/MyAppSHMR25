@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.expenses.data.mapper
 
 import com.natan.shamilov.shmr25.common.data.model.TransactionDto
-import com.natan.shamilov.shmr25.common.utils.convertCurrency
+import com.natan.shamilov.shmr25.common.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 import javax.inject.Inject
 

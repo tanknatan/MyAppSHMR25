@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.categories.domain.entity.Category
 import com.natan.shamilov.shmr25.feature.categories.domain.usecase.GetCategoriesListUseCase
 import com.natan.shamilov.shmr25.feature.categories.domain.usecase.LoadCategoriesListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -72,7 +73,7 @@ class CategoriesViewModel @Inject constructor(
     )
 
     private fun loadCategories() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
             if (getCategoriesListUseCase().isEmpty()) {
                 when (val result = loadCategoriesUseCase()) {

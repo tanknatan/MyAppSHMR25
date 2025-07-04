@@ -1,9 +1,9 @@
 package com.natan.shamilov.shmr25.feature.incomes.data.repository
 
+import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.common.data.model.TransactionDto
 import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.feature.incomes.data.api.IncomesApi
 import com.natan.shamilov.shmr25.feature.incomes.data.mapper.IncomeMapper
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income

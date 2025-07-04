@@ -4,21 +4,21 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.domain.entity.Account
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountObserverUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetSelectedAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.dropWhile
-import kotlinx.coroutines.flow.first
+
 /**
  * ViewModel для экрана счетов.
  * Ответственность: Управление данными и состоянием UI для отображения списка счетов,
@@ -65,7 +65,7 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun loadAccounts() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
             _accounts.value = getAccountUseCase()
             _uiState.value = State.Content
@@ -73,7 +73,7 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun observeAll() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             combine(
                 getAccountObserverUseCase(),
                 getSelectedAccountUseCase()

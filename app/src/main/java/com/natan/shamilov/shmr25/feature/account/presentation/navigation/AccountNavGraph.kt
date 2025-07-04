@@ -7,7 +7,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.natan.shamilov.shmr25.app.navigation.NavigationState
+import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountScreen
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.addAccount.AddAccountScreen
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.editAccount.EditAccountScreen

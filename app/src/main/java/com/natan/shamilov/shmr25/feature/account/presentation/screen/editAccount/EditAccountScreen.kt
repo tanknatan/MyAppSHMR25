@@ -7,9 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -28,15 +26,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.navigation.Screen
+import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
 import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.ui.AccountNameInput
-import com.natan.shamilov.shmr25.common.ui.BalanceInput
-import com.natan.shamilov.shmr25.common.ui.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.common.ui.CurrencySelectorButton
-import com.natan.shamilov.shmr25.common.ui.CustomButton
-import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.AccountNameInput
+import com.natan.shamilov.shmr25.common.presentation.ui.BalanceInput
+import com.natan.shamilov.shmr25.common.presentation.ui.CurrencyBottomSheet
+import com.natan.shamilov.shmr25.common.presentation.ui.CurrencySelectorButton
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomButton
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,8 +56,8 @@ fun EditAccountScreen(
     val isFormValid by remember(accountName, balance, selectedCurrency) {
         derivedStateOf {
             accountName.isNotBlank() &&
-                balance.isNotBlank() &&
-                selectedCurrency != null
+                    balance.isNotBlank() &&
+                    selectedCurrency != null
         }
     }
     Scaffold(
@@ -74,14 +73,7 @@ fun EditAccountScreen(
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onSurface)
-                }
+                LoadingScreen(innerPadding = innerPadding)
             }
 
             is State.Error -> {
@@ -91,7 +83,7 @@ fun EditAccountScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Нет сети")
+                    Text(text = stringResource(R.string.not_network))
                 }
             }
 

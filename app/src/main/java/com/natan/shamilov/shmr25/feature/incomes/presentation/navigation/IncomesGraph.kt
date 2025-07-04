@@ -5,7 +5,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.natan.shamilov.shmr25.app.navigation.NavigationState
+import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.feature.history.presentation.navigation.HistoryFlow
 import com.natan.shamilov.shmr25.feature.incomes.presentation.screen.IncomesTodayScreen

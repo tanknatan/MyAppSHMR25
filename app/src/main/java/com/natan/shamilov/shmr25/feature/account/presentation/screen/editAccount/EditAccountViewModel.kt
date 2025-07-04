@@ -55,7 +55,7 @@ class EditAccountViewModel @Inject constructor(
     }
 
     fun loadAccount(inputAccountId: String) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
             val accountId = inputAccountId.toInt()
             val accounts = getAccountUseCase()

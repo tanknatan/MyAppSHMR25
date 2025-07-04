@@ -5,7 +5,7 @@ import androidx.compose.animation.ExitTransition
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.natan.shamilov.shmr25.app.navigation.NavigationState
+import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
 import com.natan.shamilov.shmr25.feature.categories.presentation.screen.CategoriesScreen
 
 fun NavGraphBuilder.catigoriesGraph(navController: NavigationState) {

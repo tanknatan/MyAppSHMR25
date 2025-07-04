@@ -19,7 +19,7 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val accountStartupLoader: AccountStartupLoader
+    private val accountStartupLoader: AccountStartupLoader,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(false)
@@ -32,8 +32,7 @@ class SplashViewModel @Inject constructor(
 
     private fun loadDataInBackground() {
         viewModelScope.launch(Dispatchers.IO) {
-            val result = accountStartupLoader.loadAccounts()
-            // Здесь можно обработать результат (успех/ошибка)
+            accountStartupLoader.loadAccounts()
             _uiState.value = true
         }
     }

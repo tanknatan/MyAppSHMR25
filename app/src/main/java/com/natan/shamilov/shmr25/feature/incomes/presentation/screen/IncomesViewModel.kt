@@ -10,6 +10,7 @@ import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,47 +56,40 @@ class IncomesViewModel @Inject constructor(
     }
 
     private fun loadIncomes() {
-        viewModelScope.launch {
-            try {
-                _uiState.value = State.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.value = State.Loading
 
-                val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
+            val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
 
-                when (val result = loadIncomesByPeriodUseCase(today, today)) {
-                    is Result.Success -> {
-                        val incomes = getIncomesListUseCase()
-                        if (incomes.isEmpty()) {
-                            _uiState.value = State.Content // Пустой список - это валидное состояние для доходов
-                            Log.d("IncomesViewModel", "Список доходов пуст")
-                        } else {
-                            _incomes.value = incomes
-                            _sumOfIncomes.value = incomes.sumOf { it.amount }
-                            _uiState.value = State.Content
-                        }
-                    }
-
-                    is Result.Error -> {
-                        // Пробуем получить данные из локальной БД даже при ошибке загрузки
-                        val incomes = getIncomesListUseCase()
-                        if (incomes.isNotEmpty()) {
-                            _incomes.value = incomes
-                            _sumOfIncomes.value = incomes.sumOf { it.amount }
-                            _uiState.value = State.Content
-                            Log.w("IncomesViewModel", "Используем кэшированные данные: ${result.exception.message}")
-                        } else {
-                            _uiState.value = State.Error
-                            Log.e("IncomesViewModel", "Ошибка загрузки доходов: ${result.exception.message}")
-                        }
-                    }
-
-                    is Result.Loading -> {
-                        _uiState.value = State.Loading
+            when (val result = loadIncomesByPeriodUseCase(today, today)) {
+                is Result.Success -> {
+                    val incomes = getIncomesListUseCase()
+                    if (incomes.isEmpty()) {
+                        _uiState.value = State.Content
+                        Log.d("IncomesViewModel", "Список доходов пуст")
+                    } else {
+                        _incomes.value = incomes
+                        _sumOfIncomes.value = incomes.sumOf { it.amount }
+                        _uiState.value = State.Content
                     }
                 }
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                _uiState.value = State.Error
-                Log.e("IncomesViewModel", "Неожиданная ошибка при загрузке доходов", e)
+
+                is Result.Error -> {
+                    val incomes = getIncomesListUseCase()
+                    if (incomes.isNotEmpty()) {
+                        _incomes.value = incomes
+                        _sumOfIncomes.value = incomes.sumOf { it.amount }
+                        _uiState.value = State.Content
+                        Log.w("IncomesViewModel", "Используем кэшированные данные: ${result.exception.message}")
+                    } else {
+                        _uiState.value = State.Error
+                        Log.e("IncomesViewModel", "Ошибка загрузки доходов: ${result.exception.message}")
+                    }
+                }
+
+                is Result.Loading -> {
+                    _uiState.value = State.Loading
+                }
             }
         }
     }

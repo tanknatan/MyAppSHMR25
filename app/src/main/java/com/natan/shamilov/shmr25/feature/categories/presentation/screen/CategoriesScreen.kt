@@ -1,32 +1,28 @@
 package com.natan.shamilov.shmr25.feature.categories.presentation.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.app.navigation.Screen
+import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.ui.AppCard
-import com.natan.shamilov.shmr25.common.ui.CustomSearchBar
-import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomSearchBar
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesViewModel = hiltViewModel()
+    viewModel: CategoriesViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -48,25 +44,11 @@ fun CategoriesScreen(
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onSurface)
-                }
+                LoadingScreen(innerPadding = innerPadding)
             }
 
             is State.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Нет сети")
-                }
+                ErrorScreen(innerPadding = innerPadding) { viewModel.initialize() }
             }
 
             is State.Content -> {
@@ -82,7 +64,7 @@ fun CategoriesScreen(
 @Composable
 fun CategoriesContent(
     viewModel: CategoriesViewModel = hiltViewModel(),
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
 ) {
     val query by viewModel.query.collectAsStateWithLifecycle()
     val filteredCategories by viewModel.filteredCategories.collectAsStateWithLifecycle()

@@ -5,20 +5,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,17 +20,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.app.navigation.Screen
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.common.ui.AccountNameInput
-import com.natan.shamilov.shmr25.common.ui.BalanceInput
-import com.natan.shamilov.shmr25.common.ui.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.common.ui.CurrencyOption
-import com.natan.shamilov.shmr25.common.ui.CurrencySelectorButton
-import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
+import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
+import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.presentation.ui.AccountNameInput
+import com.natan.shamilov.shmr25.common.presentation.ui.BalanceInput
+import com.natan.shamilov.shmr25.common.presentation.ui.CurrencyBottomSheet
+import com.natan.shamilov.shmr25.common.presentation.ui.CurrencySelectorButton
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomButton
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import kotlinx.coroutines.launch
 
 /**
@@ -48,7 +45,6 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun AddAccountScreen(
-    modifier: Modifier = Modifier,
     viewModel: AddAccountViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
 ) {
@@ -67,14 +63,7 @@ fun AddAccountScreen(
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onSurface)
-                }
+                LoadingScreen(innerPadding = innerPadding)
             }
 
             is State.Error -> {
@@ -84,7 +73,7 @@ fun AddAccountScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "Нет сети")
+                    Text(text = stringResource(R.string.not_network))
                 }
             }
 
@@ -106,8 +95,6 @@ fun AddAccountContent(
     paddingValues: PaddingValues,
     onBack: () -> Unit,
 ) {
-    val accountCreated by viewModel.createAccountComplete.collectAsStateWithLifecycle()
-
     var accountName by remember { mutableStateOf("") }
     var balance by remember { mutableStateOf("") }
     var selectedCurrency by remember { mutableStateOf<CurrencyOption?>(null) }
@@ -115,14 +102,8 @@ fun AddAccountContent(
     val isFormValid by remember(accountName, balance, selectedCurrency) {
         derivedStateOf {
             accountName.isNotBlank() &&
-                balance.isNotBlank() &&
-                selectedCurrency != null
-        }
-    }
-    LaunchedEffect(accountCreated) {
-        if (accountCreated) {
-            viewModel.resetCreateAccountComplete()
-            onBack()
+                    balance.isNotBlank() &&
+                    selectedCurrency != null
         }
     }
 
@@ -177,8 +158,8 @@ fun AddAccountContent(
             }
         )
         Spacer(Modifier.height(20.dp))
-        Button(
-            onClick = {
+        CustomButton(
+            onButtonClick = {
                 viewModel.createAccount(
                     name = accountName,
                     balance = balance,
@@ -186,19 +167,8 @@ fun AddAccountContent(
                     onSuccess = { onBack() }
                 )
             },
-            shape = RoundedCornerShape(percent = 50), // скруглённые боковины
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            enabled = isFormValid,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.surface,
-                disabledContentColor = MaterialTheme.colorScheme.onSurface
-            )
-        ) {
-            Text(text = "Создать счёт")
-        }
+            isEnabled = isFormValid,
+            text = stringResource(R.string.create_account)
+        )
     }
 }

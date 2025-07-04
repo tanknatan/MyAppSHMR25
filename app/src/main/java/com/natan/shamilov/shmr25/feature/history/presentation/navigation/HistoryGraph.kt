@@ -6,7 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.natan.shamilov.shmr25.app.navigation.NavigationState
+import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.feature.history.presentation.screen.HistoryScreen
 

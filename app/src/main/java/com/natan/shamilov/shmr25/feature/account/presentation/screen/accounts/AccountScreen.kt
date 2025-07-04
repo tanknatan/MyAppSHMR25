@@ -1,33 +1,32 @@
 package com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.common.ui.AccountDropdownMenu
-import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.ui.MyFloatingActionButton
-import com.natan.shamilov.shmr25.common.ui.TopGreenCard
-import com.natan.shamilov.shmr25.app.navigation.Screen
+import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
+import com.natan.shamilov.shmr25.common.domain.entity.Account
+import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.presentation.ui.AccountDropdownMenu
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.common.presentation.ui.MyFloatingActionButton
+import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
 
 @Composable
 fun AccountScreen(
-    modifier: Modifier = Modifier,
     viewModel: AccountViewModel = hiltViewModel(),
     onFABClick: () -> Unit,
+    onEditAccountClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -43,7 +42,11 @@ fun AccountScreen(
                 Screen.Account.title,
                 Screen.Account.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { }
+                onNavigateClick = {
+                    viewModel.selectedAccount.value?.id?.let {
+                        onEditAccountClick(it.toString())
+                    }
+                }
             )
         },
         floatingActionButton = {
@@ -52,31 +55,24 @@ fun AccountScreen(
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onSurface)
-                }
+                LoadingScreen(innerPadding = innerPadding)
             }
 
             is State.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = "Нет сети")
-                }
+                ErrorScreen(innerPadding = innerPadding) { viewModel.initialize() }
             }
 
             is State.Content -> {
+                val accounts by viewModel.accounts.collectAsStateWithLifecycle()
+                val selectedAccount by viewModel.selectedAccount.collectAsStateWithLifecycle()
                 AccountContent(
                     paddingValues = innerPadding,
-                    viewModel = viewModel
+                    accounts = accounts,
+                    selectedAccount = selectedAccount,
+                    onAccountSelected = {
+                        viewModel.selectAccount(it)
+                    }
+
                 )
             }
         }
@@ -84,14 +80,19 @@ fun AccountScreen(
 }
 
 @Composable
-fun AccountContent(viewModel: AccountViewModel, paddingValues: PaddingValues) {
-    val accounts by viewModel.accounts.collectAsStateWithLifecycle()
-    val selectedAccount by viewModel.selectedAccount.collectAsStateWithLifecycle()
+fun AccountContent(
+    paddingValues: PaddingValues,
+    accounts: List<Account>,
+    selectedAccount: Account?,
+    onAccountSelected: (Account) -> Unit,
+) {
     Column(modifier = Modifier.padding(paddingValues)) {
         AccountDropdownMenu(
             accounts = accounts,
             selectedAccount = selectedAccount,
-            onAccountSelected = { viewModel.selectAccount(it) }
+            onAccountSelected = {
+                onAccountSelected(it)
+            }
         )
         selectedAccount?.let { account ->
             TopGreenCard(
@@ -100,11 +101,11 @@ fun AccountContent(viewModel: AccountViewModel, paddingValues: PaddingValues) {
                 currency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {},
-                avatarEmoji = "\uD83D\uDCB0"
+                avatarEmoji = stringResource(R.string.avatarEmoji)
             )
 
             TopGreenCard(
-                title = "Валюта",
+                title = stringResource(R.string.currency),
                 cucurrency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {}

@@ -1,37 +1,21 @@
 package com.natan.shamilov.shmr25.feature.account.data.repository
 
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.mapper.FinanceMapper
-import com.natan.shamilov.shmr25.app.data.api.model.CreateAccountRequest
+import com.natan.shamilov.shmr25.common.api.AccountProvider
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.Account
 import com.natan.shamilov.shmr25.feature.account.data.api.AccountApi
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
+import com.natan.shamilov.shmr25.feature.account.data.model.AccountRequestBody
 import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
  * Реализация репозитория для работы со счетами.
- * Ответственность: Управление данными счетов, включая кэширование в памяти и
- * синхронизацию с удаленным API. Предоставляет единый интерфейс для доступа к данным
- * счетов из разных источников.
+ * Управляет созданием, редактированием, удалением и получением счетов.
  */
 class AccountRepositoryImpl @Inject constructor(
     private val api: AccountApi,
-    private val mapper: FinanceMapper
+    private val accountProvider: AccountProvider,
 ) : AccountRepository {
-
-    private var accountsList = emptyList<Account>()
-
-    override suspend fun getAccountsList(): List<Account> = withContext(Dispatchers.IO) {
-        accountsList
-    }
-
-    override suspend fun loadAccountsList() = Result.execute {
-        accountsList = api.getAccountsList().map { dto ->
-            mapper.mapAccountDtoToDomain(dto)
-        }
-    }
 
     override suspend fun createAccount(
         name: String,
@@ -40,14 +24,17 @@ class AccountRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         val result = Result.execute {
             api.createAccount(
-                CreateAccountRequest(
+                AccountRequestBody(
                     name = name,
                     balance = balance,
                     currency = currency
                 )
             )
         }
-        loadAccountsList()
+        if (result is Result.Success) {
+            accountProvider.loadAccountsList()
+            accountProvider.setSelectedAccount(accountProvider.accountsList.value.last().id)
+        }
         return result
     }
 
@@ -55,7 +42,41 @@ class AccountRepositoryImpl @Inject constructor(
         val result = Result.execute {
             api.deleteAccount(id)
         }
-        loadAccountsList()
         return result
     }
+
+    override suspend fun editAccount(
+        accountId: Int,
+        name: String,
+        balance: String,
+        currency: String
+    ): Result<Unit> {
+        val result = Result.execute {
+            api.editAccount(
+                accoutId = accountId,
+                AccountRequestBody(
+                    name = name,
+                    balance = balance,
+                    currency = currency
+                )
+            )
+        }
+        if (result is Result.Success) {
+            accountProvider.loadAccountsList()
+            accountProvider.setSelectedAccount(accountProvider.selectedAccount.value!!.id)
+        }
+        return result
+    }
+
+    override suspend fun getAccountsList(): List<Account> {
+        return accountProvider.getAccountsList()
+    }
+
+    override suspend fun getSelectedAccount(): Account? {
+        return accountProvider.getSelectedAccount()
+    }
+
+    override fun observeAccountsList() = accountProvider.accountsList
+    override fun observeSelectedAccount() = accountProvider.selectedAccount
+    override fun setSelectedAccount(accountId: Int) = accountProvider.setSelectedAccount(accountId)
 }

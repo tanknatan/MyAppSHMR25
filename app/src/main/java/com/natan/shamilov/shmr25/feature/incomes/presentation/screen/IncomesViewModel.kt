@@ -4,13 +4,13 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +29,7 @@ import javax.inject.Inject
 class IncomesViewModel @Inject constructor(
     private val getIncomesListUseCase: GetIncomesListUseCase,
     private val loadIncomesByPeriodUseCase: LoadIncomesByPeriodUseCase,
-    private val networkStateReceiver: NetworkStateReceiver
+    private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
     private val _incomes = MutableStateFlow<List<Income>>(emptyList())
@@ -41,11 +41,8 @@ class IncomesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private var dataLoadingJob: Job? = null
-    private var networkJob: Job? = null
-
     init {
-        networkJob = viewModelScope.launch {
+        viewModelScope.launch {
             networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
                 if (isAvailable && _uiState.value == State.Error) {
                     loadIncomes()
@@ -59,46 +56,40 @@ class IncomesViewModel @Inject constructor(
     }
 
     private fun loadIncomes() {
-        dataLoadingJob?.cancel()
-        dataLoadingJob = viewModelScope.launch {
-            try {
-                _uiState.value = State.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.value = State.Loading
 
-                val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
+            val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
 
-                when (val result = loadIncomesByPeriodUseCase(today, today)) {
-                    is Result.Success -> {
-                        val incomes = getIncomesListUseCase()
-                        if (incomes.isEmpty()) {
-                            _uiState.value = State.Content // Пустой список - это валидное состояние для доходов
-                            Log.d("IncomesViewModel", "Список доходов пуст")
-                        } else {
-                            _incomes.value = incomes
-                            _sumOfIncomes.value = incomes.sumOf { it.amount }
-                            _uiState.value = State.Content
-                        }
-                    }
-                    is Result.Error -> {
-                        // Пробуем получить данные из локальной БД даже при ошибке загрузки
-                        val incomes = getIncomesListUseCase()
-                        if (incomes.isNotEmpty()) {
-                            _incomes.value = incomes
-                            _sumOfIncomes.value = incomes.sumOf { it.amount }
-                            _uiState.value = State.Content
-                            Log.w("IncomesViewModel", "Используем кэшированные данные: ${result.exception.message}")
-                        } else {
-                            _uiState.value = State.Error
-                            Log.e("IncomesViewModel", "Ошибка загрузки доходов: ${result.exception.message}")
-                        }
-                    }
-                    is Result.Loading -> {
-                        _uiState.value = State.Loading
+            when (val result = loadIncomesByPeriodUseCase(today, today)) {
+                is Result.Success -> {
+                    val incomes = getIncomesListUseCase()
+                    if (incomes.isEmpty()) {
+                        _uiState.value = State.Content
+                        Log.d("IncomesViewModel", "Список доходов пуст")
+                    } else {
+                        _incomes.value = incomes
+                        _sumOfIncomes.value = incomes.sumOf { it.amount }
+                        _uiState.value = State.Content
                     }
                 }
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                _uiState.value = State.Error
-                Log.e("IncomesViewModel", "Неожиданная ошибка при загрузке доходов", e)
+
+                is Result.Error -> {
+                    val incomes = getIncomesListUseCase()
+                    if (incomes.isNotEmpty()) {
+                        _incomes.value = incomes
+                        _sumOfIncomes.value = incomes.sumOf { it.amount }
+                        _uiState.value = State.Content
+                        Log.w("IncomesViewModel", "Используем кэшированные данные: ${result.exception.message}")
+                    } else {
+                        _uiState.value = State.Error
+                        Log.e("IncomesViewModel", "Ошибка загрузки доходов: ${result.exception.message}")
+                    }
+                }
+
+                is Result.Loading -> {
+                    _uiState.value = State.Loading
+                }
             }
         }
     }
@@ -106,7 +97,5 @@ class IncomesViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         Log.d("IncomesViewModel", "ViewModel уничтожен, отменяем все задачи")
-        dataLoadingJob?.cancel()
-        networkJob?.cancel()
     }
 }

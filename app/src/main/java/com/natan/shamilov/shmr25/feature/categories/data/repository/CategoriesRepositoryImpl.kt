@@ -1,10 +1,12 @@
 package com.natan.shamilov.shmr25.feature.categories.data.repository
 
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.mapper.FinanceMapper
-import com.natan.shamilov.shmr25.common.Category
+import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.feature.categories.data.api.CategoriesApi
+import com.natan.shamilov.shmr25.feature.categories.data.mapper.CategoriesMapper
+import com.natan.shamilov.shmr25.feature.categories.domain.entity.Category
 import com.natan.shamilov.shmr25.feature.categories.domain.repository.CategoriesRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -17,15 +19,21 @@ import javax.inject.Inject
  */
 class CategoriesRepositoryImpl @Inject constructor(
     private val api: CategoriesApi,
-    private val mapper: FinanceMapper
+    private val mapper: CategoriesMapper,
 ) : CategoriesRepository {
+
+    private var categoriesList = emptyList<Category>()
+
+    override suspend fun getCategoriesList(): List<Category> = withContext(Dispatchers.IO) {
+        categoriesList
+    }
 
     /**
      * Получает список категорий из API и преобразует их в доменные модели
      * @return результат операции со списком категорий
      */
-    override suspend fun getCategoriesList(): Result<List<Category>> = Result.execute {
-        api.getCategories().map { dto ->
+    override suspend fun loadCategoriesList() = Result.execute {
+        categoriesList = api.getCategories().map { dto ->
             mapper.mapCategoryDtoToDomain(dto)
         }
     }

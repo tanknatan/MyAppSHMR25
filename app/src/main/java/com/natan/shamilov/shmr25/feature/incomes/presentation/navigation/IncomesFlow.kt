@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.incomes.presentation.navigation
 
-import com.natan.shamilov.shmr25.common.Screen
+import com.natan.shamilov.shmr25.common.domain.entity.Screen
 
 sealed class IncomesFlow(override val route: String) : Screen {
 

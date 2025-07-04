@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.incomes.domain.repository
 
-import com.natan.shamilov.shmr25.app.data.api.Result
+import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 
 interface IncomesRepository {

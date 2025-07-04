@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.account.presentation.navigation
 
-import com.natan.shamilov.shmr25.common.Screen
+import com.natan.shamilov.shmr25.common.domain.entity.Screen
 
 sealed class AccountFlow(override val route: String) : Screen {
 
@@ -10,9 +10,12 @@ sealed class AccountFlow(override val route: String) : Screen {
 
     data object AddAccount : AccountFlow(ADD_ACCOUNT_ROUTE)
 
+    data object EditAccount : AccountFlow(EDIT_ACCOUNT_ROUTE)
+
     companion object {
         const val ACCOUNT_GRAPH = "account_graph"
         const val ACCOUNT_ROUTE = "account_route"
         const val ADD_ACCOUNT_ROUTE = "add_account_route"
+        const val EDIT_ACCOUNT_ROUTE = "edit_account_route"
     }
 }

@@ -12,15 +12,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.navigation.Screen
-import com.natan.shamilov.shmr25.common.ui.AppCard
-import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.ui.ThemeCard
+import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
+import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.ThemeCard
 
 @Composable
-fun OptionScreen(
-    modifier: Modifier = Modifier
-) {
+fun OptionScreen() {
     Scaffold(
         topBar = {
             CustomTopAppBar(

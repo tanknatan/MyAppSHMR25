@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.incomes.domain.usecase
 
-import com.natan.shamilov.shmr25.app.data.api.Result
+import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.repository.IncomesRepository
 import javax.inject.Inject

@@ -1,12 +1,12 @@
 package com.natan.shamilov.shmr25.feature.expenses.data.repository
 
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.mapper.FinanceMapper
-import com.natan.shamilov.shmr25.app.data.api.model.TransactionDto
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.data.model.TransactionDto
+import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.domain.entity.Account
+import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.feature.expenses.data.api.ExpensesApi
+import com.natan.shamilov.shmr25.feature.expenses.data.mapper.ExpenseMapper
 import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 import com.natan.shamilov.shmr25.feature.expenses.domain.repository.ExpensesRepository
 import kotlinx.coroutines.Dispatchers
@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 class ExpensesRepositoryImpl @Inject constructor(
     private val api: ExpensesApi,
-    private val accountRepository: AccountRepository,
-    private val mapper: FinanceMapper
+    private val accountProvider: AccountProvider,
+    private val mapper: ExpenseMapper
 ) : ExpensesRepository {
 
     private val today = LocalDate.now().toString()
@@ -41,7 +41,7 @@ class ExpensesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadTodayExpenses(): Result<Unit> = Result.execute {
-        val accounts = accountRepository.getAccountsList()
+        val accounts = accountProvider.getAccountsList()
         todayExpensesList = loadExpensesForAccounts(accounts, today, today)
     }
 
@@ -49,7 +49,7 @@ class ExpensesRepositoryImpl @Inject constructor(
         startDate: String,
         endDate: String
     ): Result<List<Expense>> = Result.execute {
-        val accounts = accountRepository.getAccountsList()
+        val accounts = accountProvider.getAccountsList()
         val expensesList = loadExpensesForAccounts(accounts, startDate, endDate)
             .filter { !it.category.isIncome }
 

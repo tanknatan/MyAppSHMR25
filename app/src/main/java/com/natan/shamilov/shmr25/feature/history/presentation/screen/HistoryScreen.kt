@@ -1,44 +1,40 @@
 package com.natan.shamilov.shmr25.feature.history.presentation.screen
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.common.ui.AppCard
-import com.natan.shamilov.shmr25.common.ui.CustomDatePickerDialog
-import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.ui.TopGreenCard
+import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomDatePickerDialog
+import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun HistoryScreen(
-    modifier: Modifier = Modifier,
     viewModel: HistoryViewModel = hiltViewModel(),
     type: HistoryType,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -62,25 +58,11 @@ fun HistoryScreen(
     ) { innerPadding ->
         when (uiState) {
             is State.Loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onSurface)
-                }
+                LoadingScreen(innerPadding = innerPadding)
             }
 
             is State.Error -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = stringResource(R.string.no_network))
-                }
+                ErrorScreen(innerPadding = innerPadding) { viewModel.initialize(type) }
             }
 
             is State.Content -> {
@@ -96,11 +78,14 @@ fun HistoryScreen(
 @Composable
 private fun HistoryContent(
     paddingValues: PaddingValues,
-    viewModel: HistoryViewModel
+    viewModel: HistoryViewModel,
 ) {
     val historyUiModel by viewModel.historyUiModel.collectAsStateWithLifecycle()
     val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()
     val endDate by viewModel.selectedPeriodEnd.collectAsStateWithLifecycle()
+
+    val timeFormatter = remember { DateTimeFormatter.ofPattern("HH:mm") }
+    val isoFormatter = remember { DateTimeFormatter.ISO_DATE_TIME }
 
     var showDialog by remember { mutableStateOf(false) }
     var isStartDatePicker by remember { mutableStateOf(true) }
@@ -144,13 +129,14 @@ private fun HistoryContent(
                     key = { "history_${it.id}" }
                 ) { item ->
                     AppCard(
-                        title = item.title,
+                        title = item.name,
                         amount = item.amount,
-                        subAmount = item.time,
+                        subAmount = LocalDateTime.parse(item.createdAt, isoFormatter).format(timeFormatter),
                         avatarEmoji = item.emoji,
                         subtitle = item.comment,
                         canNavigate = true,
-                        onNavigateClick = {}
+                        onNavigateClick = {},
+                        currency = item.currency
                     )
                 }
             }

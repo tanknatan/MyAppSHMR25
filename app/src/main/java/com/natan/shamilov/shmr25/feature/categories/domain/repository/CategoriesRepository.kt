@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.categories.domain.repository
 
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.Category
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.feature.categories.domain.entity.Category
 
 /**
  * Интерфейс репозитория для работы с категориями.
@@ -13,5 +13,7 @@ interface CategoriesRepository {
      * Получает список всех категорий
      * @return результат операции со списком категорий
      */
-    suspend fun getCategoriesList(): Result<List<Category>>
+    suspend fun loadCategoriesList(): Result<Unit>
+
+    suspend fun getCategoriesList(): List<Category>
 }

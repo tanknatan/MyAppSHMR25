@@ -28,10 +28,18 @@
     <string name="start_date">Начало</string>
     <string name="end_date">Конец</string>
     <string name="add_account">Добавить счет</string>
+    <string name="edit_account">Редактировать счет</string>
     <string name="expenses_history">История расходов</string>
     <string name="incomes_history">История доходов</string>
     <string name="history">История</string>
     <string name="balance">Баланс</string>
     <string name="no_network">Нет сети</string>
     <string name="total_amount">Сумма</string>
+    <string name="save">Сохранить изменения</string>
+    <string name="avatarEmoji">💰</string>
+    <string name="currency">Валюта</string>
+    <string name="create_account">Создать счёт</string>
+    <string name="not_network">Нет сети</string>
+    <string name="retry">Повторить</string>
+    <string name="choose_account">Выберите аккаунт</string>
 </resources>

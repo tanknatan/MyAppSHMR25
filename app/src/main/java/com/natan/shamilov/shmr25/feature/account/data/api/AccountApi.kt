@@ -1,11 +1,13 @@
 package com.natan.shamilov.shmr25.feature.account.data.api
 
-import com.natan.shamilov.shmr25.app.data.api.model.AccountDto
-import com.natan.shamilov.shmr25.app.data.api.model.CreateAccountRequest
+import com.natan.shamilov.shmr25.common.data.model.AccountDto
+import com.natan.shamilov.shmr25.feature.account.data.model.AccountRequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**
@@ -19,11 +21,17 @@ interface AccountApi {
 
     @POST("accounts")
     suspend fun createAccount(
-        @Body requestBody: CreateAccountRequest
+        @Body requestBody: AccountRequestBody
     )
 
     @DELETE("accounts")
     suspend fun deleteAccount(
         @Query("id") accountId: Int
+    )
+
+    @PUT("accounts/{id}")
+    suspend fun editAccount(
+        @Path("id") accoutId: Int,
+        @Body requestBody: AccountRequestBody
     )
 }

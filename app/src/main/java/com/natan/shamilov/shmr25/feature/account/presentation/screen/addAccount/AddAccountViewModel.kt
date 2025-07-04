@@ -4,12 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.Account
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.CreateAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,14 +33,8 @@ class AddAccountViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private val _createAccountComplete = MutableStateFlow(false)
-    val createAccountComplete: StateFlow<Boolean> = _createAccountComplete.asStateFlow()
-
-    private var dataLoadingJob: Job? = null
-    private var networkJob: Job? = null
-
     init {
-        networkJob = viewModelScope.launch {
+        viewModelScope.launch {
             networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
                 _uiState.value = if (isAvailable) {
                     State.Content
@@ -51,17 +45,13 @@ class AddAccountViewModel @Inject constructor(
         }
     }
 
-    fun resetCreateAccountComplete() {
-        _createAccountComplete.value = false
-    }
-
     fun createAccount(
         name: String,
         balance: String,
         currency: String,
         onSuccess: () -> Unit
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 _uiState.value = State.Loading
 
@@ -89,7 +79,5 @@ class AddAccountViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         Log.d("AddAccountViewModel", "ViewModel уничтожен, отменяем все задачи")
-        dataLoadingJob?.cancel()
-        networkJob?.cancel()
     }
 }

@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.feature.account.data.api
 
-import com.natan.shamilov.shmr25.app.data.api.model.AccountDto
-import com.natan.shamilov.shmr25.app.data.api.model.CreateAccountRequest
+import com.natan.shamilov.shmr25.common.data.model.AccountDto
 import com.natan.shamilov.shmr25.feature.account.data.model.AccountRequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -22,7 +21,7 @@ interface AccountApi {
 
     @POST("accounts")
     suspend fun createAccount(
-        @Body requestBody: CreateAccountRequest
+        @Body requestBody: AccountRequestBody
     )
 
     @DELETE("accounts")

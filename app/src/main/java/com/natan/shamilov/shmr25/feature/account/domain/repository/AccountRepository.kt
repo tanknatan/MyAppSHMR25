@@ -1,26 +1,13 @@
 package com.natan.shamilov.shmr25.feature.account.domain.repository
 
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.Account
+import kotlinx.coroutines.flow.StateFlow
 
 /**
- * Интерфейс репозитория для работы со счетами.
- * Ответственность: Определение контракта для операций со счетами в доменном слое,
- * включая получение списка счетов, создание и удаление счетов.
+ * Интерфейс репозитория для управления счетами (создание, редактирование, удаление).
  */
 interface AccountRepository {
-    /**
-     * Получает список всех счетов из локального кэша
-     * @return список счетов
-     */
-    suspend fun getAccountsList(): List<Account>
-
-    /**
-     * Загружает список счетов с сервера
-     * @return результат операции
-     */
-    suspend fun loadAccountsList(): Result<Unit>
-
     /**
      * Создает новый счет
      * @param name название счета
@@ -43,4 +30,12 @@ interface AccountRepository {
         balance: String,
         currency: String
     ): Result<Unit>
+
+    suspend fun getAccountsList(): List<Account>
+
+    // Новые методы для реактивного подхода
+    fun observeAccountsList(): StateFlow<List<Account>>
+    fun observeSelectedAccount(): StateFlow<Account?>
+    suspend fun getSelectedAccount(): Account?
+    fun setSelectedAccount(accountId: Int)
 }

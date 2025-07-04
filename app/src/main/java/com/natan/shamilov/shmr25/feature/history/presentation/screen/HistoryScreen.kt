@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.ui.AppCard
 import com.natan.shamilov.shmr25.common.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar

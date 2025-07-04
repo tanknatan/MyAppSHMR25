@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.expenses.domain.entity
 
-import com.natan.shamilov.shmr25.common.HistoryScreenEntity
+import com.natan.shamilov.shmr25.common.domain.entity.HistoryScreenEntity
 
 /**
  * Доменная модель расхода.

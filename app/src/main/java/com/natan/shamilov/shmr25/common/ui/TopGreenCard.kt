@@ -31,6 +31,8 @@ import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.ui.theme.dep
 import com.natan.shamilov.shmr25.common.ui.theme.rodotoFont
+import com.natan.shamilov.shmr25.common.utils.convertCurrency
+import com.natan.shamilov.shmr25.common.utils.toCurrencyString
 
 @JvmOverloads
 @Composable
@@ -109,7 +111,7 @@ fun TopGreenCard(
             }
             if (amount != null) {
                 Text(
-                    text = amount.toCurrencyString(currency = currency?.toCurrencySymbol() ?: "₽"),
+                    text = amount.toCurrencyString(currency = currency?.convertCurrency() ?: "₽"),
                     style = MaterialTheme.typography.bodyLarge,
                     fontSize = 16.sp,
                     color = Color(0xFF1D1B20),

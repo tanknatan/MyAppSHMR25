@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.app.data.api.model
+package com.natan.shamilov.shmr25.common.data.model
 
 import com.natan.shamilov.shmr25.feature.categories.data.model.CategoryDto
 import com.squareup.moshi.Json

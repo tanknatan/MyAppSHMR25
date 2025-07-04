@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.app.data.api
+package com.natan.shamilov.shmr25.common.data.model
 
 import kotlinx.coroutines.delay
 import retrofit2.HttpException

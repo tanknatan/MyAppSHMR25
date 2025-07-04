@@ -5,12 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -27,18 +23,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.app.navigation.Screen
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.ui.AccountNameInput
 import com.natan.shamilov.shmr25.common.ui.BalanceInput
 import com.natan.shamilov.shmr25.common.ui.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.common.ui.CurrencyOption
 import com.natan.shamilov.shmr25.common.ui.CurrencySelectorButton
+import com.natan.shamilov.shmr25.common.ui.CustomButton
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.ui.currencyOptions
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,6 +49,17 @@ fun EditAccountScreen(
 
     LaunchedEffect(accountId) {
         viewModel.loadAccount(accountId)
+    }
+    val accountName by viewModel.accountName.collectAsStateWithLifecycle()
+    val balance by viewModel.balance.collectAsStateWithLifecycle()
+    val selectedCurrency by viewModel.selectedCurrency.collectAsStateWithLifecycle()
+
+    val isFormValid by remember(accountName, balance, selectedCurrency) {
+        derivedStateOf {
+            accountName.isNotBlank() &&
+                balance.isNotBlank() &&
+                selectedCurrency != null
+        }
     }
     Scaffold(
         topBar = {
@@ -90,7 +99,13 @@ fun EditAccountScreen(
                 EditAccountContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel,
-                    onBack = { onBackPressed() },
+                    onBackPressed = {
+                        onBackPressed()
+                    },
+                    accountName = accountName,
+                    balance = balance,
+                    selectedCurrency = selectedCurrency,
+                    isFormValid = isFormValid
                 )
             }
         }
@@ -102,30 +117,12 @@ fun EditAccountScreen(
 fun EditAccountContent(
     viewModel: EditAccountViewModel,
     paddingValues: PaddingValues,
-    onBack: () -> Unit,
+    onBackPressed: () -> Unit,
+    accountName: String,
+    balance: String,
+    selectedCurrency: CurrencyOption?,
+    isFormValid: Boolean,
 ) {
-    val account by viewModel.account.collectAsStateWithLifecycle()
-
-    var accountName by remember { mutableStateOf("") }
-    var balance by remember { mutableStateOf("") }
-    var selectedCurrency by remember { mutableStateOf<CurrencyOption?>(null) }
-
-    val isFormValid by remember(accountName, balance, selectedCurrency) {
-        derivedStateOf {
-            accountName.isNotBlank() &&
-                balance.isNotBlank() &&
-                selectedCurrency != null
-        }
-    }
-
-    LaunchedEffect(account) {
-        account?.let {
-            accountName = it.name
-            balance = it.balance.toString()
-            selectedCurrency = currencyOptions.find { option -> option.code == it.currency }
-        }
-    }
-
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true
     )
@@ -141,7 +138,7 @@ fun EditAccountContent(
                 }
             },
             onCurrencySelected = {
-                selectedCurrency = it
+                viewModel.onCurrencyChange(it)
                 coroutineScope.launch {
                     sheetState.hide()
                     showBottomSheet = false
@@ -158,12 +155,12 @@ fun EditAccountContent(
     ) {
         AccountNameInput(
             accountName = accountName,
-            onNameChange = { accountName = it },
+            onNameChange = { viewModel.onAccountNameChange(it) },
             isError = accountName.isBlank()
         )
         BalanceInput(
             balance = balance,
-            onBalanceChange = { balance = it },
+            onBalanceChange = { viewModel.onBalanceChange(it) },
             isError = balance.isBlank()
         )
         Spacer(Modifier.height(12.dp))
@@ -177,28 +174,17 @@ fun EditAccountContent(
             }
         )
         Spacer(Modifier.height(20.dp))
-        Button(
-            onClick = {
+        CustomButton(
+            onButtonClick = {
                 viewModel.editAccount(
                     name = accountName,
                     balance = balance,
                     currency = selectedCurrency!!.code,
-                    onSuccess = { onBack() }
+                    onSuccess = { onBackPressed() }
                 )
             },
-            shape = RoundedCornerShape(percent = 50),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            enabled = isFormValid,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-                disabledContainerColor = MaterialTheme.colorScheme.surface,
-                disabledContentColor = MaterialTheme.colorScheme.onSurface
-            )
-        ) {
-            Text(text = "Сохранить изменения")
-        }
+            text = stringResource(R.string.save),
+            isEnabled = isFormValid
+        )
     }
 }

@@ -29,6 +29,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
+import com.natan.shamilov.shmr25.common.domain.entity.currencyOptions
 
 @Composable
 fun CurrencySelectorButton(

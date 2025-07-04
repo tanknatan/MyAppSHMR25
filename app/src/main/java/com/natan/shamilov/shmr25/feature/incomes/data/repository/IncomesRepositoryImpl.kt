@@ -1,9 +1,9 @@
 package com.natan.shamilov.shmr25.feature.incomes.data.repository
 
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.app.data.api.model.TransactionDto
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.data.model.TransactionDto
+import com.natan.shamilov.shmr25.common.domain.entity.Account
+import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.feature.incomes.data.api.IncomesApi
 import com.natan.shamilov.shmr25.feature.incomes.data.mapper.IncomeMapper
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class IncomesRepositoryImpl @Inject constructor(
     private val api: IncomesApi,
-    private val accountRepository: AccountRepository,
+    private val accountProvider: AccountProvider,
     private val mapper: IncomeMapper
 ) : IncomesRepository {
 
@@ -35,7 +35,7 @@ class IncomesRepositoryImpl @Inject constructor(
     }
 
     override suspend fun loadTodayIncomes(): Result<Unit> = Result.execute {
-        val accounts = accountRepository.getAccountsList()
+        val accounts = accountProvider.getAccountsList()
         todayIncomesList = loadIncomesForAccounts(accounts, today, today)
     }
 
@@ -43,7 +43,7 @@ class IncomesRepositoryImpl @Inject constructor(
         startDate: String,
         endDate: String
     ): Result<List<Income>> = Result.execute {
-        val accounts = accountRepository.getAccountsList()
+        val accounts = accountProvider.getAccountsList()
         val incomesList = loadIncomesForAccounts(accounts, startDate, endDate)
             .filter { it.category.isIncome }
 

@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.app.navigation
 
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.Screen as commoScreen
+import com.natan.shamilov.shmr25.common.domain.entity.Screen as commoScreen
 
 /**
  * Определяет все экраны приложения с их маршрутами и UI-атрибутами.
@@ -77,7 +77,7 @@ sealed class Screen(
         Screen(
             route = EDIT_ACCOUNT_ROUTE,
             title = R.string.edit_account,
-            R.drawable.ic_accept,
+            null,
             R.drawable.ic_back
         )
 

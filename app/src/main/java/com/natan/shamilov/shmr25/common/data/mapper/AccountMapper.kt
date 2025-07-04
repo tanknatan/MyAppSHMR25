@@ -1,7 +1,7 @@
-package com.natan.shamilov.shmr25.feature.account.data.mapper
+package com.natan.shamilov.shmr25.common.data.mapper
 
-import com.natan.shamilov.shmr25.app.data.api.model.AccountDto
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
+import com.natan.shamilov.shmr25.common.data.model.AccountDto
+import com.natan.shamilov.shmr25.common.domain.entity.Account
 import javax.inject.Inject
 
 class AccountMapper @Inject constructor() {

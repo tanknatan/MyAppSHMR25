@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 import com.natan.shamilov.shmr25.feature.expenses.domain.usecase.GetExpensesListUseCase
 import com.natan.shamilov.shmr25.feature.expenses.domain.usecase.LoadExpensesByPeriodUseCase
@@ -53,76 +53,44 @@ class ExpensesViewModel @Inject constructor(
         loadExpenses()
     }
 
-    private fun loadExpenses() {
+    fun loadExpenses() {
         viewModelScope.launch {
-            try {
-                _uiState.value = State.Loading
+            _uiState.value = State.Loading
 
-                val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
+            val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
 
-                when (val result = loadExpensesByPeriodUseCase(today, today)) {
-                    is Result.Success -> {
-                        val expenses = result.data
-                        if (expenses.isEmpty()) {
-                            _expenses.value = emptyList()
-                            _sumOfExpenses.value = 0.0
-                            _uiState.value = State.Content // Пустой список - это валидное состояние для расходов
-                            Log.d("ExpensesViewModel", "Список расходов пуст за сегодня")
-                        } else {
-                            _expenses.value = expenses
-                            _sumOfExpenses.value = expenses.sumOf { it.amount }
-                            _uiState.value = State.Content
-                        }
-                    }
-
-                    is Result.Error -> {
-                        // Пробуем получить данные из локальной БД
-                        val cachedExpenses = getExpensesListUseCase()
-                        if (cachedExpenses.isNotEmpty()) {
-                            _expenses.value = cachedExpenses
-                            _sumOfExpenses.value = cachedExpenses.sumOf { it.amount }
-                            _uiState.value = State.Content
-                            Log.w("ExpensesViewModel", "Используем кэшированные данные: ${result.exception.message}")
-                        } else {
-                            _uiState.value = State.Error
-                            Log.e("ExpensesViewModel", "Ошибка загрузки расходов: ${result.exception.message}")
-                        }
-                    }
-
-                    is Result.Loading -> {
-                        _uiState.value = State.Loading
-                    }
-                }
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                _uiState.value = State.Error
-                Log.e("ExpensesViewModel", "Неожиданная ошибка при загрузке расходов", e)
-            }
-        }
-    }
-
-    fun loadDataInBackground() {
-        viewModelScope.launch {
-            try {
-                val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
-                when (val result = loadExpensesByPeriodUseCase(today, today)) {
-                    is Result.Success -> {
-                        val expenses = result.data
+            when (val result = loadExpensesByPeriodUseCase(today, today)) {
+                is Result.Success -> {
+                    val expenses = result.data
+                    if (expenses.isEmpty()) {
+                        _expenses.value = emptyList()
+                        _sumOfExpenses.value = 0.0
+                        _uiState.value = State.Content // Пустой список - это валидное состояние для расходов
+                        Log.d("ExpensesViewModel", "Список расходов пуст за сегодня")
+                    } else {
                         _expenses.value = expenses
                         _sumOfExpenses.value = expenses.sumOf { it.amount }
-                    }
-
-                    is Result.Error -> {
-                        Log.w("ExpensesViewModel", "Ошибка фоновой загрузки: ${result.exception.message}")
-                    }
-
-                    is Result.Loading -> {
-                        // Игнорируем состояние загрузки при фоновом обновлении
+                        _uiState.value = State.Content
                     }
                 }
-            } catch (e: Exception) {
-                if (e is kotlinx.coroutines.CancellationException) throw e
-                Log.e("ExpensesViewModel", "Ошибка при фоновой загрузке", e)
+
+                is Result.Error -> {
+                    // Пробуем получить данные из локальной БД
+                    val cachedExpenses = getExpensesListUseCase()
+                    if (cachedExpenses.isNotEmpty()) {
+                        _expenses.value = cachedExpenses
+                        _sumOfExpenses.value = cachedExpenses.sumOf { it.amount }
+                        _uiState.value = State.Content
+                        Log.w("ExpensesViewModel", "Используем кэшированные данные: ${result.exception.message}")
+                    } else {
+                        _uiState.value = State.Error
+                        Log.e("ExpensesViewModel", "Ошибка загрузки расходов: ${result.exception.message}")
+                    }
+                }
+
+                is Result.Loading -> {
+                    _uiState.value = State.Loading
+                }
             }
         }
     }

@@ -1,8 +1,7 @@
-package com.natan.shamilov.shmr25.app.data.api.model
+package com.natan.shamilov.shmr25.common.data.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-
 /**
  * DTO модель для счета.
  * Ответственность: Представление данных счета в формате для сериализации/десериализации

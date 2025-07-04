@@ -30,11 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.app.navigation.Screen
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.ui.AccountNameInput
 import com.natan.shamilov.shmr25.common.ui.BalanceInput
 import com.natan.shamilov.shmr25.common.ui.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.common.ui.CurrencyOption
+import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
 import com.natan.shamilov.shmr25.common.ui.CurrencySelectorButton
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import kotlinx.coroutines.launch

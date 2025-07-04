@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.categories.domain.usecase
 
-import com.natan.shamilov.shmr25.app.data.api.Result
+import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.feature.categories.domain.repository.CategoriesRepository
 import javax.inject.Inject
 

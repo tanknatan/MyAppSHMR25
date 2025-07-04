@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryItem
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryUiModel
@@ -33,7 +32,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
-    private val getAccountUseCase: GetAccountUseCase,
     private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
@@ -115,10 +113,8 @@ class HistoryViewModel @Inject constructor(
 
                 val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
                 val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
-                val accounts = getAccountUseCase()
                 when (
                     val historyListResult = getHistoryByPeriodUseCase(
-                        accounts = accounts,
                         startDate = startDate,
                         endDate = endDate,
                         isIncome = historyType == HistoryType.INCOME

@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.incomes.data.api
 
-import com.natan.shamilov.shmr25.app.data.api.model.TransactionDto
+import com.natan.shamilov.shmr25.common.data.model.TransactionDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query

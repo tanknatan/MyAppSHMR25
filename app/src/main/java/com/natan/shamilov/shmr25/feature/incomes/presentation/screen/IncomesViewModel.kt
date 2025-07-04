@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase

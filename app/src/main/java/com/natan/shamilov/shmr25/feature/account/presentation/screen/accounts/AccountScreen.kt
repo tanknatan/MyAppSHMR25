@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.app.navigation.Screen
-import com.natan.shamilov.shmr25.common.State
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.ui.MyFloatingActionButton

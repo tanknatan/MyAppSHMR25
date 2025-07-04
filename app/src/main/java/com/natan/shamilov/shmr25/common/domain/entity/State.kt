@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.common
+package com.natan.shamilov.shmr25.common.domain.entity
 
 /**
  * Представляет состояния UI в приложении.

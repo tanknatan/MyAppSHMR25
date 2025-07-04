@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.history.data.mapper
 
-import com.natan.shamilov.shmr25.app.data.api.model.TransactionDto
+import com.natan.shamilov.shmr25.common.data.model.TransactionDto
 import com.natan.shamilov.shmr25.common.utils.convertCurrency
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryItem
 import javax.inject.Inject

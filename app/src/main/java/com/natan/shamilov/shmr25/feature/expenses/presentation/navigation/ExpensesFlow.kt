@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.expenses.presentation.navigation
 
-import com.natan.shamilov.shmr25.common.Screen
+import com.natan.shamilov.shmr25.common.domain.entity.Screen
 
 sealed class ExpensesFlow(override val route: String) : Screen {
 

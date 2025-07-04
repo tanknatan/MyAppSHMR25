@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.app.data.api.Result
-import com.natan.shamilov.shmr25.common.State
-import com.natan.shamilov.shmr25.feature.account.domain.entity.Account
+import com.natan.shamilov.shmr25.common.data.model.Result
+import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.domain.entity.Account
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.CreateAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

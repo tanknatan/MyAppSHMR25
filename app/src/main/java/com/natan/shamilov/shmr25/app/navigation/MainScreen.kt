@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.app
+package com.natan.shamilov.shmr25.app.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.natan.shamilov.shmr25.app.navigation.NavigationItem
-import com.natan.shamilov.shmr25.app.navigation.rememberNavigationState
 import com.natan.shamilov.shmr25.common.ui.MyNavigationBar
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.catigoriesGraph

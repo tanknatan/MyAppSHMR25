@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.ui.theme.dep
 import com.natan.shamilov.shmr25.common.ui.theme.rodotoFont
+import com.natan.shamilov.shmr25.common.utils.toCurrencyString
 
 /**
  * Универсальная карточка приложения.

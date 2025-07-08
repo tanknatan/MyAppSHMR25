@@ -16,12 +16,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 
 @Composable
 fun IncomesTodayScreen(
@@ -58,9 +60,13 @@ fun IncomesTodayScreen(
             }
 
             is State.Content -> {
+                val total by viewModel.sumOfIncomes.collectAsStateWithLifecycle()
+                val myIncomes by viewModel.incomes.collectAsStateWithLifecycle()
                 IncomesContent(
-                    viewModel = viewModel,
-                    paddingValues = innerPadding
+                    paddingValues = innerPadding,
+                    total = total,
+                    myIncomes = myIncomes,
+                    onRetry = { viewModel.initialize() }
                 )
             }
         }
@@ -68,28 +74,30 @@ fun IncomesTodayScreen(
 }
 
 @Composable
-fun IncomesContent(viewModel: IncomesViewModel, paddingValues: PaddingValues) {
-    val total by viewModel.sumOfIncomes.collectAsStateWithLifecycle()
-    val myIncomes by viewModel.incomes.collectAsStateWithLifecycle()
-
+fun IncomesContent(paddingValues: PaddingValues, total: Double, myIncomes: List<Income>, onRetry: () -> Unit) {
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
             title = stringResource(R.string.total),
             amount = total
         )
-
-        LazyColumn {
-            items(
-                items = myIncomes,
-                key = { incomes -> incomes.id }
-            ) { incomes ->
-                AppCard(
-                    title = incomes.name,
-                    amount = incomes.amount,
-                    canNavigate = true,
-                    onNavigateClick = {},
-                    currency = incomes.currency
-                )
+        if (myIncomes.isEmpty()) {
+            ListEmptyScreen(onRetry = {
+                onRetry()
+            })
+        } else {
+            LazyColumn {
+                items(
+                    items = myIncomes,
+                    key = { incomes -> incomes.id }
+                ) { incomes ->
+                    AppCard(
+                        title = incomes.name,
+                        amount = incomes.amount,
+                        canNavigate = true,
+                        onNavigateClick = {},
+                        currency = incomes.currency
+                    )
+                }
             }
         }
     }

@@ -22,6 +22,7 @@ import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
@@ -68,7 +69,8 @@ fun HistoryScreen(
             is State.Content -> {
                 HistoryContent(
                     paddingValues = innerPadding,
-                    viewModel = viewModel
+                    viewModel = viewModel,
+                    onRetry = { viewModel.initialize(type) }
                 )
             }
         }
@@ -79,6 +81,7 @@ fun HistoryScreen(
 private fun HistoryContent(
     paddingValues: PaddingValues,
     viewModel: HistoryViewModel,
+    onRetry: () -> Unit,
 ) {
     val historyUiModel by viewModel.historyUiModel.collectAsStateWithLifecycle()
     val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()
@@ -122,22 +125,28 @@ private fun HistoryContent(
             )
         }
 
-        LazyColumn {
-            historyUiModel?.let { model ->
-                items(
-                    items = model.items,
-                    key = { "history_${it.id}" }
-                ) { item ->
-                    AppCard(
-                        title = item.name,
-                        amount = item.amount,
-                        subAmount = LocalDateTime.parse(item.createdAt, isoFormatter).format(timeFormatter),
-                        avatarEmoji = item.emoji,
-                        subtitle = item.comment,
-                        canNavigate = true,
-                        onNavigateClick = {},
-                        currency = item.currency
-                    )
+        if (historyUiModel?.items?.isEmpty() == true) {
+            ListEmptyScreen(onRetry = {
+                onRetry()
+            })
+        } else {
+            LazyColumn {
+                historyUiModel?.let { model ->
+                    items(
+                        items = model.items,
+                        key = { "history_${it.id}" }
+                    ) { item ->
+                        AppCard(
+                            title = item.name,
+                            amount = item.amount,
+                            subAmount = LocalDateTime.parse(item.createdAt, isoFormatter).format(timeFormatter),
+                            avatarEmoji = item.emoji,
+                            subtitle = item.comment,
+                            canNavigate = true,
+                            onNavigateClick = {},
+                            currency = item.currency
+                        )
+                    }
                 }
             }
         }

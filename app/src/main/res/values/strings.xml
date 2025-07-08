@@ -42,4 +42,5 @@
     <string name="not_network">Нет сети</string>
     <string name="retry">Повторить</string>
     <string name="choose_account">Выберите аккаунт</string>
+    <string name="list_empty">Список пуст</string>
 </resources>

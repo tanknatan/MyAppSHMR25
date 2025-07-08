@@ -11,7 +11,6 @@ import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.domain.entity.currencyOptions
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.EditAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +19,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@HiltViewModel
 class EditAccountViewModel @Inject constructor(
     private val editAccountUseCase: EditAccountUseCase,
     private val getAccountUseCase: GetAccountUseCase,

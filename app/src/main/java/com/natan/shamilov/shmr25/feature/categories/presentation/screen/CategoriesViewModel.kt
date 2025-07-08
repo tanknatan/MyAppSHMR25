@@ -9,7 +9,7 @@ import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.categories.domain.entity.Category
 import com.natan.shamilov.shmr25.feature.categories.domain.usecase.GetCategoriesListUseCase
 import com.natan.shamilov.shmr25.feature.categories.domain.usecase.LoadCategoriesListUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * ViewModel для экрана категорий.
@@ -26,7 +25,6 @@ import javax.inject.Inject
  * включая загрузку категорий, обработку сетевых ошибок и обновление данных
  * при изменении состояния сети.
  */
-@HiltViewModel
 class CategoriesViewModel @Inject constructor(
     private val getCategoriesListUseCase: GetCategoriesListUseCase,
     private val loadCategoriesUseCase: LoadCategoriesListUseCase,

@@ -9,9 +9,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.app.di.ApplicationHolder
+import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
 import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.Account
 import com.natan.shamilov.shmr25.common.domain.entity.State
@@ -24,7 +26,7 @@ import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
 
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel = hiltViewModel(),
+    viewModel: AccountViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
     onFABClick: () -> Unit,
     onEditAccountClick: (String) -> Unit,
 ) {

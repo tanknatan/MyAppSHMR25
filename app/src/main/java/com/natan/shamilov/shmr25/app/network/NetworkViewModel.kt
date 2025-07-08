@@ -3,7 +3,6 @@ package com.natan.shamilov.shmr25.app.network
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -14,7 +13,6 @@ import javax.inject.Inject
  * Ответственность: Обработка и распространение событий, связанных с состоянием
  * сетевого подключения, таких как отображение уведомлений об отсутствии соединения.
  */
-@HiltViewModel
 class NetworkViewModel @Inject constructor(
     private val networkStateReceiver: NetworkStateReceiver
 ) : ViewModel() {

@@ -10,7 +10,7 @@ import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryItem
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryUiModel
 import com.natan.shamilov.shmr25.feature.history.domain.usecase.GetHistoryByPeriodUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 /**
  * ViewModel для экрана истории транзакций.
@@ -29,7 +28,6 @@ import javax.inject.Inject
  * включая загрузку транзакций за выбранный период, обработку сетевых ошибок,
  * и управление выбором периода для фильтрации.
  */
-@HiltViewModel
 class HistoryViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
     private val networkStateReceiver: NetworkStateReceiver,

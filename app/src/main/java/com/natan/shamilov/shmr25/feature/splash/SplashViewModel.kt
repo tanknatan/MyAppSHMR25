@@ -3,7 +3,6 @@ package com.natan.shamilov.shmr25.feature.splash
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +16,6 @@ import javax.inject.Inject
  * включая загрузку списка счетов и транзакций. Обеспечивает параллельную
  * загрузку данных во время отображения сплэш-экрана.
  */
-@HiltViewModel
 class SplashViewModel @Inject constructor(
     private val accountStartupLoader: AccountStartupLoader,
 ) : ViewModel() {

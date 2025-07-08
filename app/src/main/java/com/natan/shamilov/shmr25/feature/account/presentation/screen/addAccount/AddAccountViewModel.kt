@@ -8,20 +8,18 @@ import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.common.domain.entity.Account
 import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.CreateAccountUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * ViewModel для экрана добавления нового счета.
  * Ответственность: Управление бизнес-логикой и состоянием UI при создании нового счета,
  * включая валидацию данных, обработку сетевых запросов и отображение состояния загрузки.
  */
-@HiltViewModel
 class AddAccountViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
     private val networkStateReceiver: NetworkStateReceiver

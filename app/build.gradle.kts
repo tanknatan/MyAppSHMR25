@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt)
     kotlin("kapt")
 }
 
@@ -78,10 +77,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    // Hilt
-    implementation(libs.hilt.core)
-    kapt(libs.hilt.compiler)
-    implementation(libs.hilt.navigation.compose)
+    // Dagger 2
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
     // navigation
     implementation(libs.androidx.navigation.compose)
     // Material

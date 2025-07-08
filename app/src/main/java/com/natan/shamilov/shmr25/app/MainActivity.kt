@@ -13,23 +13,22 @@ import com.natan.shamilov.shmr25.app.network.NetworkEvent
 import com.natan.shamilov.shmr25.app.network.NetworkViewModel
 import com.natan.shamilov.shmr25.app.presentation.navigation.AppGraph
 import com.natan.shamilov.shmr25.common.presentation.ui.theme.MyAppSHMR25Theme
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * Главная активность приложения.
  * Ответственность: Точка входа в приложение, инициализация основного UI
  * и обработка событий сетевого подключения.
  *
- * Использует Jetpack Compose для отображения UI и Hilt для внедрения зависимостей.
+ * Использует Jetpack Compose для отображения UI и Dagger 2 для внедрения зависимостей.
  * Отслеживает состояние сетевого подключения и показывает соответствующие уведомления.
  */
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val networkViewModel: NetworkViewModel by viewModels()
+    @Inject lateinit var networkViewModel: NetworkViewModel
 
     /**
      * Инициализация активности.
@@ -41,6 +40,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        (application as App).appComponent.inject(this)
+        // networkViewModel теперь должен быть проинициализирован через Dagger
         setContent {
             MyAppSHMR25Theme {
                 AppGraph()

@@ -11,9 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.app.di.ApplicationHolder
+import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
 import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
@@ -27,7 +29,7 @@ import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 
 @Composable
 fun ExpensesTodayScreen(
-    viewModel: ExpensesViewModel = hiltViewModel(),
+    viewModel: ExpensesViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
     onHistoryClick: () -> Unit,
     onFABClick: () -> Unit,
 ) {

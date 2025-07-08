@@ -12,17 +12,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
+import com.natan.shamilov.shmr25.app.di.ApplicationHolder
+import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
 
 @Composable
 fun SplashScreen(
     onNextScreen: () -> Unit,
-    viewModel: SplashViewModel = hiltViewModel()
+    viewModel: SplashViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application))
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Asset("my_animation.json"))
     val progress by animateLottieCompositionAsState(

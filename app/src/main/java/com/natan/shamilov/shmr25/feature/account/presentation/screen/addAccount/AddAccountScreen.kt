@@ -22,9 +22,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.R
+import com.natan.shamilov.shmr25.app.di.ApplicationHolder
+import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
 import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
 import com.natan.shamilov.shmr25.common.domain.entity.State
@@ -45,7 +47,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun AddAccountScreen(
-    viewModel: AddAccountViewModel = hiltViewModel(),
+    viewModel: AddAccountViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()

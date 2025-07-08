@@ -9,7 +9,7 @@ import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
 import com.natan.shamilov.shmr25.feature.expenses.domain.usecase.GetExpensesListUseCase
 import com.natan.shamilov.shmr25.feature.expenses.domain.usecase.LoadExpensesByPeriodUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 /**
  * ViewModel для экрана расходов.
@@ -25,7 +24,6 @@ import javax.inject.Inject
  * включая загрузку расходов за определенный период, обработку сетевых ошибок
  * и обновление данных при изменении состояния сети.
  */
-@HiltViewModel
 class ExpensesViewModel @Inject constructor(
     private val getExpensesListUseCase: GetExpensesListUseCase,
     private val loadExpensesByPeriodUseCase: LoadExpensesByPeriodUseCase,

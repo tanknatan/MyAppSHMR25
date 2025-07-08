@@ -9,7 +9,7 @@ import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 /**
  * ViewModel для экрана доходов.
@@ -25,7 +24,6 @@ import javax.inject.Inject
  * включая загрузку доходов за определенный период, обработку сетевых ошибок
  * и обновление данных при изменении состояния сети.
  */
-@HiltViewModel
 class IncomesViewModel @Inject constructor(
     private val getIncomesListUseCase: GetIncomesListUseCase,
     private val loadIncomesByPeriodUseCase: LoadIncomesByPeriodUseCase,

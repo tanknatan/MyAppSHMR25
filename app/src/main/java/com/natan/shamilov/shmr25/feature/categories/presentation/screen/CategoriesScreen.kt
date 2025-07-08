@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.State
@@ -19,10 +19,12 @@ import com.natan.shamilov.shmr25.common.presentation.ui.CustomSearchBar
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
+import com.natan.shamilov.shmr25.app.di.ApplicationHolder
 
 @Composable
 fun CategoriesScreen(
-    viewModel: CategoriesViewModel = hiltViewModel(),
+    viewModel: CategoriesViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -63,7 +65,7 @@ fun CategoriesScreen(
 
 @Composable
 fun CategoriesContent(
-    viewModel: CategoriesViewModel = hiltViewModel(),
+    viewModel: CategoriesViewModel,
     paddingValues: PaddingValues,
 ) {
     val query by viewModel.query.collectAsStateWithLifecycle()

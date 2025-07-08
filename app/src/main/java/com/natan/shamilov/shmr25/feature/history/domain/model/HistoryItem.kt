@@ -11,6 +11,6 @@ data class HistoryItem(
     override val emoji: String,
     override val amount: Double,
     override val currency: String,
-    override val comment: String = "",
+    override val comment: String?,
     override val createdAt: String,
 ) : HistoryScreenEntity

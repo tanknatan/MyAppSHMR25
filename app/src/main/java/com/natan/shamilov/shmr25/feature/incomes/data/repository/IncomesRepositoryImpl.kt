@@ -20,18 +20,15 @@ import javax.inject.Inject
 class IncomesRepositoryImpl @Inject constructor(
     private val api: IncomesApi,
     private val accountProvider: AccountProvider,
-    private val mapper: IncomeMapper
+    private val mapper: IncomeMapper,
 ) : IncomesRepository {
 
     private val today = LocalDate.now().toString()
     private var todayIncomesList = emptyList<TransactionDto>()
+    private var todayIncomes: List<Income> = emptyList()
 
     override suspend fun getIncomesList(): List<Income> = withContext(Dispatchers.IO) {
-        todayIncomesList
-            .filter { it.category.isIncome }
-            .map { dto ->
-                mapper.mapTransactionDtoToIncome(dto)
-            }
+        todayIncomes
     }
 
     override suspend fun loadTodayIncomes(): Result<Unit> = Result.execute {
@@ -41,14 +38,14 @@ class IncomesRepositoryImpl @Inject constructor(
 
     override suspend fun loadIncomesByPeriod(
         startDate: String,
-        endDate: String
+        endDate: String,
     ): Result<List<Income>> = Result.execute {
         val accounts = accountProvider.getAccountsList()
         val incomesList = loadIncomesForAccounts(accounts, startDate, endDate)
             .filter { it.category.isIncome }
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        incomesList.map { dto ->
+        val sortedIncomes = incomesList.map { dto ->
             mapper.mapTransactionDtoToIncome(dto)
         }.sortedByDescending { income ->
             LocalDate.parse(
@@ -56,12 +53,14 @@ class IncomesRepositoryImpl @Inject constructor(
                 formatter
             )
         }
+        todayIncomes = sortedIncomes
+        sortedIncomes
     }
 
     private suspend fun loadIncomesForAccounts(
         accounts: List<Account>,
         startDate: String,
-        endDate: String
+        endDate: String,
     ): List<TransactionDto> = coroutineScope {
         accounts.map { account ->
             async {

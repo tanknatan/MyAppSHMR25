@@ -11,6 +11,6 @@ interface HistoryScreenEntity {
     val emoji: String
     val amount: Double
     val currency: String
-    val comment: String
+    val comment: String?
     val createdAt: String
 }

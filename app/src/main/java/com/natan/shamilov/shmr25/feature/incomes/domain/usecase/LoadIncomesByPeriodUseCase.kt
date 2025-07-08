@@ -12,4 +12,4 @@ class LoadIncomesByPeriodUseCase @Inject constructor(
         startDate: String,
         endDate: String
     ): Result<List<Income>> = repository.loadIncomesByPeriod(startDate, endDate)
-} 
+}

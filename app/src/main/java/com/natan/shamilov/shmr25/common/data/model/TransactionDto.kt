@@ -16,7 +16,7 @@ data class TransactionDto(
     @Json(name = "category") val category: CategoryDto,
     @Json(name = "amount") val amount: String,
     @Json(name = "transactionDate") val transactionDate: String,
-    @Json(name = "comment") val comment: String,
+    @Json(name = "comment") val comment: String?,
     @Json(name = "createdAt") val createdAt: String,
     @Json(name = "updatedAt") val updatedAt: String
 )

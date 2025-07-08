@@ -1,10 +1,10 @@
 package com.natan.shamilov.shmr25.feature.expenses.data.repository
 
+import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.common.data.model.Result
 import com.natan.shamilov.shmr25.common.data.model.TransactionDto
-import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.common.api.AccountProvider
+import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.feature.expenses.data.api.ExpensesApi
 import com.natan.shamilov.shmr25.feature.expenses.data.mapper.ExpenseMapper
 import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
@@ -61,12 +61,6 @@ class ExpensesRepositoryImpl @Inject constructor(
                 expense.createdAt.substring(START_OF_DATA_IN_RESPONSE, END_OF_DATA_IN_RESPONSE),
                 formatter
             )
-        }
-    }.also {
-        _completeExpensesByPeriodLoadingFlow.value = when (it) {
-            is Result.Success -> State.Content
-            is Result.Error -> State.Error
-            is Result.Loading -> State.Loading
         }
     }
 

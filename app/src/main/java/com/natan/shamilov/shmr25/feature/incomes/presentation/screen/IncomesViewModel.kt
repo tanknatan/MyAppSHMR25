@@ -63,7 +63,7 @@ class IncomesViewModel @Inject constructor(
 
             when (val result = loadIncomesByPeriodUseCase(today, today)) {
                 is Result.Success -> {
-                    val incomes = getIncomesListUseCase()
+                    val incomes = result.data
                     if (incomes.isEmpty()) {
                         _uiState.value = State.Content
                         Log.d("IncomesViewModel", "Список доходов пуст")

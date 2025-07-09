@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.common.presentation.ui
+package com.natan.shamilov.shmr25.feature.account.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

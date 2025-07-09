@@ -14,15 +14,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.app.di.ApplicationHolder
 import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.Account
 import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.presentation.ui.AccountDropdownMenu
+import com.natan.shamilov.shmr25.feature.account.presentation.components.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 
 @Composable
 fun AccountScreen(
@@ -40,9 +40,9 @@ fun AccountScreen(
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.Account.startIcone,
-                Screen.Account.title,
-                Screen.Account.endIcone,
+                AccountFlow.Account.startIcone,
+                AccountFlow.Account.title,
+                AccountFlow.Account.endIcone,
                 onBackOrCanselClick = {},
                 onNavigateClick = {
                     viewModel.selectedAccount.value?.id?.let {

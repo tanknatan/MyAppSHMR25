@@ -12,19 +12,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.presentation.ui.ThemeCard
+import com.natan.shamilov.shmr25.feature.option.presentation.components.ThemeCard
+import com.natan.shamilov.shmr25.feature.option.presentation.navigation.OptionsFlow
 
 @Composable
 fun OptionScreen() {
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.Options.startIcone,
-                Screen.Options.title,
-                Screen.Options.endIcone,
+                OptionsFlow.Options.startIcone,
+                OptionsFlow.Options.title,
+                OptionsFlow.Options.endIcone,
                 onBackOrCanselClick = {},
                 onNavigateClick = { }
             )

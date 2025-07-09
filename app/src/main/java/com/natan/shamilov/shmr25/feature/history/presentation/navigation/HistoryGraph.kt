@@ -3,14 +3,14 @@ package com.natan.shamilov.shmr25.feature.history.presentation.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
 import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
 import com.natan.shamilov.shmr25.feature.history.presentation.screen.HistoryScreen
 
-fun NavGraphBuilder.historyGraph(navController: NavigationState) {
+fun NavGraphBuilder.historyGraph(navHostController: NavHostController) {
     composable(
         route = HistoryFlow.History.route,
         arguments = listOf(
@@ -31,7 +31,7 @@ fun NavGraphBuilder.historyGraph(navController: NavigationState) {
 
         HistoryScreen(
             type = type,
-            onBackClick = { navController.navHostController.popBackStack() }
+            onBackClick = { navHostController.popBackStack() }
         )
     }
 }

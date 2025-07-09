@@ -10,13 +10,13 @@ import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountObserv
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetSelectedAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * ViewModel для экрана счетов.

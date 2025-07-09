@@ -1,16 +1,37 @@
 package com.natan.shamilov.shmr25.feature.account.presentation.navigation
 
+import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.domain.entity.Screen
 
-sealed class AccountFlow(override val route: String) : Screen {
+sealed class AccountFlow(
+    override val route: String,
+    val title: Int? = null,
+    val endIcone: Int? = null,
+    val startIcone: Int? = null,
+) : Screen {
 
     data object AccountGraph : AccountFlow(ACCOUNT_GRAPH)
 
-    data object Account : AccountFlow(ACCOUNT_ROUTE)
+    data object Account : AccountFlow(
+        route = ACCOUNT_ROUTE,
+        title = R.string.my_account,
+        R.drawable.ic_edit,
+        null
+    )
 
-    data object AddAccount : AccountFlow(ADD_ACCOUNT_ROUTE)
+    data object AddAccount : AccountFlow(
+        route = ADD_ACCOUNT_ROUTE,
+        title = R.string.add_account,
+        null,
+        R.drawable.ic_close
+    )
 
-    data object EditAccount : AccountFlow(EDIT_ACCOUNT_ROUTE)
+    data object EditAccount : AccountFlow(
+        route = EDIT_ACCOUNT_ROUTE,
+        title = R.string.edit_account,
+        null,
+        R.drawable.ic_back
+    )
 
     companion object {
         const val ACCOUNT_GRAPH = "account_graph"

@@ -13,9 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.natan.shamilov.shmr25.app.presentation.components.MyNavigationBar
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.app.presentation.navigation.rememberNavigationState
-import com.natan.shamilov.shmr25.common.presentation.ui.MyNavigationBar
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.catigoriesGraph
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.ExpensesFlow
@@ -69,12 +69,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None }
         ) {
-            expensesGraph(navController = navigationState)
-            incomesGraph(navController = navigationState)
-            accountGraph(navController = navigationState)
-            catigoriesGraph(navController = navigationState)
-            optionsGraph(navController = navigationState)
-            historyGraph(navController = navigationState)
+            expensesGraph(navHostController = navigationState.navHostController)
+            incomesGraph(navHostController = navigationState.navHostController)
+            accountGraph(navHostController = navigationState.navHostController)
+            catigoriesGraph(navHostController = navigationState.navHostController)
+            optionsGraph(navHostController = navigationState.navHostController)
+            historyGraph(navHostController = navigationState.navHostController)
         }
     }
 }

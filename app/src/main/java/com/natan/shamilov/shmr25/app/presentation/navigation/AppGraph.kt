@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.natan.shamilov.shmr25.app.presentation.MainScreen
+import com.natan.shamilov.shmr25.feature.splash.SplashFlow
 import com.natan.shamilov.shmr25.feature.splash.SplashScreen
 
 /**
@@ -24,9 +25,9 @@ fun AppGraph() {
     val navigationState = rememberNavigationState()
     NavHost(
         navController = navigationState.navHostController,
-        startDestination = Screen.Splash.route
+        startDestination = SplashFlow.Splash.route
     ) {
-        composable(Screen.Splash.route) {
+        composable(SplashFlow.Splash.route) {
             SplashScreen(onNextScreen = {
                 navigationState.splashNavigate(Screen.Main)
             })

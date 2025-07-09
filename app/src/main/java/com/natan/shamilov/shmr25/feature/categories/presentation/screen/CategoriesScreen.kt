@@ -10,17 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.natan.shamilov.shmr25.app.di.ApplicationHolder
+import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
 import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomSearchBar
+import com.natan.shamilov.shmr25.feature.categories.presentation.components.CustomSearchBar
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
-import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.app.di.ApplicationHolder
+import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.CategoriesFlow
 
 @Composable
 fun CategoriesScreen(
@@ -36,9 +36,9 @@ fun CategoriesScreen(
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.Categories.startIcone,
-                Screen.Categories.title,
-                Screen.Categories.endIcone,
+                CategoriesFlow.Categories.startIcone,
+                CategoriesFlow.Categories.title,
+                CategoriesFlow.Categories.endIcone,
                 onBackOrCanselClick = {},
                 onNavigateClick = { }
             )

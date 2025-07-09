@@ -22,21 +22,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.app.di.ApplicationHolder
 import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
 import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.presentation.ui.AccountNameInput
 import com.natan.shamilov.shmr25.common.presentation.ui.BalanceInput
-import com.natan.shamilov.shmr25.common.presentation.ui.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.common.presentation.ui.CurrencySelectorButton
+import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencyBottomSheet
+import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencySelectorButton
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -55,9 +55,9 @@ fun AddAccountScreen(
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.AddAccount.startIcone,
-                Screen.AddAccount.title,
-                Screen.AddAccount.endIcone,
+                AccountFlow.AddAccount.startIcone,
+                AccountFlow.AddAccount.title,
+                AccountFlow.AddAccount.endIcone,
                 onBackOrCanselClick = { onBackPressed() },
                 onNavigateClick = { },
             )

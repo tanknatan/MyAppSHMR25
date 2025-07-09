@@ -11,12 +11,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.app.di.ApplicationHolder
 import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.app.presentation.navigation.Screen
 import com.natan.shamilov.shmr25.common.domain.entity.State
 import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
@@ -26,6 +25,7 @@ import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
+import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
 
 @Composable
 fun IncomesTodayScreen(
@@ -41,9 +41,9 @@ fun IncomesTodayScreen(
     Scaffold(
         topBar = {
             CustomTopAppBar(
-                Screen.Incomes.startIcone,
-                Screen.Incomes.title,
-                Screen.Incomes.endIcone,
+                IncomesFlow.IncomesToday.startIcone,
+                IncomesFlow.IncomesToday.title,
+                IncomesFlow.IncomesToday.endIcone,
                 onBackOrCanselClick = {},
                 onNavigateClick = { onHistoryClick() }
             )

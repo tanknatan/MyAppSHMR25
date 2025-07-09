@@ -1,5 +1,6 @@
 package com.natan.shamilov.shmr25.feature.categories.presentation.navigation
 
+import com.natan.shamilov.shmr25.R
 import com.natan.shamilov.shmr25.common.domain.entity.Screen
 
 /**
@@ -7,7 +8,12 @@ import com.natan.shamilov.shmr25.common.domain.entity.Screen
  * Ответственность: Инкапсуляция логики создания и управления маршрутами
  * навигации для экранов категорий.
  */
-sealed class CategoriesFlow(override val route: String) : Screen {
+sealed class CategoriesFlow(
+    override val route: String,
+    val title: Int? = null,
+    val endIcone: Int? = null,
+    val startIcone: Int? = null,
+) : Screen {
 
     /**
      * Граф навигации категорий
@@ -17,7 +23,12 @@ sealed class CategoriesFlow(override val route: String) : Screen {
     /**
      * Экран списка категорий
      */
-    data object Categories : CategoriesFlow(CATEGORIES_ROUTE)
+    data object Categories : CategoriesFlow(
+        route = CATEGORIES_ROUTE,
+        title = R.string.my_categories,
+        null,
+        null
+    )
 
     companion object {
         const val CATEGORIES_GRAPH_ROUTE = "categories_graph_route"

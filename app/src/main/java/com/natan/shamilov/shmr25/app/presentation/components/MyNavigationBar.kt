@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.common.presentation.ui
+package com.natan.shamilov.shmr25.app.presentation.components
 
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size

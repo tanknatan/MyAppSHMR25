@@ -3,16 +3,16 @@ package com.natan.shamilov.shmr25.feature.account.presentation.navigation
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountScreen
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.addAccount.AddAccountScreen
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.editAccount.EditAccountScreen
 
-fun NavGraphBuilder.accountGraph(navController: NavigationState) {
+fun NavGraphBuilder.accountGraph(navHostController: NavHostController) {
     navigation(
         route = AccountFlow.AccountGraph.route,
         startDestination = AccountFlow.Account.route,
@@ -22,10 +22,10 @@ fun NavGraphBuilder.accountGraph(navController: NavigationState) {
         composable(AccountFlow.Account.route) {
             AccountScreen(
                 onFABClick = {
-                    navController.navigateSingleTopTo(AccountFlow.AddAccount)
+                    navHostController.navigate(AccountFlow.AddAccount)
                 },
                 onEditAccountClick = { accountId ->
-                    navController.navHostController.navigate(
+                    navHostController.navigate(
                         AccountFlow.EditAccount.route + "/$accountId"
                     )
                 }
@@ -34,7 +34,7 @@ fun NavGraphBuilder.accountGraph(navController: NavigationState) {
 
         composable(AccountFlow.AddAccount.route) {
             AddAccountScreen(onBackPressed = {
-                navController.navHostController.popBackStack()
+                navHostController.popBackStack()
             })
         }
 
@@ -46,7 +46,7 @@ fun NavGraphBuilder.accountGraph(navController: NavigationState) {
             EditAccountScreen(
                 accountId = accountId,
                 onBackPressed = {
-                    navController.navHostController.popBackStack()
+                    navHostController.popBackStack()
                 }
             )
         }

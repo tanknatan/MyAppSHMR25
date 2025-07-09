@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.common.presentation.ui
+package com.natan.shamilov.shmr25.feature.option.presentation.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row

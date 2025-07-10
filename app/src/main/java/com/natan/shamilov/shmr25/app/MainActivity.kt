@@ -8,8 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.natan.shamilov.shmr25.app.network.NetworkEvent
-import com.natan.shamilov.shmr25.app.network.NetworkViewModel
+import com.natan.shamilov.shmr25.common.network.NetworkEvent
+import com.natan.shamilov.shmr25.common.network.NetworkViewModel
 import com.natan.shamilov.shmr25.app.presentation.navigation.AppGraph
 import com.natan.shamilov.shmr25.common.presentation.ui.theme.MyAppSHMR25Theme
 import kotlinx.coroutines.Dispatchers

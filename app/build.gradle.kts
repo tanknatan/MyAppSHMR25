@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -22,17 +20,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-        // Читаем API_TOKEN из local.properties
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
-        buildConfigField(
-            "String",
-            "API_TOKEN",
-            "\"${localProperties.getProperty("API_TOKEN", "")}\""
-        )
     }
 
     buildTypes {
@@ -97,4 +84,14 @@ dependencies {
     kapt(libs.moshi.codegen)
     // coroutines
     implementation(libs.kotlinx.coroutines.android)
+    // Feature modules
+    implementation(project(":feature:account"))
+    implementation(project(":feature:categories"))
+    implementation(project(":feature:expenses"))
+    implementation(project(":feature:history"))
+    implementation(project(":feature:incomes"))
+    implementation(project(":feature:options"))
+    implementation(project(":feature:splash"))
+    // Общий модуль
+    implementation(project(":common"))
 }

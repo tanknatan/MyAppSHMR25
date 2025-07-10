@@ -1,9 +1,8 @@
 package com.natan.shamilov.shmr25.app.di
 
-import android.content.Context
 import android.app.Application
 import com.natan.shamilov.shmr25.BuildConfig
-import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
+import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
 import com.natan.shamilov.shmr25.feature.history.data.api.HistoryApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory

@@ -2,6 +2,7 @@ package com.natan.shamilov.shmr25.app.di
 
 import android.app.Application
 import com.natan.shamilov.shmr25.app.MainActivity
+import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -28,7 +29,7 @@ interface AppComponent {
     // Методы-провайдеры для ViewModelFactory
     fun getCategoriesListUseCase(): com.natan.shamilov.shmr25.feature.categories.domain.usecase.GetCategoriesListUseCase
     fun loadCategoriesListUseCase(): com.natan.shamilov.shmr25.feature.categories.domain.usecase.LoadCategoriesListUseCase
-    fun networkStateReceiver(): com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
+    fun networkStateReceiver(): NetworkStateReceiver
     fun getAccountObserverUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountObserverUseCase
     fun getAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
     fun getSelectedAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.GetSelectedAccountUseCase

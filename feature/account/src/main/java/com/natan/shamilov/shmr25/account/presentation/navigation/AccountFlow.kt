@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.account.presentation.navigation
 
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.domain.entity.Screen
+import com.natan.shamilov.shmr25.account.R
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen
 
 sealed class AccountFlow(
     override val route: String,

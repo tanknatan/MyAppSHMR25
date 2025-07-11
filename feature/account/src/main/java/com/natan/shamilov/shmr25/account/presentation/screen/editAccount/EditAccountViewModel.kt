@@ -1,16 +1,16 @@
-package com.natan.shamilov.shmr25.feature.account.presentation.screen.editAccount
+package com.natan.shamilov.shmr25.account.presentation.screen.editAccount
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
-import com.natan.shamilov.shmr25.common.data.model.Result
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
-import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.domain.entity.currencyOptions
+import com.natan.shamilov.shmr25.account.domain.usecase.GetSelectedAccountUseCase
+import com.natan.shamilov.shmr25.account.domain.usecase.LoadAccountListUseCase
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
+import com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.currencyOptions
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.EditAccountUseCase
-import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +21,9 @@ import javax.inject.Inject
 
 class EditAccountViewModel @Inject constructor(
     private val editAccountUseCase: EditAccountUseCase,
-    private val getAccountUseCase: GetAccountUseCase,
-    private val networkStateReceiver: NetworkStateReceiver,
+    private val getselectedAccountUseCase: GetSelectedAccountUseCase,
+    private val loadAccountListUseCase: LoadAccountListUseCase,
+    // private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
     private val _account = MutableStateFlow<Account?>(null)
@@ -42,26 +43,26 @@ class EditAccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
-                _uiState.value = if (isAvailable) {
-                    State.Content
-                } else {
-                    State.Error
-                }
-            }
+//            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
+//                _uiState.value = if (isAvailable) {
+//                    State.Content
+//                } else {
+//                    State.Error
+//                }
+//            }
         }
     }
 
-    fun loadAccount(inputAccountId: String) {
+    fun loadAccount() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
-            val accountId = inputAccountId.toInt()
-            val accounts = getAccountUseCase()
-            val foundAccount = accounts.find { it.id == accountId }!!
+            val foundAccount = getselectedAccountUseCase()
             _account.value = foundAccount
-            _accountName.value = foundAccount.name
-            _balance.value = foundAccount.balance.toString()
-            _selectedCurrency.value = currencyOptions.find { it.code == foundAccount.currency }
+            if (foundAccount != null) {
+                _accountName.value = foundAccount.name
+                _balance.value = foundAccount.balance.toString()
+                _selectedCurrency.value = currencyOptions.find { it.code == foundAccount.currency }
+            }
             _uiState.value = State.Content
         }
     }
@@ -83,7 +84,6 @@ class EditAccountViewModel @Inject constructor(
                 )
             ) {
                 is Result.Success -> {
-                    _uiState.value = State.Content
                     withContext(Dispatchers.Main) {
                         onSuccess()
                     }

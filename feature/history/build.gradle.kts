@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.natan.shamilov.shmr25history"
+    namespace = "com.natan.shamilov.shmr25.history"
     compileSdk = 35
 
     defaultConfig {

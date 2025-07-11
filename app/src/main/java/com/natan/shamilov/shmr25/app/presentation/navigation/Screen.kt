@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.app.presentation.navigation
 
-import com.natan.shamilov.shmr25.common.domain.entity.Screen as commoScreen
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen as commoScreen
 
 /**
  * Определяет все экраны приложения с их маршрутами и UI-атрибутами.

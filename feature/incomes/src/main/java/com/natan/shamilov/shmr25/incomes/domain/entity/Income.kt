@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.incomes.domain.entity
 
-import com.natan.shamilov.shmr25.common.domain.entity.HistoryScreenEntity
+import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryScreenEntity
 
 /**
  * Доменная модель дохода.

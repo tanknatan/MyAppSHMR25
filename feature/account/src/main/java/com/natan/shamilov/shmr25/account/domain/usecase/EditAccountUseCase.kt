@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.feature.account.domain.usecase
 
-import com.natan.shamilov.shmr25.common.data.model.Result
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
+import com.natan.shamilov.shmr25.account.domain.repository.AccountRepository
 import javax.inject.Inject
 
 class EditAccountUseCase @Inject constructor(
@@ -13,7 +12,7 @@ class EditAccountUseCase @Inject constructor(
         name: String,
         balance: String,
         currency: String
-    ): Result<Unit> {
+    ): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> {
         return repository.editAccount(
             accountId = accountId,
             name = name,

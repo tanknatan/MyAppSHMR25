@@ -1,10 +1,8 @@
-package com.natan.shamilov.shmr25.feature.account.di
+package com.natan.shamilov.shmr25.account.di
 
 import com.natan.shamilov.shmr25.feature.account.data.api.AccountApi
-import com.natan.shamilov.shmr25.feature.account.data.repository.AccountRepositoryImpl
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
-import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetSelectedAccountUseCase
-import com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
+import com.natan.shamilov.shmr25.account.data.repository.AccountRepositoryImpl
+import com.natan.shamilov.shmr25.account.domain.repository.AccountRepository
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -21,14 +19,4 @@ object AccountModule {
     @Provides
     @Singleton
     fun provideAccountRepository(repository: AccountRepositoryImpl): AccountRepository = repository
-
-    @Provides
-    @Singleton
-    fun provideGetSelectedAccountUseCase(repository: AccountRepository): GetSelectedAccountUseCase =
-        GetSelectedAccountUseCase(repository)
-
-    @Provides
-    @Singleton
-    fun provideSetSelectedAccountUseCase(repository: AccountRepository): SetSelectedAccountUseCase =
-        SetSelectedAccountUseCase(repository)
 }

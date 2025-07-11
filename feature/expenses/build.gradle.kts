@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.natan.shamilov.shmr25expenses"
+    namespace = "com.natan.shamilov.shmr25.expenses"
     compileSdk = 35
 
     defaultConfig {

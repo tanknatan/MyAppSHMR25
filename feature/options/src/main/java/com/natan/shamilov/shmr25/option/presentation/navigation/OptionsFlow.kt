@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.option.presentation.navigation
 
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.domain.entity.Screen
+import com.natan.shamilov.shmr25.options.R
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen
 
 /**
  * Определяет навигационные маршруты для функционала настроек.

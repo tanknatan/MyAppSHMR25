@@ -2,53 +2,61 @@ package com.natan.shamilov.shmr25.feature.account.presentation.navigation
 
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.navigation.navArgument
-import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountScreen
+import com.natan.shamilov.shmr25.account.di.AccountsComponent
+import com.natan.shamilov.shmr25.account.presentation.screen.accounts.AccountScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.feature.account.presentation.screen.addAccount.AddAccountScreen
-import com.natan.shamilov.shmr25.feature.account.presentation.screen.editAccount.EditAccountScreen
+import com.natan.shamilov.shmr25.account.presentation.screen.editAccount.EditAccountScreen
 
-fun NavGraphBuilder.accountGraph(navHostController: NavHostController) {
+fun NavGraphBuilder.accountGraph(navHostController: NavHostController, accountsComponent: AccountsComponent) {
     navigation(
         route = AccountFlow.AccountGraph.route,
         startDestination = AccountFlow.Account.route,
         enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None }
+        exitTransition = { ExitTransition.None },
     ) {
         composable(AccountFlow.Account.route) {
-            AccountScreen(
-                onFABClick = {
-                    navHostController.navigate(AccountFlow.AddAccount)
-                },
-                onEditAccountClick = { accountId ->
-                    navHostController.navigate(
-                        AccountFlow.EditAccount.route + "/$accountId"
-                    )
-                }
-            )
+            CompositionLocalProvider(
+                LocalViewModelFactory provides accountsComponent.viewModelFactory()
+            ) {
+                AccountScreen(
+                    onFABClick = {
+                        navHostController.navigate(AccountFlow.AddAccount)
+                    },
+                    onEditAccountClick = { accountId ->
+                        navHostController.navigate(
+                            AccountFlow.EditAccount.route
+                        )
+                    }
+                )
+            }
         }
 
         composable(AccountFlow.AddAccount.route) {
-            AddAccountScreen(onBackPressed = {
-                navHostController.popBackStack()
-            })
+            CompositionLocalProvider(
+                LocalViewModelFactory provides accountsComponent.viewModelFactory()
+            ) {
+                AddAccountScreen(onBackPressed = {
+                    navHostController.popBackStack()
+                })
+            }
         }
 
-        composable(
-            route = AccountFlow.EditAccount.route + "/{accountId}",
-            arguments = listOf(navArgument("accountId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val accountId = backStackEntry.arguments?.getString("accountId") ?: ""
-            EditAccountScreen(
-                accountId = accountId,
-                onBackPressed = {
-                    navHostController.popBackStack()
-                }
-            )
+        composable(AccountFlow.EditAccount.route) { backStackEntry ->
+            CompositionLocalProvider(
+                LocalViewModelFactory provides accountsComponent.viewModelFactory()
+            ) {
+                EditAccountScreen(
+                    onBackPressed = {
+                        navHostController.popBackStack()
+                    }
+                )
+            }
         }
     }
 }

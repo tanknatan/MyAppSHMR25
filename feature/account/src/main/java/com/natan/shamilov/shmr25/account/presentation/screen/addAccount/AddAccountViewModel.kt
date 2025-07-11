@@ -1,19 +1,17 @@
-package com.natan.shamilov.shmr25.feature.account.presentation.screen.addAccount
+package com.natan.shamilov.shmr25.account.presentation.screen.addAccount
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
-import com.natan.shamilov.shmr25.common.data.model.Result
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.CreateAccountUseCase
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * ViewModel для экрана добавления нового счета.
@@ -22,7 +20,7 @@ import kotlinx.coroutines.launch
  */
 class AddAccountViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
-    private val networkStateReceiver: NetworkStateReceiver
+    //   private val networkStateReceiver: NetworkStateReceiver
 ) : ViewModel() {
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
@@ -33,13 +31,13 @@ class AddAccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
-                _uiState.value = if (isAvailable) {
-                    State.Content
-                } else {
-                    State.Error
-                }
-            }
+//            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
+//                _uiState.value = if (isAvailable) {
+//                    State.Content
+//                } else {
+//                    State.Error
+//                }
+//            }
         }
     }
 
@@ -47,22 +45,24 @@ class AddAccountViewModel @Inject constructor(
         name: String,
         balance: String,
         currency: String,
-        onSuccess: () -> Unit
+        onSuccess: () -> Unit,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _uiState.value = State.Loading
 
                 when (val result = createAccountUseCase(name, balance, currency)) {
-                    is Result.Success -> {
+                    is com.natan.shamilov.shmr25.common.impl.data.model.Result.Success -> {
                         _uiState.value = State.Content
                         onSuccess()
                     }
-                    is Result.Error -> {
+
+                    is com.natan.shamilov.shmr25.common.impl.data.model.Result.Error -> {
                         _uiState.value = State.Error
                         Log.e("AddAccountViewModel", "Ошибка создания аккаунта: ${result.exception.message}")
                     }
-                    is Result.Loading -> {
+
+                    is com.natan.shamilov.shmr25.common.impl.data.model.Result.Loading -> {
                         _uiState.value = State.Loading
                     }
                 }

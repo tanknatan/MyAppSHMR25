@@ -6,7 +6,7 @@ import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.Cate
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.feature.option.presentation.navigation.OptionsFlow
-import com.natan.shamilov.shmr25.common.domain.entity.Screen as commoScreen
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen as commoScreen
 
 /**
  * Sealed класс, представляющий элементы нижней навигационной панели.

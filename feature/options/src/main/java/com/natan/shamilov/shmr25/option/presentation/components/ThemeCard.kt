@@ -21,8 +21,8 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.dep
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.rodotoFont
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.dep
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
 
 @Composable
 fun ThemeCard(

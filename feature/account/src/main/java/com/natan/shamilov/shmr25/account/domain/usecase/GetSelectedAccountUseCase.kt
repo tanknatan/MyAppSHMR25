@@ -1,12 +1,12 @@
-package com.natan.shamilov.shmr25.feature.account.domain.usecase
+package com.natan.shamilov.shmr25.account.domain.usecase
 
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
-import kotlinx.coroutines.flow.StateFlow
+import com.natan.shamilov.shmr25.account.domain.repository.AccountRepository
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import javax.inject.Inject
 
 class GetSelectedAccountUseCase @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
 ) {
-    operator fun invoke(): StateFlow<Account?> = repository.observeSelectedAccount()
-} 
+    suspend operator fun invoke(): Account? = repository.getSelectedAccount()
+}
+

@@ -18,8 +18,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.BottomBarBackground
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.rodotoFont
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.BottomBarBackground
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
 
 @Composable
 fun MyNavigationBar(

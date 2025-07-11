@@ -1,10 +1,11 @@
 package com.natan.shamilov.shmr25.feature.incomes.data.repository
 
 import com.natan.shamilov.shmr25.common.api.AccountProvider
-import com.natan.shamilov.shmr25.common.data.model.Result
-import com.natan.shamilov.shmr25.common.data.model.TransactionDto
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.feature.incomes.data.api.IncomesApi
+import com.natan.shamilov.shmr25.common.impl.data.api.TransactionsApi
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
+import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
+
 import com.natan.shamilov.shmr25.feature.incomes.data.mapper.IncomeMapper
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.repository.IncomesRepository
@@ -18,7 +19,7 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class IncomesRepositoryImpl @Inject constructor(
-    private val api: IncomesApi,
+    private val api: TransactionsApi,
     private val accountProvider: AccountProvider,
     private val mapper: IncomeMapper,
 ) : IncomesRepository {
@@ -64,7 +65,7 @@ class IncomesRepositoryImpl @Inject constructor(
     ): List<TransactionDto> = coroutineScope {
         accounts.map { account ->
             async {
-                api.getIncomesByPeriod(
+                api.getTransactionsByAccountPeriod(
                     accountId = account.id,
                     startDate = startDate,
                     endDate = endDate

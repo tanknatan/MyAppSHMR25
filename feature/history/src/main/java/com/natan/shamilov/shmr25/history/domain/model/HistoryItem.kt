@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.history.domain.model
 
-import com.natan.shamilov.shmr25.common.domain.entity.HistoryScreenEntity
+import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryScreenEntity
 
 /**
  * Элемент истории для отображения

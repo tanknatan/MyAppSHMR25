@@ -5,13 +5,16 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.natan.shamilov.shmr25.common.network.NetworkEvent
-import com.natan.shamilov.shmr25.common.network.NetworkViewModel
 import com.natan.shamilov.shmr25.app.presentation.navigation.AppGraph
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.MyAppSHMR25Theme
+import com.natan.shamilov.shmr25.app.network.NetworkEvent
+import com.natan.shamilov.shmr25.app.presentation.viewModel.NetworkViewModel
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.MyAppSHMR25Theme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,7 +30,10 @@ import javax.inject.Inject
  */
 class MainActivity : ComponentActivity() {
 
-    @Inject lateinit var networkViewModel: NetworkViewModel
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var networkViewModel: NetworkViewModel
 
     /**
      * Инициализация активности.
@@ -39,11 +45,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        (application as App).appComponent.inject(this)
-        // networkViewModel теперь должен быть проинициализирован через Dagger
+        appComponent.inject(this)
+        networkViewModel = ViewModelProvider(this, viewModelFactory)[NetworkViewModel::class]
         setContent {
             MyAppSHMR25Theme {
-                AppGraph()
+                CompositionLocalProvider(
+                    LocalViewModelFactory provides appComponent.viewModelFactory()
+                ) {
+                    AppGraph()
+                }
             }
         }
         initNetworkEvents()

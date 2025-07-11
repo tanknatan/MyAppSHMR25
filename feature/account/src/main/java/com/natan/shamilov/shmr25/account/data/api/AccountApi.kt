@@ -1,6 +1,6 @@
 package com.natan.shamilov.shmr25.feature.account.data.api
 
-import com.natan.shamilov.shmr25.common.data.model.AccountDto
+import com.natan.shamilov.shmr25.common.impl.data.model.AccountDto
 import com.natan.shamilov.shmr25.feature.account.data.model.AccountRequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE

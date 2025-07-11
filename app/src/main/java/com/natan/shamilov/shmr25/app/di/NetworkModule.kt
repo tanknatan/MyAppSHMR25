@@ -1,9 +1,6 @@
 package com.natan.shamilov.shmr25.app.di
 
-import android.app.Application
 import com.natan.shamilov.shmr25.BuildConfig
-import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
-import com.natan.shamilov.shmr25.feature.history.data.api.HistoryApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -91,30 +88,6 @@ class NetworkModule {
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
-
-    /**
-     * Предоставляет реализацию API истории операций.
-     *
-     * @param retrofit Экземпляр Retrofit для создания API
-     * @return Реализация интерфейса HistoryApi
-     */
-    @Provides
-    @Singleton
-    fun provideHistoryApi(retrofit: Retrofit): HistoryApi =
-        retrofit.create(HistoryApi::class.java)
-
-    /**
-     * Предоставляет приёмник состояния сети.
-     * Используется для отслеживания состояния подключения к интернету.
-     *
-     * @param application Контекст приложения
-     * @return Экземпляр NetworkStateReceiver
-     */
-    @Provides
-    @Singleton
-    fun provideNetworkStateReceiver(
-        application: Application
-    ): NetworkStateReceiver = NetworkStateReceiver(application)
 
     companion object {
         /** Базовый URL для API */

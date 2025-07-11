@@ -31,9 +31,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.rodotoFont
+import com.natan.shamilov.shmr25.account.R
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

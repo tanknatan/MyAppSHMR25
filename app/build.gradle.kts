@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -20,6 +22,17 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        // Читаем API_TOKEN из local.properties
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localProperties.load(localPropertiesFile.inputStream())
+        }
+        buildConfigField(
+            "String",
+            "API_TOKEN",
+            "\"${localProperties.getProperty("API_TOKEN", "")}\""
+        )
     }
 
     buildTypes {

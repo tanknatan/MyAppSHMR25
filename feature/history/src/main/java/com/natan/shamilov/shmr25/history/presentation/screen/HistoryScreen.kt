@@ -14,20 +14,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.di.ApplicationHolder
-import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomDatePickerDialog
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.ListEmptyScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
-import com.natan.shamilov.shmr25.feature.history.domain.HistoryType
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomDatePickerDialog
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.history.R
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -35,7 +34,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun HistoryScreen(
-    viewModel: HistoryViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
+    viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current),
     type: HistoryType,
     onBackClick: () -> Unit,
 ) {

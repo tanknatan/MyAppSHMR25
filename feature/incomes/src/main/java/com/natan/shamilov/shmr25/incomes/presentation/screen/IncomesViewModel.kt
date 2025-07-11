@@ -1,15 +1,13 @@
-package com.natan.shamilov.shmr25.feature.incomes.presentation.screen
+package com.natan.shamilov.shmr25.incomes.presentation.screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
-import com.natan.shamilov.shmr25.common.data.model.Result
-import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.common.api.NetworkChekerProvider
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
 import com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 
 /**
  * ViewModel для экрана доходов.
@@ -27,7 +26,7 @@ import java.time.format.DateTimeFormatter
 class IncomesViewModel @Inject constructor(
     private val getIncomesListUseCase: GetIncomesListUseCase,
     private val loadIncomesByPeriodUseCase: LoadIncomesByPeriodUseCase,
-    private val networkStateReceiver: NetworkStateReceiver,
+    private val networkChekerProvider: NetworkChekerProvider,
 ) : ViewModel() {
 
     private val _incomes = MutableStateFlow<List<Income>>(emptyList())
@@ -41,7 +40,7 @@ class IncomesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
+            networkChekerProvider.getNetworkStatus().collect { isAvailable ->
                 if (isAvailable && _uiState.value == State.Error) {
                     loadIncomes()
                 }
@@ -60,7 +59,7 @@ class IncomesViewModel @Inject constructor(
             val today = LocalDate.now().format(DateTimeFormatter.ISO_DATE)
 
             when (val result = loadIncomesByPeriodUseCase(today, today)) {
-                is Result.Success -> {
+                is com.natan.shamilov.shmr25.common.impl.data.model.Result.Success -> {
                     val incomes = result.data
                     if (incomes.isEmpty()) {
                         _uiState.value = State.Content
@@ -72,7 +71,7 @@ class IncomesViewModel @Inject constructor(
                     }
                 }
 
-                is Result.Error -> {
+                is com.natan.shamilov.shmr25.common.impl.data.model.Result.Error -> {
                     val incomes = getIncomesListUseCase()
                     if (incomes.isNotEmpty()) {
                         _incomes.value = incomes
@@ -85,7 +84,7 @@ class IncomesViewModel @Inject constructor(
                     }
                 }
 
-                is Result.Loading -> {
+                is com.natan.shamilov.shmr25.common.impl.data.model.Result.Loading -> {
                     _uiState.value = State.Loading
                 }
             }

@@ -1,38 +1,42 @@
-package com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts
+package com.natan.shamilov.shmr25.account.presentation.screen.accounts
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.di.ApplicationHolder
-import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.common.domain.entity.State
+import com.natan.shamilov.shmr25.account.R
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.account.presentation.components.AccountDropdownMenu
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.MyFloatingActionButton
-import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
+import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountViewModel
 
 @Composable
 fun AccountScreen(
-    viewModel: AccountViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
+    viewModel: AccountViewModel = viewModel(factory = LocalViewModelFactory.current),
     onFABClick: () -> Unit,
     onEditAccountClick: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Инициализируем ViewModel при первом показе экрана
     LaunchedEffect(Unit) {
         viewModel.initialize()
     }

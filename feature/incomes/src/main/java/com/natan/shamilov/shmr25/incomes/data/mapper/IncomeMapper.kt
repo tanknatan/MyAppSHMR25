@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.incomes.data.mapper
 
-import com.natan.shamilov.shmr25.common.data.model.TransactionDto
-import com.natan.shamilov.shmr25.common.presentation.utils.convertCurrency
+import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import javax.inject.Inject
 

@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.feature.account.domain.usecase
 
-import com.natan.shamilov.shmr25.common.data.model.Result
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
+import com.natan.shamilov.shmr25.account.domain.repository.AccountRepository
 import javax.inject.Inject
 
 /**
@@ -19,5 +18,5 @@ class DeleteAccountUseCase @Inject constructor(
      * @param id идентификатор удаляемого счета
      * @return результат операции удаления
      */
-    suspend operator fun invoke(id: Int): Result<Unit> = repository.deleteAccount(id)
+    suspend operator fun invoke(id: Int): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> = repository.deleteAccount(id)
 }

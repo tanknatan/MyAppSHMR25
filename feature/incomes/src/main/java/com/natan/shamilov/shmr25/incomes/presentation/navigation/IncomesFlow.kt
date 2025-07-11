@@ -1,7 +1,8 @@
 package com.natan.shamilov.shmr25.feature.incomes.presentation.navigation
 
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.domain.entity.Screen
+import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen
+import com.natan.shamilov.shmr25.incomes.R
 
 sealed class IncomesFlow(
     override val route: String,
@@ -17,7 +18,9 @@ sealed class IncomesFlow(
         title = R.string.incomes_today,
         R.drawable.ic_history,
         null
-    )
+    ) {
+        fun createRoute(type: HistoryType, from: String) = "history/${type.name}?from=$from"
+    }
 
     companion object {
         const val INCOMES_GRAP = "incomes_graph"

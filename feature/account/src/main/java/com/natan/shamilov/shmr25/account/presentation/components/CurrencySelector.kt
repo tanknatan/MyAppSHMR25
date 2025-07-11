@@ -28,13 +28,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
-import com.natan.shamilov.shmr25.common.domain.entity.currencyOptions
+import com.natan.shamilov.shmr25.account.R
+import com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption
+import com.natan.shamilov.shmr25.common.impl.domain.entity.currencyOptions
 
 @Composable
 fun CurrencySelectorButton(
-    selectedCurrency: CurrencyOption?,
+    selectedCurrency: com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption?,
     onClick: () -> Unit
 ) {
     // Используем Surface с OutlinedTextField-стилем + кликабельность
@@ -82,7 +82,7 @@ fun CurrencySelectorButton(
 @Composable
 fun CurrencyBottomSheet(
     onDismiss: () -> Unit,
-    onCurrencySelected: (CurrencyOption) -> Unit,
+    onCurrencySelected: (com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption) -> Unit,
     sheetState: SheetState
 ) {
     ModalBottomSheet(
@@ -94,7 +94,7 @@ fun CurrencyBottomSheet(
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
         ) {
-            items(currencyOptions) { currency ->
+            items(com.natan.shamilov.shmr25.common.impl.domain.entity.currencyOptions) { currency ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

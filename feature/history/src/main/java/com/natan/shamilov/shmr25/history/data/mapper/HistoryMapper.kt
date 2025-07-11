@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.history.data.mapper
 
-import com.natan.shamilov.shmr25.common.data.model.TransactionDto
-import com.natan.shamilov.shmr25.common.presentation.utils.convertCurrency
+import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryItem
 import javax.inject.Inject
 

@@ -13,23 +13,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.di.ApplicationHolder
-import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.presentation.ui.ErrorScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.ListEmptyScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
-import com.natan.shamilov.shmr25.common.presentation.ui.MyFloatingActionButton
-import com.natan.shamilov.shmr25.common.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.incomes.R
+
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.incomes.domain.entity.Income
 import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
+import com.natan.shamilov.shmr25.incomes.presentation.screen.IncomesViewModel
 
 @Composable
 fun IncomesTodayScreen(
-    viewModel: IncomesViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
+    viewModel: IncomesViewModel = viewModel(factory = LocalViewModelFactory.current),
     onHistoryClick: () -> Unit,
     onFABClick: () -> Unit,
 ) {

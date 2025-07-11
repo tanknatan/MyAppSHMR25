@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.feature.account.domain.usecase
 
-import com.natan.shamilov.shmr25.common.domain.entity.Account
-import com.natan.shamilov.shmr25.feature.account.domain.repository.AccountRepository
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
+import com.natan.shamilov.shmr25.account.domain.repository.AccountRepository
 import javax.inject.Inject
 
 class GetAccountUseCase @Inject constructor(

@@ -11,9 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.common.presentation.ui.AppCard
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.options.R
 import com.natan.shamilov.shmr25.feature.option.presentation.components.ThemeCard
 import com.natan.shamilov.shmr25.feature.option.presentation.navigation.OptionsFlow
 

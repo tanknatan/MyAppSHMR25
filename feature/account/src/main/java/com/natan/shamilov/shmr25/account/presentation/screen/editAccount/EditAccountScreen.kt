@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.feature.account.presentation.screen.editAccount
+package com.natan.shamilov.shmr25.account.presentation.screen.editAccount
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,31 +25,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.natan.shamilov.shmr25.R
-import com.natan.shamilov.shmr25.app.di.ApplicationHolder
-import com.natan.shamilov.shmr25.app.di.DaggerViewModelFactory
-import com.natan.shamilov.shmr25.common.domain.entity.CurrencyOption
-import com.natan.shamilov.shmr25.common.domain.entity.State
-import com.natan.shamilov.shmr25.common.presentation.ui.AccountNameInput
-import com.natan.shamilov.shmr25.common.presentation.ui.BalanceInput
+import com.natan.shamilov.shmr25.account.R
+import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountNameInput
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.BalanceInput
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencyBottomSheet
 import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencySelectorButton
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomButton
-import com.natan.shamilov.shmr25.common.presentation.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.common.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 import kotlinx.coroutines.launch
 
 @Composable
 fun EditAccountScreen(
-    accountId: String,
-    viewModel: EditAccountViewModel = viewModel(factory = DaggerViewModelFactory(ApplicationHolder.application)),
+    viewModel: EditAccountViewModel = viewModel(factory = LocalViewModelFactory.current),
     onBackPressed: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(accountId) {
-        viewModel.loadAccount(accountId)
+    LaunchedEffect(Unit) {
+        viewModel.loadAccount()
     }
     val accountName by viewModel.accountName.collectAsStateWithLifecycle()
     val balance by viewModel.balance.collectAsStateWithLifecycle()
@@ -114,7 +111,7 @@ fun EditAccountContent(
     onBackPressed: () -> Unit,
     accountName: String,
     balance: String,
-    selectedCurrency: CurrencyOption?,
+    selectedCurrency: com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption?,
     isFormValid: Boolean,
 ) {
     val sheetState = rememberModalBottomSheetState(

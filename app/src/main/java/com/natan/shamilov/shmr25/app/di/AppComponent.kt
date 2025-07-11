@@ -1,47 +1,62 @@
 package com.natan.shamilov.shmr25.app.di
 
-import android.app.Application
+import android.content.Context
+import com.example.core.di.ViewModelFactoryScope
+import com.natan.shamilov.shmr25.account.api.AccountDependencies
 import com.natan.shamilov.shmr25.app.MainActivity
-import com.natan.shamilov.shmr25.common.network.NetworkStateReceiver
+import com.natan.shamilov.shmr25.app.di.moduls.AccountsDependenciesModule
+import com.natan.shamilov.shmr25.app.di.moduls.CategoriesDependenciesModule
+import com.natan.shamilov.shmr25.app.di.moduls.ExpensesDependenciesModule
+import com.natan.shamilov.shmr25.app.di.moduls.HistoryDependenciesModule
+import com.natan.shamilov.shmr25.app.di.moduls.IncomesDependenciesModule
+import com.natan.shamilov.shmr25.app.di.moduls.SplashDependenciesModule
+import com.natan.shamilov.shmr25.app.di.moduls.ViewModelModule
+import com.natan.shamilov.shmr25.categories.api.CategoriesDependencies
+import com.natan.shamilov.shmr25.common.impl.di.BaseAccountModule
+import com.natan.shamilov.shmr25.common.impl.di.CommonApiModule
+import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryModule
+import com.natan.shamilov.shmr25.expenses.api.ExpensesDependencies
+import com.natan.shamilov.shmr25.history.api.HistoryDependencies
+import com.natan.shamilov.shmr25.incomes.api.IncomesDependencies
+import com.natan.shamilov.shmr25.splash.api.SplashDependencies
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
+@ViewModelFactoryScope
 @Component(
     modules = [
+        ViewModelFactoryModule::class,
+        CommonApiModule::class,
         NetworkModule::class,
-        com.natan.shamilov.shmr25.common.di.AccountModule::class,
-        com.natan.shamilov.shmr25.common.di.AccountApiModule::class,
-        com.natan.shamilov.shmr25.feature.account.di.AccountModule::class,
-        com.natan.shamilov.shmr25.feature.incomes.di.IncomesModule::class,
-        com.natan.shamilov.shmr25.feature.expenses.di.ExpensesModule::class,
-        com.natan.shamilov.shmr25.feature.categories.di.CategoriesModule::class,
-        com.natan.shamilov.shmr25.feature.history.di.HistoryModule::class
+        com.natan.shamilov.shmr25.common.impl.di.NetworkModule::class,
+        BaseAccountModule::class,
+        SplashDependenciesModule::class,
+        ExpensesDependenciesModule::class,
+        IncomesDependenciesModule::class,
+        HistoryDependenciesModule::class,
+        AccountsDependenciesModule::class,
+        CategoriesDependenciesModule::class,
+        ViewModelModule::class
     ]
 )
-interface AppComponent {
+interface AppComponent :
+    SplashDependencies,
+    ExpensesDependencies,
+    IncomesDependencies,
+    HistoryDependencies,
+    AccountDependencies,
+    CategoriesDependencies {
+
+    fun viewModelFactory(): ViewModelFactory
+
+    fun inject(activity: MainActivity)
+
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance application: Application): AppComponent
+
+        fun create(@BindsInstance context: Context): AppComponent
     }
-    fun inject(activity: MainActivity)
-    // Методы-провайдеры для ViewModelFactory
-    fun getCategoriesListUseCase(): com.natan.shamilov.shmr25.feature.categories.domain.usecase.GetCategoriesListUseCase
-    fun loadCategoriesListUseCase(): com.natan.shamilov.shmr25.feature.categories.domain.usecase.LoadCategoriesListUseCase
-    fun networkStateReceiver(): NetworkStateReceiver
-    fun getAccountObserverUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountObserverUseCase
-    fun getAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
-    fun getSelectedAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.GetSelectedAccountUseCase
-    fun setSelectedAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
-    fun createAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.CreateAccountUseCase
-    fun accountRepository(): com.natan.shamilov.shmr25.common.domain.repository.AccountRepository
-    fun editAccountUseCase(): com.natan.shamilov.shmr25.feature.account.domain.usecase.EditAccountUseCase
-    fun loadIncomesByPeriodUseCase(): com.natan.shamilov.shmr25.feature.incomes.domain.usecase.LoadIncomesByPeriodUseCase
-    fun getIncomesListUseCase(): com.natan.shamilov.shmr25.feature.incomes.domain.usecase.GetIncomesListUseCase
-    fun loadExpensesByPeriodUseCase(): com.natan.shamilov.shmr25.feature.expenses.domain.usecase.LoadExpensesByPeriodUseCase
-    fun getExpensesListUseCase(): com.natan.shamilov.shmr25.feature.expenses.domain.usecase.GetExpensesListUseCase
-    fun getHistoryByPeriodUseCase(): com.natan.shamilov.shmr25.feature.history.domain.usecase.GetHistoryByPeriodUseCase
-    fun accountStartupLoader(): com.natan.shamilov.shmr25.feature.splash.AccountStartupLoader
-    // Позже добавим inject для ViewModel и других компонентов
-} 
+}

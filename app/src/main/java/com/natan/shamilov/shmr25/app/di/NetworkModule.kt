@@ -1,16 +1,10 @@
 package com.natan.shamilov.shmr25.app.di
 
-import android.content.Context
 import com.natan.shamilov.shmr25.BuildConfig
-import com.natan.shamilov.shmr25.app.data.api.NetworkStateReceiver
-import com.natan.shamilov.shmr25.feature.history.data.api.HistoryApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,7 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 /**
- * Модуль Hilt для настройки сетевых зависимостей.
+ * Модуль Dagger 2 для настройки сетевых зависимостей.
  * Ответственность: Предоставление и конфигурация всех необходимых компонентов
  * для работы с сетью, включая HTTP-клиент, сериализацию JSON и API-интерфейсы.
  *
@@ -27,7 +21,6 @@ import javax.inject.Singleton
  * сетевых компонентов на протяжении всего жизненного цикла приложения.
  */
 @Module
-@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
     /**
@@ -95,30 +88,6 @@ class NetworkModule {
         .client(okHttpClient)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
-
-    /**
-     * Предоставляет реализацию API истории операций.
-     *
-     * @param retrofit Экземпляр Retrofit для создания API
-     * @return Реализация интерфейса HistoryApi
-     */
-    @Provides
-    @Singleton
-    fun provideHistoryApi(retrofit: Retrofit): HistoryApi =
-        retrofit.create(HistoryApi::class.java)
-
-    /**
-     * Предоставляет приёмник состояния сети.
-     * Используется для отслеживания состояния подключения к интернету.
-     *
-     * @param context Контекст приложения
-     * @return Экземпляр NetworkStateReceiver
-     */
-    @Provides
-    @Singleton
-    fun provideNetworkStateReceiver(
-        @ApplicationContext context: Context
-    ): NetworkStateReceiver = NetworkStateReceiver(context)
 
     companion object {
         /** Базовый URL для API */

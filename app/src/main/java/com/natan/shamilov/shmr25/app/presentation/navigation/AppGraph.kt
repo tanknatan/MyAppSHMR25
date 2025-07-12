@@ -1,10 +1,16 @@
 package com.natan.shamilov.shmr25.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.natan.shamilov.shmr25.app.appComponent
 import com.natan.shamilov.shmr25.app.presentation.MainScreen
-import com.natan.shamilov.shmr25.feature.splash.SplashScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.splash.impl.SplashFlow
+import com.natan.shamilov.shmr25.splash.impl.SplashScreen
+import com.natan.shamilov.shmr25.splash.impl.di.DaggerSplashComponent
 
 /**
  * Корневой навигационный граф приложения.
@@ -22,14 +28,21 @@ import com.natan.shamilov.shmr25.feature.splash.SplashScreen
 @Composable
 fun AppGraph() {
     val navigationState = rememberNavigationState()
+    val context = LocalContext.current
+    val appComponent = context.appComponent
     NavHost(
         navController = navigationState.navHostController,
-        startDestination = Screen.Splash.route
+        startDestination = SplashFlow.Splash.route
     ) {
-        composable(Screen.Splash.route) {
-            SplashScreen(onNextScreen = {
-                navigationState.splashNavigate(Screen.Main)
-            })
+        composable(SplashFlow.Splash.route) {
+            val splashComponent = DaggerSplashComponent.factory().create(appComponent)
+            CompositionLocalProvider(
+                LocalViewModelFactory provides splashComponent.viewModelFactory()
+            ) {
+                SplashScreen(onNextScreen = {
+                    navigationState.splashNavigate(Screen.Main)
+                })
+            }
         }
 
         composable(Screen.Main.route) {

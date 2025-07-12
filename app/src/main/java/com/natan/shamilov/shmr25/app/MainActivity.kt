@@ -5,31 +5,35 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.natan.shamilov.shmr25.app.network.NetworkEvent
-import com.natan.shamilov.shmr25.app.network.NetworkViewModel
 import com.natan.shamilov.shmr25.app.presentation.navigation.AppGraph
-import com.natan.shamilov.shmr25.common.presentation.ui.theme.MyAppSHMR25Theme
-import dagger.hilt.android.AndroidEntryPoint
+import com.natan.shamilov.shmr25.app.network.NetworkEvent
+import com.natan.shamilov.shmr25.app.presentation.viewModel.NetworkViewModel
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.MyAppSHMR25Theme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * Главная активность приложения.
  * Ответственность: Точка входа в приложение, инициализация основного UI
  * и обработка событий сетевого подключения.
  *
- * Использует Jetpack Compose для отображения UI и Hilt для внедрения зависимостей.
+ * Использует Jetpack Compose для отображения UI и Dagger 2 для внедрения зависимостей.
  * Отслеживает состояние сетевого подключения и показывает соответствующие уведомления.
  */
-@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val networkViewModel: NetworkViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var networkViewModel: NetworkViewModel
 
     /**
      * Инициализация активности.
@@ -41,9 +45,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        appComponent.inject(this)
+        networkViewModel = ViewModelProvider(this, viewModelFactory)[NetworkViewModel::class]
         setContent {
             MyAppSHMR25Theme {
-                AppGraph()
+                CompositionLocalProvider(
+                    LocalViewModelFactory provides appComponent.viewModelFactory()
+                ) {
+                    AppGraph()
+                }
             }
         }
         initNetworkEvents()

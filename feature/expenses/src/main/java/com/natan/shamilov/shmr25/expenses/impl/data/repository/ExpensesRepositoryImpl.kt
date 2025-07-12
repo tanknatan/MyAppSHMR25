@@ -1,20 +1,18 @@
 package com.natan.shamilov.shmr25.expenses.impl.data.repository
 
 import com.natan.shamilov.shmr25.common.api.AccountProvider
+import com.natan.shamilov.shmr25.common.api.TransactionsProvider
 import com.natan.shamilov.shmr25.common.impl.data.api.TransactionsApi
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
-import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.expenses.impl.domain.entity.Expense
+import com.natan.shamilov.shmr25.expenses.impl.domain.repository.ExpensesRepository
 import com.natan.shamilov.shmr25.feature.expenses.data.mapper.ExpenseMapper
-import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
-import com.natan.shamilov.shmr25.feature.expenses.domain.repository.ExpensesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -23,14 +21,12 @@ import javax.inject.Inject
 class ExpensesRepositoryImpl @Inject constructor(
     private val api: TransactionsApi,
     private val accountProvider: AccountProvider,
+    private val transactionsProvider: TransactionsProvider,
     private val mapper: ExpenseMapper,
 ) : ExpensesRepository {
 
     private val today = LocalDate.now().toString()
     private var todayExpensesList = emptyList<TransactionDto>()
-
-    private val _completeExpensesByPeriodLoadingFlow = MutableStateFlow<State>(State.Loading)
-    override val completeExpensesByPeriodLoadingFlow = _completeExpensesByPeriodLoadingFlow.asStateFlow()
 
     override suspend fun getExpensesList(): List<Expense> = withContext(Dispatchers.IO) {
         todayExpensesList
@@ -63,6 +59,47 @@ class ExpensesRepositoryImpl @Inject constructor(
                 formatter
             )
         }
+    }
+
+    override suspend fun getExpenseById(id: Int): Expense? = withContext(Dispatchers.IO) {
+        return@withContext try {
+            val dto = api.getTransactionById(id)
+            if (!dto.category.isIncome) mapper.mapTransactionDtoToExpense(dto) else null
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun deleteTransaction(transactionId: Int): Result<Unit> = Result.execute {
+        api.deleteTransaction(transactionId)
+    }
+
+    override suspend fun createTransaction(
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String,
+    ): Result<Unit> {
+        return transactionsProvider.createTransaction(accountId, categoryId, amount, transactionDate, comment)
+    }
+
+    override suspend fun editTransaction(
+        transactionId: Int,
+        accountId: Int,
+        categoryId: Int,
+        amount: String,
+        transactionDate: String,
+        comment: String,
+    ): Result<Unit> {
+        return transactionsProvider.editTransaction(
+            transactionId,
+            accountId,
+            categoryId,
+            amount,
+            transactionDate,
+            comment
+        )
     }
 
     private suspend fun loadExpensesForAccounts(

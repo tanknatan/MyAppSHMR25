@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.common.impl.di
 
 import androidx.lifecycle.ViewModelProvider
-import com.example.core.di.ViewModelFactoryScope
 import dagger.Binds
 import dagger.Module
 

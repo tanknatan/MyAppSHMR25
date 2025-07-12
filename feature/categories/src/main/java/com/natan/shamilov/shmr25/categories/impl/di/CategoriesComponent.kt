@@ -1,8 +1,9 @@
 package com.natan.shamilov.shmr25.categories.impl.di
 
-import com.example.core.di.ViewModelFactoryScope
+import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryScope
 import com.natan.shamilov.shmr25.categories.api.CategoriesDependencies
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryModule
 import dagger.Component
 
 @CategoriesScope
@@ -12,7 +13,7 @@ import dagger.Component
         CategoriesDependencies::class
     ],
     modules = [
-        CategoriesModule::class,
+        ViewModelFactoryModule::class,
         CategoriesViewModelModule::class,
         CategoriesRepositoryModule::class
     ]

@@ -12,6 +12,7 @@
     <string name="add_expense">Добавить расход</string>
     <string name="add_earning">Добавить доход</string>
     <string name="categories">Статьи</string>
+    <string name="category">Статья</string>
     <string name="my_categories">Мои статьи</string>
     <string name="my_account">Мой счет</string>
     <string name="dark_theme">Темная тема</string>
@@ -42,5 +43,6 @@
     <string name="not_network">Нет сети</string>
     <string name="retry">Повторить</string>
     <string name="choose_account">Выберите аккаунт</string>
+    <string name="choose_category">Выберите статью</string>
     <string name="list_empty">Список пуст</string>
 </resources>

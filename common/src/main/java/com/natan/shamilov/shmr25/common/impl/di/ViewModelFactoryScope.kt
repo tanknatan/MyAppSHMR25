@@ -1,4 +1,4 @@
-package com.example.core.di
+package com.natan.shamilov.shmr25.common.impl.di
 
 import javax.inject.Scope
 

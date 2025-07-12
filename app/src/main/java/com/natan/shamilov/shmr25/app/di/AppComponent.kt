@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.app.di
 
 import android.content.Context
-import com.example.core.di.ViewModelFactoryScope
+import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryScope
 import com.natan.shamilov.shmr25.account.api.AccountDependencies
 import com.natan.shamilov.shmr25.app.MainActivity
 import com.natan.shamilov.shmr25.app.di.moduls.AccountsDependenciesModule
@@ -13,6 +13,8 @@ import com.natan.shamilov.shmr25.app.di.moduls.SplashDependenciesModule
 import com.natan.shamilov.shmr25.app.di.moduls.ViewModelModule
 import com.natan.shamilov.shmr25.categories.api.CategoriesDependencies
 import com.natan.shamilov.shmr25.common.impl.di.BaseAccountModule
+import com.natan.shamilov.shmr25.common.impl.di.BaseCategoriesModule
+import com.natan.shamilov.shmr25.common.impl.di.BaseTransactionsModule
 import com.natan.shamilov.shmr25.common.impl.di.CommonApiModule
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryModule
@@ -33,6 +35,8 @@ import javax.inject.Singleton
         NetworkModule::class,
         com.natan.shamilov.shmr25.common.impl.di.NetworkModule::class,
         BaseAccountModule::class,
+        BaseCategoriesModule::class,
+        BaseTransactionsModule::class,
         SplashDependenciesModule::class,
         ExpensesDependenciesModule::class,
         IncomesDependenciesModule::class,

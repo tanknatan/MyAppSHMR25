@@ -1,12 +1,13 @@
-package com.natan.shamilov.shmr25.feature.categories.presentation.screen
+package com.natan.shamilov.shmr25.categories.impl.presentation.screen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.categories.impl.domain.usecase.GetCategoriesListUseCase
+import com.natan.shamilov.shmr25.categories.impl.domain.usecase.LoadCategoriesListUseCase
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
-import com.natan.shamilov.shmr25.feature.categories.domain.usecase.GetCategoriesListUseCase
-import com.natan.shamilov.shmr25.feature.categories.domain.usecase.LoadCategoriesListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -73,12 +74,13 @@ class CategoriesViewModel @Inject constructor(
             _uiState.value = State.Loading
             if (getCategoriesListUseCase().isEmpty()) {
                 when (val result = loadCategoriesUseCase()) {
-                    is com.natan.shamilov.shmr25.common.impl.data.model.Result.Success -> {
+                    is Result.Success -> {
                         _categories.value = getCategoriesListUseCase()
+                        Log.d("CategoriesViewModel", " $_categories.value.toString()")
                         _uiState.value = State.Content
                     }
 
-                    is com.natan.shamilov.shmr25.common.impl.data.model.Result.Error -> {
+                    is Result.Error -> {
                         if (getCategoriesListUseCase().isNotEmpty()) {
                             _categories.value = getCategoriesListUseCase()
                             _uiState.value = State.Content
@@ -88,7 +90,7 @@ class CategoriesViewModel @Inject constructor(
                         Log.e("CategoriesViewModel", "Ошибка загрузки категорий: ${result.exception.message}")
                     }
 
-                    is com.natan.shamilov.shmr25.common.impl.data.model.Result.Loading -> {
+                    is Result.Loading -> {
                         _uiState.value = State.Loading
                     }
                 }

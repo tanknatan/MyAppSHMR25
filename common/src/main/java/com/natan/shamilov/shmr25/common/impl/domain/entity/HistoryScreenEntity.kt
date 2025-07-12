@@ -9,8 +9,11 @@ interface HistoryScreenEntity {
     val id: Long
     val name: String
     val emoji: String
+    val categoryId: Int
     val amount: Double
     val currency: String
     val comment: String?
     val createdAt: String
+    val accountId: Int
+    val isIncome: Boolean
 }

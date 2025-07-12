@@ -1,7 +1,7 @@
 package com.natan.shamilov.shmr25.expenses.impl.di
 
 import com.natan.shamilov.shmr25.expenses.impl.data.repository.ExpensesRepositoryImpl
-import com.natan.shamilov.shmr25.feature.expenses.domain.repository.ExpensesRepository
+import com.natan.shamilov.shmr25.expenses.impl.domain.repository.ExpensesRepository
 import dagger.Binds
 import dagger.Module
 

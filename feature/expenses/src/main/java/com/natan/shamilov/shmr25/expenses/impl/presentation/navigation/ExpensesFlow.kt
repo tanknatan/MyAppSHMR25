@@ -22,8 +22,25 @@ sealed class ExpensesFlow(
         fun createRoute(type: HistoryType, from: String) = "history/${type.name}?from=$from"
     }
 
+    data object AddExpense : ExpensesFlow(
+        route = ADD_EXPENSE_ROUTE,
+        title = R.string.my_expenses,
+        R.drawable.ic_accept,
+        R.drawable.ic_close
+    )
+
+    data object EditExpense : ExpensesFlow(
+        route = "edit_expense_route/{expenseId}",
+        title = R.string.my_expenses,
+        R.drawable.ic_accept,
+        R.drawable.ic_close
+    ) {
+        fun createRoute(expenseId: String) = "edit_expense_route/$expenseId"
+    }
+
     companion object {
         const val EXPENSES_GRAP = "expenses_graph"
         const val EXPENSESTODAY_ROUTE = "expenses_today_route"
+        const val ADD_EXPENSE_ROUTE = "add_expense_route"
     }
 }

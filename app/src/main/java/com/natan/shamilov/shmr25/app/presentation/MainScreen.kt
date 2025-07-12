@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.natan.shamilov.shmr25.account.di.DaggerAccountsComponent
+import com.natan.shamilov.shmr25.account.impl.di.DaggerAccountsComponent
 import com.natan.shamilov.shmr25.app.appComponent
 import com.natan.shamilov.shmr25.app.presentation.components.MyNavigationBar
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
@@ -25,11 +25,11 @@ import com.natan.shamilov.shmr25.expenses.impl.di.DaggerExpensesComponent
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.expensesGraph
-import com.natan.shamilov.shmr25.feature.history.presentation.navigation.historyGraph
+import com.natan.shamilov.shmr25.history.impl.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.feature.option.presentation.navigation.optionsGraph
-import com.natan.shamilov.shmr25.history.di.DaggerHistoryComponent
-import com.natan.shamilov.shmr25.incomes.di.DaggerIncomesComponent
-import com.natan.shamilov.shmr25.incomes.presentation.navigation.incomesGraph
+import com.natan.shamilov.shmr25.history.impl.di.DaggerHistoryComponent
+import com.natan.shamilov.shmr25.incomes.impl.di.DaggerIncomesComponent
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.incomesGraph
 
 /**
  * Основной экран приложения.

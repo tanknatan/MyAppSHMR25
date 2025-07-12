@@ -1,7 +1,7 @@
-package com.natan.shamilov.shmr25.feature.categories.domain.usecase
+package com.natan.shamilov.shmr25.categories.impl.domain.usecase
 
+import com.natan.shamilov.shmr25.categories.impl.domain.repository.CategoriesRepository
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
-import com.natan.shamilov.shmr25.feature.categories.domain.repository.CategoriesRepository
 import javax.inject.Inject
 
 /**
@@ -12,11 +12,11 @@ import javax.inject.Inject
  * @property repository Репозиторий для работы с категориями
  */
 class LoadCategoriesListUseCase @Inject constructor(
-    private val repository: CategoriesRepository
+    private val categoriesRepository: CategoriesRepository,
 ) {
     /**
      * Выполняет получение списка категорий
      * @return результат операции со списком категорий
      */
-    suspend operator fun invoke(): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> = repository.loadCategoriesList()
+    suspend operator fun invoke(): Result<Unit> = categoriesRepository.loadCategoriesList()
 }

@@ -2,7 +2,7 @@ package com.natan.shamilov.shmr25.feature.expenses.data.mapper
 
 import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
-import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
+import com.natan.shamilov.shmr25.expenses.impl.domain.entity.Expense
 import javax.inject.Inject
 
 /**
@@ -20,7 +20,10 @@ class ExpenseMapper @Inject constructor() {
             amount = amount.toDouble(),
             currency = dto.account.currency.convertCurrency(),
             comment = comment,
-            createdAt = transactionDate
+            createdAt = transactionDate,
+            categoryId = dto.category.id.toInt(),
+            accountId = dto.account.id,
+            isIncome = dto.category.isIncome
         )
     }
 }

@@ -53,6 +53,7 @@ fun AppCard(
     title: String,
     subtitle: String? = null,
     amount: Double? = null,
+    stringDate: String? = null,
     subAmount: String? = null,
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
@@ -62,16 +63,16 @@ fun AppCard(
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
-        modifier = if (canNavigate && onNavigateClick != null) {
-            Modifier
-                .fillMaxWidth()
-                .height(70.dep)
-                .clickable { }
-        } else {
-            Modifier
-                .fillMaxWidth()
-                .height(70.dep)
-        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .then(
+                if (onNavigateClick != null) {
+                    Modifier.clickable { onNavigateClick() }
+                } else {
+                    Modifier
+                }
+            ),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.background
         ),
@@ -158,7 +159,21 @@ fun AppCard(
                 Spacer(modifier = Modifier.width(16.dp))
             }
 
-            if (canNavigate && onNavigateClick != null) {
+            if (stringDate != null) {
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = stringDate,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 16.sp,
+                        fontFamily = rodotoFont
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+
+            if (canNavigate) {
                 if (isSetting) {
                     Image(
                         painter = painterResource(R.drawable.ic_category_more),

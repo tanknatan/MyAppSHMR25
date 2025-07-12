@@ -1,7 +1,7 @@
-package com.natan.shamilov.shmr25.feature.expenses.domain.usecase
+package com.natan.shamilov.shmr25.expenses.impl.domain.usecase
 
-import com.natan.shamilov.shmr25.feature.expenses.domain.entity.Expense
-import com.natan.shamilov.shmr25.feature.expenses.domain.repository.ExpensesRepository
+import com.natan.shamilov.shmr25.expenses.impl.domain.entity.Expense
+import com.natan.shamilov.shmr25.expenses.impl.domain.repository.ExpensesRepository
 import javax.inject.Inject
 
 class GetExpensesListUseCase @Inject constructor(

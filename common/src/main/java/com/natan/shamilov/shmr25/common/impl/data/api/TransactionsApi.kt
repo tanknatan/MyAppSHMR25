@@ -1,7 +1,12 @@
 package com.natan.shamilov.shmr25.common.impl.data.api
 
+import com.natan.shamilov.shmr25.common.impl.data.model.CreateTransactionRequestBody
 import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -18,4 +23,25 @@ interface TransactionsApi {
         @Query("startDate") startDate: String?,
         @Query("endDate") endDate: String?,
     ): List<TransactionDto>
+
+    @POST("transactions")
+    suspend fun createTransaction(
+        @Body requestBody: CreateTransactionRequestBody
+    )
+
+    @PUT("transactions/{id}")
+    suspend fun editTransaction(
+        @Path("id") transactionId: Int,
+        @Body requestBody: CreateTransactionRequestBody
+    )
+
+    @GET("transactions/{id}")
+    suspend fun getTransactionById(
+        @Path("id") transactionId: Int
+    ): TransactionDto
+
+    @DELETE("transactions/{id}")
+    suspend fun deleteTransaction(
+        @Path("id") transactionId: Int
+    )
 }

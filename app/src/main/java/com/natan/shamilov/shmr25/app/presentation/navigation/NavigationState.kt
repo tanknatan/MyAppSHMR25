@@ -5,7 +5,7 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.natan.shamilov.shmr25.common.domain.entity.Screen
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen
 
 /**
  * Класс для управления навигацией в приложении.

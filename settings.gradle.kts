@@ -15,4 +15,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "MyAppSHMR25"
 include(":app")
- 
+include(":common")
+include(":feature:account")
+include(":feature:categories")
+include(":feature:expenses")
+include(":feature:history")
+include(":feature:incomes")
+include(":feature:splash")
+include(":feature:options")

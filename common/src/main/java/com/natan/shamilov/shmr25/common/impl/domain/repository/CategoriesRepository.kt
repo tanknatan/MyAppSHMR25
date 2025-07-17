@@ -13,7 +13,5 @@ internal interface CategoriesRepository {
      * Получает список всех категорий
      * @return результат операции со списком категорий
      */
-    suspend fun loadCategoriesList(): Result<Unit>
-
     suspend fun getCategoriesList(): List<Category>
 }

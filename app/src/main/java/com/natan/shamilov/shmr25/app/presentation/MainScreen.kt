@@ -23,7 +23,7 @@ import com.natan.shamilov.shmr25.categories.impl.di.DaggerCategoriesComponent
 import com.natan.shamilov.shmr25.categories.impl.presentation.navigation.catigoriesGraph
 import com.natan.shamilov.shmr25.expenses.impl.di.DaggerExpensesComponent
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
-import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.ExpensesFlow
+import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.expensesGraph
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.feature.option.presentation.navigation.optionsGraph

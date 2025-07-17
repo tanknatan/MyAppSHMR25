@@ -9,8 +9,6 @@ interface ExpensesDependencies {
 
     val accountProvider: AccountProvider
 
-    val transactionsApi: TransactionsApi
-
     val categoriesProvider: CategoriesProvider
 
     val transactionsProvider: TransactionsProvider

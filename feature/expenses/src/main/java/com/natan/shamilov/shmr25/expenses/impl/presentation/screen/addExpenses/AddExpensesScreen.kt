@@ -31,7 +31,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.R
-import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.ExpensesFlow
+import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId

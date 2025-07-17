@@ -14,12 +14,6 @@ class AccountRepositoryImpl @Inject constructor(
     private val accountProvider: AccountProvider,
 ) : AccountRepository {
 
-    override suspend fun loadAccountsList(): Result<Unit> {
-        return Result.execute {
-            accountProvider.loadAccountsList()
-        }
-    }
-
     override suspend fun getAccountsList(): List<Account> {
         return accountProvider.getAccountsList()
     }

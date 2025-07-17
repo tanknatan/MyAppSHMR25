@@ -9,7 +9,6 @@ import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 interface AccountRepository {
 
     suspend fun getAccountsList(): List<Account>
-    suspend fun loadAccountsList(): Result<Unit>
     suspend fun getSelectedAccount(): Account?
     suspend fun setSelectedAccount(accountId: Int)
     suspend fun getAccountById(id: Int): Account?

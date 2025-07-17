@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.history.impl.di.HistoryComponent
+import com.natan.shamilov.shmr25.history.impl.presentation.screen.analysis.AnalysisScreen
 import com.natan.shamilov.shmr25.history.impl.presentation.screen.editHistory.EditHistoryScreen
 import com.natan.shamilov.shmr25.history.impl.presentation.screen.history.HistoryScreen
 
@@ -46,7 +47,8 @@ fun NavGraphBuilder.historyGraph(navHostController: NavHostController, historyCo
                     onBackClick = { navHostController.popBackStack() },
                     onItemClick = { historyId ->
                         navHostController.navigate(HistoryFlow.EditHistory.createRoute(historyId.id.toString(), from))
-                    }
+                    },
+                    onNavigateClick = { navHostController.navigate(HistoryFlow.Analysis.createRoute(type, from)) },
                 )
             }
         }
@@ -69,6 +71,33 @@ fun NavGraphBuilder.historyGraph(navHostController: NavHostController, historyCo
                 EditHistoryScreen(
                     historyId = historyId,
                     onBackPressed = { navHostController.popBackStack() },
+                )
+            }
+        }
+
+        composable(
+            route = HistoryFlow.Analysis.route,
+            arguments = listOf(
+                navArgument("type") {
+                    type = NavType.StringType
+                    defaultValue = HistoryType.EXPENSE.name
+                },
+                navArgument("from") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
+        ) { backStackEntry ->
+            val type = backStackEntry.arguments?.getString("type")?.let {
+                HistoryType.valueOf(it)
+            } ?: HistoryType.EXPENSE
+
+            CompositionLocalProvider(
+                LocalViewModelFactory provides historyComponent.viewModelFactory()
+            ) {
+                AnalysisScreen(
+                    type = type,
+                    onBackClick = { navHostController.popBackStack() }
                 )
             }
         }

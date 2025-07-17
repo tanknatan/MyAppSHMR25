@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -23,9 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.common.R
@@ -53,6 +56,8 @@ fun AppCard(
     title: String,
     subtitle: String? = null,
     amount: Double? = null,
+    percent: Double? = null,
+    subPercent: Double? = null,
     stringDate: String? = null,
     subAmount: String? = null,
     avatarEmoji: String? = null,
@@ -60,6 +65,7 @@ fun AppCard(
     onNavigateClick: (() -> Unit)? = null,
     isSetting: Boolean = false,
     currency: String? = null,
+    date: String? = null,
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -130,7 +136,9 @@ fun AppCard(
                         style = MaterialTheme.typography.bodyMedium,
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontFamily = rodotoFont
+                        fontFamily = rodotoFont,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
@@ -158,7 +166,25 @@ fun AppCard(
                 }
                 Spacer(modifier = Modifier.width(16.dp))
             }
-
+            if (percent != null && subPercent != null) {
+                Column(
+                    horizontalAlignment = Alignment.End
+                ) {
+                    Text(
+                        text = "$percent%",
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 16.sp,
+                        fontFamily = rodotoFont
+                    )
+                    Text(
+                        text = subPercent.toCurrencyString(currency = currency ?: "₽"),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 16.sp,
+                        fontFamily = rodotoFont
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+            }
             if (stringDate != null) {
                 Column(
                     horizontalAlignment = Alignment.End
@@ -168,6 +194,23 @@ fun AppCard(
                         style = MaterialTheme.typography.bodyLarge,
                         fontSize = 16.sp,
                         fontFamily = rodotoFont
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+            if (date != null) {
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.primary, // зелёный из картинки
+                            shape = RoundedCornerShape(50)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
+                ) {
+                    Text(
+                        text = date,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Black,
                     )
                 }
                 Spacer(modifier = Modifier.width(16.dp))

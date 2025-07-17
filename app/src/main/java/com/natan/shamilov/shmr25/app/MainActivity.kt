@@ -47,38 +47,28 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         appComponent.inject(this)
         networkViewModel = ViewModelProvider(this, viewModelFactory)[NetworkViewModel::class]
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                networkViewModel.events.collect { event ->
+                    when (event) {
+                        is NetworkEvent.ShowNoConnectionToast -> {
+                            Toast.makeText(
+                                this@MainActivity,
+                                "Отсутствует подключение к интернету",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
+        }
         setContent {
             MyAppSHMR25Theme {
                 CompositionLocalProvider(
                     LocalViewModelFactory provides appComponent.viewModelFactory()
                 ) {
                     AppGraph()
-                }
-            }
-        }
-        initNetworkEvents()
-    }
-
-    /**
-     * Инициализация обработки сетевых событий.
-     * Запускает корутину для отслеживания состояния сети и отображения
-     * уведомлений при отсутствии подключения.
-     */
-    private fun initNetworkEvents() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                networkViewModel.events.collect { event ->
-                    when (event) {
-                        is NetworkEvent.ShowNoConnectionToast -> {
-                            withContext(Dispatchers.Main) {
-                                Toast.makeText(
-                                    this@MainActivity,
-                                    "Отсутствует подключение к интернету",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
                 }
             }
         }

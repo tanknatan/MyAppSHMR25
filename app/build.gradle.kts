@@ -107,4 +107,8 @@ dependencies {
     implementation(project(":feature:splash"))
     // Общий модуль
     implementation(project(":common"))
+    //Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
 }

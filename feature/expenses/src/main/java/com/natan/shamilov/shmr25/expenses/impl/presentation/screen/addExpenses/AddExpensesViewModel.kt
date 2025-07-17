@@ -1,6 +1,5 @@
 package com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
@@ -9,11 +8,9 @@ import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toUtcIsoString
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.CreateExpensesUseCase
-import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.EditExpensesUseCase
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.GetCategoriesListUseCase
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.GetSelectedAccountUseCase
-import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.LoadCategoriesUseCase
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.SetSelectedAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +26,6 @@ import javax.inject.Inject
 
 class AddExpensesViewModel @Inject constructor(
     private val getCategoriesListUseCase: GetCategoriesListUseCase,
-    private val loadCategoriesListUseCase: LoadCategoriesUseCase,
     private val getAccountUseCase: GetAccountUseCase,
     private val getSelectedAccountUseCase: GetSelectedAccountUseCase,
     private val setSelectedAccountUseCase: SetSelectedAccountUseCase,
@@ -120,8 +116,11 @@ class AddExpensesViewModel @Inject constructor(
     }
 
     fun initialize() {
-        loadCategories()
-        loadAccounts()
+        viewModelScope.launch(Dispatchers.IO){
+            loadCategories()
+            loadAccounts()
+            _uiState.value = State.Content
+        }
     }
 
     fun createTransaction(onSuccess: () -> Unit) {
@@ -159,42 +158,14 @@ class AddExpensesViewModel @Inject constructor(
 
     private fun loadCategories() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = State.Loading
-            if (getCategoriesListUseCase().isEmpty()) {
-                when (val result = loadCategoriesListUseCase()) {
-                    is Result.Success -> {
-                        _categories.value = getCategoriesListUseCase()
-                        Log.d("CategoriesViewModel", " $_categories.value.toString()")
-                        _uiState.value = State.Content
-                    }
-
-                    is Result.Error -> {
-                        if (getCategoriesListUseCase().isNotEmpty()) {
-                            _categories.value = getCategoriesListUseCase()
-                            _uiState.value = State.Content
-                        } else {
-                            _uiState.value = State.Error
-                        }
-                        Log.e("CategoriesViewModel", "Ошибка загрузки категорий: ${result.exception.message}")
-                    }
-
-                    is Result.Loading -> {
-                        _uiState.value = State.Loading
-                    }
-                }
-            } else {
-                _categories.value = getCategoriesListUseCase()
-                _uiState.value = State.Content
-            }
+            _categories.value = getCategoriesListUseCase()
         }
     }
 
     private fun loadAccounts() {
         viewModelScope.launch(Dispatchers.IO) {
-            _uiState.value = State.Loading
             _accounts.value = getAccountUseCase()
             _selectedAccount.value = getSelectedAccountUseCase()
-            _uiState.value = State.Content
         }
     }
 }

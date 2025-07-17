@@ -1,5 +1,6 @@
 package com.natan.shamilov.shmr25.history.impl.presentation.navigation
 
+import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen
 import com.natan.shamilov.shmr25.history.R
 
@@ -34,5 +35,15 @@ sealed class HistoryFlow(
     ) {
         fun createRoute(historyId: String, from: String): String =
             "edit_history_route/$historyId?from=$from"
+    }
+
+    data object Analysis : HistoryFlow(
+        route = "analysis_route/{$TYPE_KEY}?from={$FROM_KEY}",
+        title = R.string.analysis,
+        endIcone = null,
+        startIcone = R.drawable.ic_back,
+    ) {
+        fun createRoute(type: HistoryType, from: String): String =
+            "analysis_route/${type.name}?from=$from"
     }
 }

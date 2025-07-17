@@ -5,5 +5,5 @@ data class CreateTransactionRequestBody(
     val categoryId: Int,
     val amount: String,
     val transactionDate: String,
-    val comment: String
+    val comment: String?
 )

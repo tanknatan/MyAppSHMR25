@@ -12,17 +12,17 @@ sealed class Result<out T> {
     /**
      * Представляет успешный результат операции с данными
      */
-    data class Success<T>(val data: T) : com.natan.shamilov.shmr25.common.impl.data.model.Result<T>()
+    data class Success<T>(val data: T) : Result<T>()
 
     /**
      * Представляет ошибку при выполнении операции
      */
-    data class Error(val exception: Exception) : com.natan.shamilov.shmr25.common.impl.data.model.Result<Nothing>()
+    data class Error(val exception: Exception) : Result<Nothing>()
 
     /**
      * Представляет состояние загрузки
      */
-    object Loading : com.natan.shamilov.shmr25.common.impl.data.model.Result<Nothing>()
+    object Loading : Result<Nothing>()
 
     companion object {
         private const val MAX_RETRIES = 3
@@ -34,18 +34,18 @@ sealed class Result<out T> {
          * @param block лямбда-функция, выполняющая асинхронную операцию
          * @return Result<T> результат выполнения операции
          */
-        suspend fun <T> execute(block: suspend () -> T): com.natan.shamilov.shmr25.common.impl.data.model.Result<T> {
+        suspend fun <T> execute(block: suspend () -> T): Result<T> {
             var retryCount = 0
             while (true) {
                 try {
-                    return com.natan.shamilov.shmr25.common.impl.data.model.Result.Success(block())
+                    return Result.Success(block())
                 } catch (e: Exception) {
                     if ((e is HttpException) && (e.code() == ERROR_CODE_500) && (retryCount < MAX_RETRIES)) {
                         retryCount++
-                        delay(com.natan.shamilov.shmr25.common.impl.data.model.Result.Companion.RETRY_DELAY_MS)
+                        delay(Result.Companion.RETRY_DELAY_MS)
                         continue
                     }
-                    return com.natan.shamilov.shmr25.common.impl.data.model.Result.Error(e)
+                    return Result.Error(e)
                 }
             }
         }

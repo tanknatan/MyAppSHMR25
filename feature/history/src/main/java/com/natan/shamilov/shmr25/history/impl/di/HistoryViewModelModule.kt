@@ -2,6 +2,7 @@ package com.natan.shamilov.shmr25.history.impl.di
 
 import androidx.lifecycle.ViewModel
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelKey
+import com.natan.shamilov.shmr25.history.impl.presentation.screen.analysis.AnalysisViewModel
 import com.natan.shamilov.shmr25.history.impl.presentation.screen.editHistory.EditHistoryViewModel
 import com.natan.shamilov.shmr25.history.impl.presentation.screen.history.HistoryViewModel
 import dagger.Binds
@@ -20,4 +21,9 @@ interface HistoryViewModelModule {
     @IntoMap
     @ViewModelKey(EditHistoryViewModel::class)
     fun bindEditHistoryViewModel(historyViewModel: EditHistoryViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AnalysisViewModel::class)
+    fun bindAnalysisViewModel(analysisViewModel:  AnalysisViewModel): ViewModel
 }

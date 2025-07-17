@@ -7,10 +7,10 @@ import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.formatDateToMillis
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toLocalTimeWithoutSeconds
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toUtcIsoString
-import com.natan.shamilov.shmr25.history.impl.domain.model.HistoryItem
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.DeletTransactionUseCase
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.EditTransactionUseCase
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetAccountByIdUseCase
@@ -19,7 +19,6 @@ import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetCategoriesListUs
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetCategoryByIdUseCase
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetSelectedAccountUseCase
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetTransacrionByIdUseCase
-import com.natan.shamilov.shmr25.history.impl.domain.usecase.LoadCategoriesUseCase
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.SetSelectedAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +34,6 @@ import javax.inject.Inject
 
 class EditHistoryViewModel @Inject constructor(
     private val getCategoriesListUseCase: GetCategoriesListUseCase,
-    private val loadCategoriesListUseCase: LoadCategoriesUseCase,
     private val getAccountUseCase: GetAccountUseCase,
     private val getSelectedAccountUseCase: GetSelectedAccountUseCase,
     private val setSelectedAccountUseCase: SetSelectedAccountUseCase,
@@ -45,11 +43,11 @@ class EditHistoryViewModel @Inject constructor(
     private val editTransactionUseCase: EditTransactionUseCase,
     private val deleteTransactionUseCase: DeletTransactionUseCase,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<State>(State.Content)
+    private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private val _expense = MutableStateFlow<HistoryItem?>(null)
-    val expense: StateFlow<HistoryItem?> = _expense.asStateFlow()
+    private val _expense = MutableStateFlow<Transaction?>(null)
+    val expense: StateFlow<Transaction?> = _expense.asStateFlow()
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts: StateFlow<List<Account>> = _accounts.asStateFlow()
@@ -135,35 +133,37 @@ class EditHistoryViewModel @Inject constructor(
     fun initialize(transactionId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("EditHistoryVM", "transactionId: $transactionId")
+            when (val expense = getTransacrionByIdUseCase(transactionId.toInt())) {
+                is Result.Success<Transaction> -> {
+                    loadCategories(expense.data.isIncome)
+                    val accounts = getAccountUseCase()
 
-            val expense = getTransacrionByIdUseCase(transactionId.toInt())
-            if (expense != null) {
-                loadCategories(expense.isIncome)
+                    // Обновляем всё
+                    _expense.value = expense.data
+                    Log.d("EditExpensesVM", "expense = $expense")
+                    _accounts.value = accounts
+                    Log.d("EditExpensesVM", "categories = ${categories.value}")
+                    Log.d("EditExpensesVM", "accounts = $accounts")
+
+                    _amount.value = (expense.data.amount ?: "").toString()
+                    _comment.value = expense.data.comment.orEmpty()
+
+                    _selectedCategory.value = getCategoryByIdUseCase(expense.data.categoryId, expense.data.isIncome)
+                    _selectedAccount.value = getAccountByIdUseCase(expense.data.accountId)
+
+                    Log.d("EditExpensesVM", "selectedCategory = ${_selectedCategory.value}")
+
+                    expense.data.createdAt.let { createdAt ->
+                        _selectedDate.value = createdAt.formatDateToMillis()
+                        _selectedTime.value = createdAt.toLocalTimeWithoutSeconds()
+                        Log.d("EditExpensesVM", "parsed createdAt = $createdAt")
+                    }
+                    _uiState.value = State.Content
+                }
+
+                is Result.Error -> TODO()
+                Result.Loading -> TODO()
             }
-            val accounts = getAccountUseCase()
-
-            // Обновляем всё
-            _expense.value = expense
-            Log.d("EditHistoryVM", "expense = $expense")
-            _accounts.value = accounts
-            Log.d("EditHistoryVM", "categories = ${categories.value}")
-            Log.d("EditHistoryVM", "accounts = $accounts")
-
-            _amount.value = (expense?.amount ?: "").toString()
-            _comment.value = expense?.comment.orEmpty()
-
-            _selectedCategory.value = expense?.let { getCategoryByIdUseCase(it.categoryId, it.isIncome) }
-            _selectedAccount.value = expense?.let { getAccountByIdUseCase(it.accountId) }
-
-            Log.d("EditHistoryVM", "selectedCategory = ${_selectedCategory.value}")
-
-            expense?.createdAt?.let { createdAt ->
-                _selectedDate.value = createdAt.formatDateToMillis()
-                _selectedTime.value = createdAt.toLocalTimeWithoutSeconds()
-                Log.d("EditHistoryVM", "parsed createdAt = $createdAt")
-            }
-
-            _uiState.value = State.Content
         }
     }
 
@@ -217,28 +217,7 @@ class EditHistoryViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadCategories(isIncome: Boolean) {
-        if (getCategoriesListUseCase(isIncome).isEmpty()) {
-            when (val result = loadCategoriesListUseCase()) {
-                is Result.Success -> {
-                    _categories.value = getCategoriesListUseCase(isIncome)
-                    Log.d("CategoriesViewModel", " $_categories.value.toString()")
-                }
-
-                is Result.Error -> {
-                    if (getCategoriesListUseCase(isIncome).isNotEmpty()) {
-                        _categories.value = getCategoriesListUseCase(isIncome)
-                    } else {
-                        _uiState.value = State.Error
-                    }
-                    Log.e("CategoriesViewModel", "Ошибка загрузки категорий: ${result.exception.message}")
-                }
-
-                is Result.Loading -> {
-                }
-            }
-        } else {
-            _categories.value = getCategoriesListUseCase(isIncome)
-        }
+    private suspend fun loadCategories(isIncomes : Boolean) {
+        _categories.value = getCategoriesListUseCase(isIncomes)
     }
 }

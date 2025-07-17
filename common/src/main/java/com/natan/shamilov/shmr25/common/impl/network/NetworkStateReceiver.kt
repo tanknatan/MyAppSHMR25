@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,11 +19,11 @@ import javax.inject.Singleton
 class NetworkStateReceiver @Inject constructor(
     context: Context
 ) {
-    private val _isNetworkAvailable = MutableStateFlow(true)
-    val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
+    private val connectivityManager: ConnectivityManager? =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
 
-    private val connectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    private val _isNetworkAvailable = MutableStateFlow(getCurrentNetworkState())
+    val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
@@ -42,11 +41,34 @@ class NetworkStateReceiver @Inject constructor(
         }
     }
 
+    private fun getCurrentNetworkState(): Boolean {
+        return try {
+            val manager = connectivityManager ?: return false
+            val activeNetwork = manager.activeNetwork ?: return false
+            val capabilities = manager.getNetworkCapabilities(activeNetwork) ?: return false
+
+            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     fun register() {
-        connectivityManager.registerDefaultNetworkCallback(networkCallback)
+        try {
+            // Обновляем состояние перед регистрацией
+            _isNetworkAvailable.value = getCurrentNetworkState()
+            connectivityManager?.registerDefaultNetworkCallback(networkCallback)
+        } catch (e: Exception) {
+            // Если не удается зарегистрировать callback, просто игнорируем
+        }
     }
 
     fun unregister() {
-        connectivityManager.unregisterNetworkCallback(networkCallback)
+        try {
+            connectivityManager?.unregisterNetworkCallback(networkCallback)
+        } catch (e: Exception) {
+            // Если не удается отменить регистрацию, просто игнорируем
+        }
     }
 }

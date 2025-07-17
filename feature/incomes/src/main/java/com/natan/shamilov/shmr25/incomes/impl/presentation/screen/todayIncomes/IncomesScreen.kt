@@ -14,6 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
@@ -24,14 +25,13 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionBut
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.R
-import com.natan.shamilov.shmr25.incomes.impl.domain.entity.Income
 
 @Composable
 fun IncomesTodayScreen(
     viewModel: IncomesViewModel = viewModel(factory = LocalViewModelFactory.current),
     onHistoryClick: () -> Unit,
     onFABClick: () -> Unit,
-    onItemClick: (Income) -> Unit
+    onItemClick: (Transaction) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
@@ -82,9 +82,9 @@ fun IncomesTodayScreen(
 fun IncomesContent(
     paddingValues: PaddingValues,
     total: Double,
-    myIncomes: List<Income>,
+    myIncomes: List<Transaction>,
     onRetry: () -> Unit,
-    onItemClick: (Income) -> Unit,
+    onItemClick: (Transaction) -> Unit,
 ) {
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(

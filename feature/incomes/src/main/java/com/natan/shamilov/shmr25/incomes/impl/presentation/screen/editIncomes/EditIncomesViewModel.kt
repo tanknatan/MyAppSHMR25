@@ -7,10 +7,10 @@ import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.formatDateToMillis
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toLocalTimeWithoutSeconds
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toUtcIsoString
-import com.natan.shamilov.shmr25.incomes.impl.domain.entity.Income
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.DeletTransactionUseCase
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.EditIncomeUseCase
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.GetAccountByIdUseCase
@@ -19,7 +19,6 @@ import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.GetCategoriesListUs
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.GetCategoryByIdUseCase
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.GetIncomeByIdUseCase
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.GetSelectedAccountUseCase
-import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.LoadCategoriesUseCase
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.SetSelectedAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +34,6 @@ import javax.inject.Inject
 
 class EditIncomesViewModel @Inject constructor(
     private val getCategoriesListUseCase: GetCategoriesListUseCase,
-    private val loadCategoriesListUseCase: LoadCategoriesUseCase,
     private val getAccountUseCase: GetAccountUseCase,
     private val getSelectedAccountUseCase: GetSelectedAccountUseCase,
     private val setSelectedAccountUseCase: SetSelectedAccountUseCase,
@@ -45,11 +43,11 @@ class EditIncomesViewModel @Inject constructor(
     private val editIncomesUseCase: EditIncomeUseCase,
     private val deletTransactionUseCase : DeletTransactionUseCase
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow<State>(State.Content)
+    private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 
-    private val _expense = MutableStateFlow<Income?>(null)
-    val expense: StateFlow<Income?> = _expense.asStateFlow()
+    private val _expense = MutableStateFlow<Transaction?>(null)
+    val expense: StateFlow<Transaction?> = _expense.asStateFlow()
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts: StateFlow<List<Account>> = _accounts.asStateFlow()
@@ -136,32 +134,37 @@ class EditIncomesViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("EditIncomesVM", "transactionId: $transactionId")
 
-            val expense = getIncomeByIdUseCase(transactionId.toInt())
-            loadCategories()
-            val accounts = getAccountUseCase()
+            when (val expense = getIncomeByIdUseCase(transactionId.toInt())) {
+                is Result.Success<Transaction> -> {
+                    loadCategories()
+                    val accounts = getAccountUseCase()
 
-            // Обновляем всё
-            _expense.value = expense
-            Log.d("EditIncomesVM", "expense = $expense")
-            _accounts.value = accounts
-            Log.d("EditIncomesVM", "categories = ${categories.value}")
-            Log.d("EditIncomesVM", "accounts = $accounts")
+                    // Обновляем всё
+                    _expense.value = expense.data
+                    Log.d("EditExpensesVM", "expense = $expense")
+                    _accounts.value = accounts
+                    Log.d("EditExpensesVM", "categories = ${categories.value}")
+                    Log.d("EditExpensesVM", "accounts = $accounts")
 
-            _amount.value = (expense?.amount ?: "").toString()
-            _comment.value = expense?.comment.orEmpty()
+                    _amount.value = (expense.data.amount ?: "").toString()
+                    _comment.value = expense.data.comment.orEmpty()
 
-            _selectedCategory.value = expense?.let { getCategoryByIdUseCase(it.categoryId) }
-            _selectedAccount.value = expense?.let { getAccountByIdUseCase(it.accountId) }
+                    _selectedCategory.value = getCategoryByIdUseCase(expense.data.categoryId)
+                    _selectedAccount.value = getAccountByIdUseCase(expense.data.accountId)
 
-            Log.d("EditIncomesVM", "selectedCategory = ${_selectedCategory.value}")
+                    Log.d("EditExpensesVM", "selectedCategory = ${_selectedCategory.value}")
 
-            expense?.createdAt?.let { createdAt ->
-                _selectedDate.value = createdAt.formatDateToMillis()
-                _selectedTime.value = createdAt.toLocalTimeWithoutSeconds()
-                Log.d("EditIncomesVM", "parsed createdAt = $createdAt")
+                    expense.data.createdAt.let { createdAt ->
+                        _selectedDate.value = createdAt.formatDateToMillis()
+                        _selectedTime.value = createdAt.toLocalTimeWithoutSeconds()
+                        Log.d("EditExpensesVM", "parsed createdAt = $createdAt")
+                    }
+                    _uiState.value = State.Content
+                }
+
+                is Result.Error -> TODO()
+                Result.Loading -> TODO()
             }
-
-            _uiState.value = State.Content
         }
     }
 
@@ -216,27 +219,6 @@ class EditIncomesViewModel @Inject constructor(
     }
 
     private suspend fun loadCategories() {
-        if (getCategoriesListUseCase().isEmpty()) {
-            when (val result = loadCategoriesListUseCase()) {
-                is Result.Success -> {
-                    _categories.value = getCategoriesListUseCase()
-                    Log.d("CategoriesViewModel", " $_categories.value.toString()")
-                }
-
-                is Result.Error -> {
-                    if (getCategoriesListUseCase().isNotEmpty()) {
-                        _categories.value = getCategoriesListUseCase()
-                    } else {
-                        _uiState.value = State.Error
-                    }
-                    Log.e("CategoriesViewModel", "Ошибка загрузки категорий: ${result.exception.message}")
-                }
-
-                is Result.Loading -> {
-                }
-            }
-        } else {
-            _categories.value = getCategoriesListUseCase()
-        }
+        _categories.value = getCategoriesListUseCase()
     }
 }

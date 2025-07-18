@@ -10,10 +10,6 @@ interface IncomesDependencies {
 
     val accountProvider: AccountProvider
 
-    val networkChekerProvider: NetworkChekerProvider
-
-    val transactionsApi: TransactionsApi
-
     val categoriesProvider: CategoriesProvider
 
     val transactionsProvider: TransactionsProvider

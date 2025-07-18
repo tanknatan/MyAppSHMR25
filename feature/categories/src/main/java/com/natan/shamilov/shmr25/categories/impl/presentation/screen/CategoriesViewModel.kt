@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.categories.impl.domain.usecase.GetCategoriesListUseCase
-import com.natan.shamilov.shmr25.categories.impl.domain.usecase.LoadCategoriesListUseCase
-import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +24,6 @@ import javax.inject.Inject
  */
 class CategoriesViewModel @Inject constructor(
     private val getCategoriesListUseCase: GetCategoriesListUseCase,
-    private val loadCategoriesUseCase: LoadCategoriesListUseCase,
-    //  private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<State>(State.Loading)
@@ -35,16 +31,6 @@ class CategoriesViewModel @Inject constructor(
 
     private val _categories = MutableStateFlow<List<Category>>(emptyList())
     val categories: StateFlow<List<Category>> = _categories.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-//            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
-//                if (isAvailable && _uiState.value == State.Error) {
-//                    loadCategories()
-//                }
-//            }
-        }
-    }
 
     fun initialize() {
         loadCategories()
@@ -72,32 +58,9 @@ class CategoriesViewModel @Inject constructor(
     private fun loadCategories() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
-            if (getCategoriesListUseCase().isEmpty()) {
-                when (val result = loadCategoriesUseCase()) {
-                    is Result.Success -> {
-                        _categories.value = getCategoriesListUseCase()
-                        Log.d("CategoriesViewModel", " $_categories.value.toString()")
-                        _uiState.value = State.Content
-                    }
-
-                    is Result.Error -> {
-                        if (getCategoriesListUseCase().isNotEmpty()) {
-                            _categories.value = getCategoriesListUseCase()
-                            _uiState.value = State.Content
-                        } else {
-                            _uiState.value = State.Error
-                        }
-                        Log.e("CategoriesViewModel", "Ошибка загрузки категорий: ${result.exception.message}")
-                    }
-
-                    is Result.Loading -> {
-                        _uiState.value = State.Loading
-                    }
-                }
-            } else {
-                _categories.value = getCategoriesListUseCase()
-                _uiState.value = State.Content
-            }
+            val categoriesListResult = getCategoriesListUseCase()
+            _categories.value = categoriesListResult
+            _uiState.value = State.Content
         }
     }
 

@@ -9,9 +9,6 @@ import javax.inject.Inject
 class CategoriesRepositoryImpl @Inject constructor(
     private val categoriesProvider: CategoriesProvider,
 ) : CategoriesRepository {
-    override suspend fun loadCategoriesList(): Result<Unit> {
-        return categoriesProvider.loadCategoriesList()
-    }
 
     override suspend fun getCategoriesList(isIncome: Boolean): List<Category> {
         return categoriesProvider.getCategoriesList()

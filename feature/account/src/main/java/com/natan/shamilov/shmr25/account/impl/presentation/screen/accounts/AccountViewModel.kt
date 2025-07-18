@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetSelectedAccountUseCase
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
-import com.natan.shamilov.shmr25.feature.account.domain.usecase.GetAccountUseCase
+import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,6 @@ import javax.inject.Inject
  * и обновление данных при изменении состояния сети.
  */
 class AccountViewModel @Inject constructor(
-    // private val networkStateReceiver: NetworkStateReceiver,
     private val getAccountUseCase: GetAccountUseCase,
     private val getSelectedAccountUseCase: GetSelectedAccountUseCase,
     private val setSelectedAccountUseCase: SetSelectedAccountUseCase,
@@ -36,17 +35,6 @@ class AccountViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
-
-    init {
-//        viewModelScope.launch {
-////            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
-////                if (isAvailable && _uiState.value == State.Error) {
-////                    loadAccounts()
-////                }
-////            }
-//        }
-        Log.d("AccountViewModel", "ViewModel инициализирован")
-    }
 
     fun initialize() {
         loadAccounts()
@@ -64,6 +52,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
             _accounts.value = getAccountUseCase()
+            Log.d("loadtest2", _accounts.value.toString())
             _selectedAccount.value = getSelectedAccountUseCase()
             _uiState.value = State.Content
         }

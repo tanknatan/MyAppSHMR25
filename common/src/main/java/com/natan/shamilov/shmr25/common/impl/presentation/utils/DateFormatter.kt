@@ -1,37 +1,13 @@
 package com.natan.shamilov.shmr25.common.impl.presentation.utils
 
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
-import java.util.Locale
-
-fun Long.formatDateToString(): String {
-    val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    return dateFormatter.format(Date(this))
-}
-
-fun getLocalTime(): String {
-    val currentTime = LocalTime.now()
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    val formattedTime = currentTime.format(formatter)
-    return formattedTime
-}
-
-fun LocalTime.formatToString(): String {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    return this.format(formatter)
-}
-
-fun String.toLocalTime(): LocalTime {
-    val formatter = DateTimeFormatter.ofPattern("HH:mm")
-    return LocalTime.parse(this, formatter)
-}
 
 fun toUtcIsoString(dateMillis: Long, time: LocalTime): String {
     val localDate = Instant.ofEpochMilli(dateMillis)
@@ -43,6 +19,36 @@ fun toUtcIsoString(dateMillis: Long, time: LocalTime): String {
         .withZoneSameInstant(ZoneOffset.UTC)
 
     return DateTimeFormatter.ISO_INSTANT.format(zonedDateTime.toInstant())
+}
+
+fun formatToIsoUtc(timestampMillis: Long): String {
+    return Instant.ofEpochMilli(timestampMillis)
+        .atOffset(ZoneOffset.UTC)
+        .format(DateTimeFormatter.ISO_INSTANT)
+}
+
+fun getUtcDayBounds(date: LocalDate): Pair<String, String> {
+    val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+    val start = date.atStartOfDay().atOffset(ZoneOffset.UTC).format(formatter)
+    val end = date.atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC).format(formatter)
+    return start to end
+}
+
+fun toStartOfDayIso(dateString: String): String {
+    val date = LocalDate.parse(dateString)
+    val zdt: ZonedDateTime = date
+        .atStartOfDay()
+        .atZone(ZoneOffset.UTC)
+
+    return zdt.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+}
+
+fun toEndOfDayIso(dateString: String): String {
+    val date = LocalDate.parse(dateString) // "2025-07-18"
+    return date
+        .atTime(LocalTime.MAX) // 23:59:59.999999
+        .atOffset(ZoneOffset.UTC)
+        .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 }
 
 fun String.extractDate(): String {
@@ -73,5 +79,3 @@ fun String.toLocalTimeWithoutSeconds(): LocalTime {
         .withSecond(0)
         .withNano(0)
 }
-
-

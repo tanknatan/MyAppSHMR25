@@ -2,91 +2,27 @@ package com.natan.shamilov.shmr25.incomes.impl.data.repository
 
 import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.common.api.TransactionsProvider
-import com.natan.shamilov.shmr25.common.impl.data.api.TransactionsApi
+import com.natan.shamilov.shmr25.common.impl.data.model.CreateTransactionResponse
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
-import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
-import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
-
-import com.natan.shamilov.shmr25.incomes.impl.data.mapper.IncomeMapper
-import com.natan.shamilov.shmr25.incomes.impl.domain.entity.Income
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.getUtcDayBounds
 import com.natan.shamilov.shmr25.incomes.impl.domain.repository.IncomesRepository
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class IncomesRepositoryImpl @Inject constructor(
-    private val api: TransactionsApi,
     private val accountProvider: AccountProvider,
-    private val mapper: IncomeMapper,
     private val transactionsProvider: TransactionsProvider,
 ) : IncomesRepository {
 
-    private val today = LocalDate.now().toString()
-    private var todayIncomesList = emptyList<TransactionDto>()
-    private var todayIncomes: List<Income> = emptyList()
-
-    override suspend fun getIncomesList(): List<Income> = withContext(Dispatchers.IO) {
-        todayIncomes
+    override suspend fun getTransactionList(): Result<List<Transaction>> {
+        val (start, end) = getUtcDayBounds(java.time.LocalDate.now())
+        return transactionsProvider.getHistoryByPeriod(accountProvider.getAccountsList(), start, end, true)
     }
 
-    override suspend fun loadTodayIncomes(): Result<Unit> = Result.execute {
-        val accounts = accountProvider.getAccountsList()
-        todayIncomesList = loadIncomesForAccounts(accounts, today, today)
-    }
+    override suspend fun getTransactionById(id: Int): Result<Transaction> = transactionsProvider.getTransactionById(id)
 
-    override suspend fun loadIncomesByPeriod(
-        startDate: String,
-        endDate: String,
-    ): Result<List<Income>> = Result.execute {
-        val accounts = accountProvider.getAccountsList()
-        val incomesList = loadIncomesForAccounts(accounts, startDate, endDate)
-            .filter { it.category.isIncome }
-
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val sortedIncomes = incomesList.map { dto ->
-            mapper.mapTransactionDtoToIncome(dto)
-        }.sortedByDescending { income ->
-            LocalDate.parse(
-                income.createdAt.substring(START_OF_DATA_IN_RESPONSE, END_OF_DATA_IN_RESPONSE),
-                formatter
-            )
-        }
-        todayIncomes = sortedIncomes
-        sortedIncomes
-    }
-
-    override suspend fun getIncomeById(id: Int): Income? = withContext(Dispatchers.IO) {
-        return@withContext try {
-            val dto = api.getTransactionById(id)
-            if (dto.category.isIncome) mapper.mapTransactionDtoToIncome(dto) else null
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    override suspend fun deleteTransaction(transactionId: Int): Result<Unit> = Result.execute {
-        api.deleteTransaction(transactionId)
-    }
-
-    private suspend fun loadIncomesForAccounts(
-        accounts: List<Account>,
-        startDate: String,
-        endDate: String,
-    ): List<TransactionDto> = coroutineScope {
-        accounts.map { account ->
-            async {
-                api.getTransactionsByAccountPeriod(
-                    accountId = account.id,
-                    startDate = startDate,
-                    endDate = endDate
-                )
-            }
-        }.awaitAll().flatten()
+    override suspend fun deleteTransaction(transactionId: Int): Result<Unit> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun createTransaction(
@@ -94,9 +30,15 @@ class IncomesRepositoryImpl @Inject constructor(
         categoryId: Int,
         amount: String,
         transactionDate: String,
-        comment: String,
-    ): Result<Unit> {
-        return transactionsProvider.createTransaction(accountId, categoryId, amount, transactionDate, comment)
+        comment: String?,
+    ): Result<CreateTransactionResponse> {
+        return transactionsProvider.createTransaction(
+            accountId = accountId,
+            categoryId = categoryId,
+            amount = amount,
+            transactionDate = transactionDate,
+            comment = comment
+        )
     }
 
     override suspend fun editTransaction(
@@ -105,20 +47,15 @@ class IncomesRepositoryImpl @Inject constructor(
         categoryId: Int,
         amount: String,
         transactionDate: String,
-        comment: String,
+        comment: String?,
     ): Result<Unit> {
         return transactionsProvider.editTransaction(
-            transactionId,
-            accountId,
-            categoryId,
-            amount,
-            transactionDate,
-            comment
+            transactionId = transactionId,
+            accountId = accountId,
+            categoryId = categoryId,
+            amount = amount,
+            transactionDate = transactionDate,
+            comment = comment
         )
-    }
-
-    companion object {
-        private const val START_OF_DATA_IN_RESPONSE = 0
-        private const val END_OF_DATA_IN_RESPONSE = 10
     }
 }

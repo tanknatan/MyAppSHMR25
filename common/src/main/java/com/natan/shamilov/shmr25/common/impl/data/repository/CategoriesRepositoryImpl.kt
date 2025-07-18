@@ -1,11 +1,14 @@
 package com.natan.shamilov.shmr25.common.impl.data.repository
 
+import android.util.Log
 import com.natan.shamilov.shmr25.common.api.CategoriesProvider
+import com.natan.shamilov.shmr25.common.api.NetworkChekerProvider
 import com.natan.shamilov.shmr25.common.impl.data.api.CategoriesApi
 import com.natan.shamilov.shmr25.common.impl.data.mapper.CategoriesMapper
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.repository.CategoriesRepository
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
+import com.natan.shamilov.shmr25.common.impl.data.storage.dao.CategoriesDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -21,21 +24,52 @@ import javax.inject.Inject
 class CategoriesRepositoryImpl @Inject constructor(
     private val api: CategoriesApi,
     private val mapper: CategoriesMapper,
+    private val networkRepository: NetworkChekerProvider,
+    private val categoriesDao: CategoriesDao,
 ) : CategoriesRepository, CategoriesProvider {
 
-    private var categoriesList = emptyList<Category>()
+    var categoriesList = listOf<Category>()
 
-    override suspend fun getCategoriesList(): List<Category> = withContext(Dispatchers.IO) {
-        categoriesList
+    override suspend fun getCategoriesList(): List<Category> {
+        if (!categoriesList.isEmpty()) return categoriesList
+        else {
+            when (val result = loadCategoriesList()) {
+                is Result.Success<List<Category>> -> {
+                    categoriesList = result.data
+                }
+                else -> {
+                    Log.d("LoadCategoriesTest", result.toString())
+                }
+            }
+            return categoriesList
+        }
     }
 
-    /**
-     * Получает список категорий из API и преобразует их в доменные модели
-     * @return результат операции со списком категорий
-     */
-    override suspend fun loadCategoriesList() = Result.execute {
-        categoriesList = api.getCategories().map { dto ->
-            mapper.mapCategoryDtoToDomain(dto)
+    private suspend fun loadCategoriesList(): Result<List<Category>> = Result.execute {
+        if (networkRepository.getNetworkStatus().value) {
+            loadCategoriesFromNetwork()
+        }
+        else {
+            loadCategoriesFromDb()
+        }
+    }
+
+    private suspend fun loadCategoriesFromNetwork(): List<Category> {
+        val categoriesDto = api.getCategories()
+        val categoriesDomain = categoriesDto.map { categoryDto ->
+            mapper.mapCategoryDtoToDomain(categoryDto)
+        }
+
+        categoriesDao.insertCategories(categoriesDomain.map { mapper.mapDomainToDb(it) })
+
+        return categoriesDomain
+    }
+
+    private suspend fun loadCategoriesFromDb(): List<Category> {
+        val dbCategories = categoriesDao.getAllCategories()
+
+        return dbCategories.map { dbCategory ->
+            mapper.mapDbToDomain(dbCategory)
         }
     }
 }

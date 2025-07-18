@@ -54,10 +54,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     // Material
     implementation(libs.material3)
-    // Lottie
-    implementation(libs.lottie)
-    // Splash
-    implementation(libs.splash)
     // Network
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.moshi)

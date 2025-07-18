@@ -1,10 +1,9 @@
 package com.natan.shamilov.shmr25.account.impl.data.repository
 
-import com.natan.shamilov.shmr25.common.api.AccountProvider
-import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
-import com.natan.shamilov.shmr25.account.impl.data.api.AccountApi
 import com.natan.shamilov.shmr25.account.impl.domain.repository.AccountRepository
-import com.natan.shamilov.shmr25.feature.account.data.model.AccountRequestBody
+import com.natan.shamilov.shmr25.common.api.AccountProvider
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import javax.inject.Inject
 
 /**
@@ -12,7 +11,6 @@ import javax.inject.Inject
  * Управляет созданием, редактированием, удалением и получением счетов.
  */
 class AccountRepositoryImpl @Inject constructor(
-    private val api: AccountApi,
     private val accountProvider: AccountProvider,
 ) : AccountRepository {
 
@@ -20,56 +18,30 @@ class AccountRepositoryImpl @Inject constructor(
         name: String,
         balance: String,
         currency: String,
-    ): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> {
-        val result = com.natan.shamilov.shmr25.common.impl.data.model.Result.execute {
-            api.createAccount(
-                AccountRequestBody(
-                    name = name,
-                    balance = balance,
-                    currency = currency
-                )
-            )
-        }
-        if (result is com.natan.shamilov.shmr25.common.impl.data.model.Result.Success) {
-            accountProvider.loadAccountsList()
-            accountProvider.setSelectedAccount(accountProvider.accountsList.value.last().id)
-        }
-        return result
-    }
+    ): Result<Unit> =
+        accountProvider.createAccount(
+            name = name,
+            balance = balance,
+            currency = currency
+        )
 
-    override suspend fun deleteAccount(id: Int): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> {
-        val result = com.natan.shamilov.shmr25.common.impl.data.model.Result.execute {
-            api.deleteAccount(id)
-        }
-        return result
-    }
+    override suspend fun deleteAccount(id: Int): Result<Unit> = accountProvider.deleteAccount(id)
 
     override suspend fun editAccount(
         accountId: Int,
         name: String,
         balance: String,
         currency: String,
-    ): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> {
-        val result = com.natan.shamilov.shmr25.common.impl.data.model.Result.execute {
-            api.editAccount(
-                accoutId = accountId,
-                AccountRequestBody(
-                    name = name,
-                    balance = balance,
-                    currency = currency
-                )
-            )
-        }
-        if (result is com.natan.shamilov.shmr25.common.impl.data.model.Result.Success) {
-            accountProvider.loadAccountsList()
-            accountProvider.setSelectedAccount(accountProvider.selectedAccount.value!!.id)
-        }
-        return result
-    }
+    ): Result<Unit> = accountProvider.editAccount(
+        accountId = accountId,
+        name = name,
+        balance = balance,
+        currency = currency
+    )
 
-    override suspend fun loadAccountsList(): com.natan.shamilov.shmr25.common.impl.data.model.Result<Unit> {
-        return com.natan.shamilov.shmr25.common.impl.data.model.Result.execute {
-            accountProvider.loadAccountsList()
+    override suspend fun loadAccountsList(): Result<Unit> {
+        return Result.execute {
+            accountProvider.loadAccounts()
         }
     }
 

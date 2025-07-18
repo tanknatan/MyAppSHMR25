@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.feature.account.domain.usecase
+package com.natan.shamilov.shmr25.account.impl.domain.usecase
 
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.account.impl.domain.repository.AccountRepository

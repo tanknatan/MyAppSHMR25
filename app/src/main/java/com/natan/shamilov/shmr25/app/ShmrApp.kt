@@ -2,8 +2,12 @@ package com.natan.shamilov.shmr25.app
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.natan.shamilov.shmr25.app.di.AppComponent
 import com.natan.shamilov.shmr25.app.di.DaggerAppComponent
+
 
 /**
  * Класс приложения.
@@ -15,6 +19,31 @@ class ShmrApp : Application() {
     override fun onCreate() {
         super.onCreate()
         appComponent = DaggerAppComponent.factory().create(this)
+        initializeWorkManager()
+        schedulePeriodicSync()
+    }
+
+    private fun initializeWorkManager() {
+        try {
+            val configuration = Configuration.Builder()
+                .setWorkerFactory(appComponent.workerFactory())
+                .setMinimumLoggingLevel(Log.DEBUG)
+                .build()
+
+            WorkManager.initialize(this, configuration)
+            Log.d("FinanceApp", "WorkManager initialized successfully with DaggerWorkerFactory")
+        } catch (e: Exception) {
+            Log.e("FinanceApp", "Failed to initialize WorkManager", e)
+        }
+    }
+
+    private fun schedulePeriodicSync() {
+        try {
+             appComponent.workManagerProvider().schedulePeriodicSync()
+            Log.d("FinanceApp", "Periodic sync scheduled successfully")
+        } catch (e: Exception) {
+            Log.e("FinanceApp", "Failed to schedule periodic sync", e)
+        }
     }
 }
 

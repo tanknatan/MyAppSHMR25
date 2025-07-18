@@ -73,10 +73,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     // Material
     implementation(libs.material3)
-    // Lottie
-    implementation(libs.lottie)
-    // Splash
-    implementation(libs.splash)
     // Network
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.moshi)
@@ -86,4 +82,10 @@ dependencies {
     kapt(libs.moshi.codegen)
     // coroutines
     implementation(libs.kotlinx.coroutines.android)
+    //Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
+    //WorkManager
+    implementation(libs.work.runtime)
 }

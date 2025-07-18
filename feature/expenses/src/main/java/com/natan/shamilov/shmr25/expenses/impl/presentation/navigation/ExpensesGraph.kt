@@ -12,6 +12,7 @@ import androidx.navigation.navArgument
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.expenses.impl.di.ExpensesComponent
+import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses.AddExpensesScreen
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.editExpenses.EditExpensesScreen
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.todayExpenses.ExpensesTodayScreen

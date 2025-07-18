@@ -3,6 +3,7 @@ package com.natan.shamilov.shmr25.splash.impl
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
  */
 class SplashViewModel @Inject constructor(
     private val accountStartupLoader: AccountStartupLoader,
+    private val categoriesStartupLoader: CategoriesStartupLoader,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(false)
@@ -30,7 +32,15 @@ class SplashViewModel @Inject constructor(
 
     private fun loadDataInBackground() {
         viewModelScope.launch(Dispatchers.IO) {
-            accountStartupLoader.loadAccounts()
+            when (val result = accountStartupLoader.loadAccounts()) {
+                is Result.Error -> Log.e("SplashViewModel", "Ошибка загрузки счетов: ${result.exception.message}")
+                Result.Loading -> Log.d("SplashViewModel", "Загрузка счетов в процессе")
+                is Result.Success<*> -> {
+                    Log.d("SplashViewModel", "Счета загружены")
+                    categoriesStartupLoader.load()
+                }
+            }
+
             _uiState.value = true
         }
     }

@@ -36,7 +36,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.R
-import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.ExpensesFlow
+import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -160,12 +160,12 @@ fun EditExpensesContent(
             placeholder = stringResource(R.string.comment)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        CustomButton(
-            onButtonClick = { viewModel.deleteTransaction(onSuccess = { onBackPressed() }) },
-            text = "Удалить транзакцию",
-            isEnabled = true,
-            color = Color.Red
-        )
+//        CustomButton(
+//            onButtonClick = { viewModel.deleteTransaction(onSuccess = { onBackPressed() }) },
+//            text = "Удалить транзакцию",
+//            isEnabled = true,
+//            color = Color.Red
+//        )
 
         if (showDialog) {
             CustomDatePickerDialog(

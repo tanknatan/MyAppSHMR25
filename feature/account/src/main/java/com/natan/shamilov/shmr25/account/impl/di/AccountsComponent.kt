@@ -13,7 +13,6 @@ import dagger.Component
         AccountDependencies::class
     ],
     modules = [
-        NetworkModule::class,
         RepositoryModule::class,
         AccountsViewModelModule::class,
         ViewModelFactoryModule::class,

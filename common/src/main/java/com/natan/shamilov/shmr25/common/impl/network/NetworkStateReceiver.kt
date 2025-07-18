@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
-import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,11 +19,11 @@ import javax.inject.Singleton
 class NetworkStateReceiver @Inject constructor(
     context: Context
 ) {
-    private val _isNetworkAvailable = MutableStateFlow(true)
-    val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
-
     private val connectivityManager =
         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+    private val _isNetworkAvailable = MutableStateFlow(getCurrentNetworkState())
+    val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
@@ -40,6 +39,14 @@ class NetworkStateReceiver @Inject constructor(
                 capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
                         capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
         }
+    }
+
+    private fun getCurrentNetworkState(): Boolean {
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     fun register() {

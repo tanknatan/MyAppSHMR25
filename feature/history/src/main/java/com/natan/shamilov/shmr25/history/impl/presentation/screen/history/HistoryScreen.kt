@@ -18,6 +18,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomDatePickerDialog
@@ -27,7 +28,6 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.history.R
-import com.natan.shamilov.shmr25.history.impl.domain.model.HistoryItem
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -38,7 +38,8 @@ fun HistoryScreen(
     viewModel: HistoryViewModel = viewModel(factory = LocalViewModelFactory.current),
     type: HistoryType,
     onBackClick: () -> Unit,
-    onItemClick: (HistoryItem) -> Unit
+    onItemClick: (Transaction) -> Unit,
+    onNavigateClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -56,7 +57,7 @@ fun HistoryScreen(
                 },
                 endIcone = R.drawable.ic_analytics,
                 onBackOrCanselClick = { onBackClick() },
-                onNavigateClick = { }
+                onNavigateClick = { onNavigateClick() }
             )
         }
     ) { innerPadding ->
@@ -88,7 +89,7 @@ private fun HistoryContent(
     paddingValues: PaddingValues,
     viewModel: HistoryViewModel,
     onRetry: () -> Unit,
-    onItemClick: (HistoryItem) -> Unit,
+    onItemClick: (Transaction) -> Unit,
 ) {
     val historyUiModel by viewModel.historyUiModel.collectAsStateWithLifecycle()
     val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()

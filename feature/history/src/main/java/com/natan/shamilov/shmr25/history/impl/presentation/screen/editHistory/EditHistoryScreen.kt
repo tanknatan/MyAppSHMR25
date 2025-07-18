@@ -160,12 +160,12 @@ fun EditHistoryContent(
             placeholder = stringResource(R.string.comment)
         )
         Spacer(modifier = Modifier.height(16.dp))
-        CustomButton(
-            onButtonClick = { viewModel.deleteTransaction(onSuccess = { onBackPressed() }) },
-            text = "Удалить транзакцию",
-            isEnabled = true,
-            color = Color.Red
-        )
+//        CustomButton(
+//            onButtonClick = { viewModel.deleteTransaction(onSuccess = { onBackPressed() }) },
+//            text = "Удалить транзакцию",
+//            isEnabled = true,
+//            color = Color.Red
+//        )
 
         if (showDialog) {
             CustomDatePickerDialog(

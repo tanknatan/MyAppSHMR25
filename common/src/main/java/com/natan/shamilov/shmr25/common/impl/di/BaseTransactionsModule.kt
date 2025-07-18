@@ -8,6 +8,7 @@ import dagger.Module
 @Module
 abstract class BaseTransactionsModule {
     @Binds
+    @ViewModelFactoryScope
     abstract fun bindCategoriesProvider(
         impl: BaseTransacrionsRepositoryImpl,
     ): TransactionsProvider

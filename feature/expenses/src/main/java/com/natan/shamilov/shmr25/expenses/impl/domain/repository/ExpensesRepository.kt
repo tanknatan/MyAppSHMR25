@@ -1,20 +1,14 @@
 package com.natan.shamilov.shmr25.expenses.impl.domain.repository
 
+import com.natan.shamilov.shmr25.common.impl.data.model.CreateTransactionResponse
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
-import com.natan.shamilov.shmr25.expenses.impl.domain.entity.Expense
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 
 interface ExpensesRepository {
 
-    suspend fun getExpensesList(): List<Expense>
+    suspend fun getTransactionList(): Result<List<Transaction>>
 
-    suspend fun loadTodayExpenses(): Result<Unit>
-
-    suspend fun loadExpensesByPeriod(
-        startDate: String,
-        endDate: String,
-    ): Result<List<Expense>>
-
-    suspend fun getExpenseById(id: Int): Expense?
+    suspend fun getTransactionById(id: Int) : Result<Transaction>
 
     suspend fun deleteTransaction(transactionId: Int): Result<Unit>
 
@@ -23,8 +17,8 @@ interface ExpensesRepository {
         categoryId: Int,
         amount: String,
         transactionDate: String,
-        comment: String,
-    ): Result<Unit>
+        comment: String?,
+    ): Result<CreateTransactionResponse>
 
     suspend fun editTransaction(
         transactionId: Int,
@@ -32,6 +26,6 @@ interface ExpensesRepository {
         categoryId: Int,
         amount: String,
         transactionDate: String,
-        comment: String,
+        comment: String?,
     ): Result<Unit>
 }

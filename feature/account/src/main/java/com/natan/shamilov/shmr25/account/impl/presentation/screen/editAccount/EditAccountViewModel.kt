@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetSelectedAccountUseCase
-import com.natan.shamilov.shmr25.account.impl.domain.usecase.LoadAccountListUseCase
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption
@@ -22,8 +21,6 @@ import javax.inject.Inject
 class EditAccountViewModel @Inject constructor(
     private val editAccountUseCase: EditAccountUseCase,
     private val getselectedAccountUseCase: GetSelectedAccountUseCase,
-    private val loadAccountListUseCase: LoadAccountListUseCase,
-    // private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
     private val _account = MutableStateFlow<Account?>(null)
@@ -40,18 +37,6 @@ class EditAccountViewModel @Inject constructor(
 
     private val _selectedCurrency = MutableStateFlow<CurrencyOption?>(null)
     val selectedCurrency: StateFlow<CurrencyOption?> = _selectedCurrency.asStateFlow()
-
-    init {
-        viewModelScope.launch {
-//            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
-//                _uiState.value = if (isAvailable) {
-//                    State.Content
-//                } else {
-//                    State.Error
-//                }
-//            }
-        }
-    }
 
     fun loadAccount() {
         viewModelScope.launch(Dispatchers.IO) {

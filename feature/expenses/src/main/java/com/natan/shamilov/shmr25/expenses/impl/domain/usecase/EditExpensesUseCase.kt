@@ -13,7 +13,7 @@ class EditExpensesUseCase @Inject constructor(
         categoryId: Int,
         amount: String,
         transactionDate: String,
-        comment: String,
+        comment: String?,
     ): Result<Unit> = repository.editTransaction(
         transactionId = transactionId,
         accountId = accountId,

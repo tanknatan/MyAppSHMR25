@@ -3,10 +3,12 @@ package com.natan.shamilov.shmr25.history.impl.presentation.screen.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
-import com.natan.shamilov.shmr25.history.impl.domain.model.HistoryItem
-import com.natan.shamilov.shmr25.feature.history.domain.model.HistoryUiModel
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetHistoryByPeriodUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
@@ -28,7 +29,6 @@ import javax.inject.Inject
  */
 class HistoryViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
-    //private val networkStateReceiver: NetworkStateReceiver,
 ) : ViewModel() {
 
     private val _historyUiModel = MutableStateFlow<HistoryUiModel?>(null)
@@ -106,8 +106,10 @@ class HistoryViewModel @Inject constructor(
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
 
-            val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
-            val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
+            val startDate = toStartOfDayIso(startLocalDate.toString())
+            val endDate = toEndOfDayIso(endLocalDate.toString())
+            Log.d("HistoryViewModel", "Загружаем историю за период $startLocalDate - $endLocalDate")
+            Log.d("HistoryViewModel", "Загружаем историю за период $startDate - $endDate")
             when (
                 val historyListResult = getHistoryByPeriodUseCase(
                     startDate = startDate,
@@ -115,16 +117,16 @@ class HistoryViewModel @Inject constructor(
                     isIncome = historyType == HistoryType.INCOME
                 )
             ) {
-                is com.natan.shamilov.shmr25.common.impl.data.model.Result.Error -> {
+                is Result.Error -> {
                     _uiState.value = State.Error
                     Log.e("HistoryViewModel", "Ошибка загрузки истории: ${historyListResult.exception.message}")
                 }
 
-                com.natan.shamilov.shmr25.common.impl.data.model.Result.Loading -> {
+                Result.Loading -> {
                     _uiState.value = State.Loading
                 }
 
-                is com.natan.shamilov.shmr25.common.impl.data.model.Result.Success<List<HistoryItem>> -> {
+                is Result.Success<List<Transaction>> -> {
                     _historyUiModel.value = HistoryUiModel(
                         items = historyListResult.data,
                         totalAmount = historyListResult.data.sumOf { it.amount }

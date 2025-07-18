@@ -52,6 +52,7 @@ class IncomesViewModel @Inject constructor(
                 is Result.Success<List<Transaction>> -> {
                     _incomes.value = result.data
                     _sumOfIncomes.value = _incomes.value.sumOf { it.amount }
+                    _uiState.value = State.Content
                 }
             }
         }

@@ -12,13 +12,19 @@ import com.natan.shamilov.shmr25.app.di.moduls.IncomesDependenciesModule
 import com.natan.shamilov.shmr25.app.di.moduls.SplashDependenciesModule
 import com.natan.shamilov.shmr25.app.di.moduls.ViewModelModule
 import com.natan.shamilov.shmr25.categories.api.CategoriesDependencies
+import com.natan.shamilov.shmr25.common.api.SyncPreferencesProvider
+import com.natan.shamilov.shmr25.common.api.WorkManagerProvider
 import com.natan.shamilov.shmr25.common.impl.di.BaseAccountModule
 import com.natan.shamilov.shmr25.common.impl.di.BaseCategoriesModule
 import com.natan.shamilov.shmr25.common.impl.di.BaseTransactionsModule
 import com.natan.shamilov.shmr25.common.impl.di.CommonApiModule
+import com.natan.shamilov.shmr25.common.impl.di.SyncPreferencesRepositoryModule
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryModule
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelFactoryScope
+import com.natan.shamilov.shmr25.common.impl.di.WorkManagerModule
+import com.natan.shamilov.shmr25.common.impl.di.WorkManagerRepositoryModule
+import com.natan.shamilov.shmr25.common.impl.di.WorkerModule
 import com.natan.shamilov.shmr25.expenses.api.ExpensesDependencies
 import com.natan.shamilov.shmr25.history.api.HistoryDependencies
 import com.natan.shamilov.shmr25.incomes.api.IncomesDependencies
@@ -45,7 +51,11 @@ import javax.inject.Singleton
         AccountsDependenciesModule::class,
         CategoriesDependenciesModule::class,
         ViewModelModule::class,
-        AppDatabaseModule::class
+        AppDatabaseModule::class,
+        WorkManagerRepositoryModule::class,
+        WorkerModule::class,
+        WorkManagerModule::class,
+        SyncPreferencesRepositoryModule::class
     ]
 )
 interface AppComponent :
@@ -57,6 +67,12 @@ interface AppComponent :
     CategoriesDependencies {
 
     fun viewModelFactory(): ViewModelFactory
+
+    fun workerFactory(): androidx.work.WorkerFactory
+
+    fun workManagerProvider(): WorkManagerProvider
+
+    fun syncPreferencesProvider() : SyncPreferencesProvider
 
     fun inject(activity: MainActivity)
 

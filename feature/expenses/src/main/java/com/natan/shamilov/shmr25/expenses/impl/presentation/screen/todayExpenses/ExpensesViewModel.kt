@@ -39,16 +39,20 @@ class ExpensesViewModel @Inject constructor(
 
     private fun loadExpensesList() {
         viewModelScope.launch(Dispatchers.IO) {
+            _uiState.value = State.Loading
             val result = loadExpensesByPeriodUseCase()
             Log.d("LoadExpenses", result.toString())
             when (result) {
                 is Result.Error -> {
+                    _uiState.value = State.Error
                 }
                 Result.Loading -> {
+                    _uiState.value = State.Loading
                 }
                 is Result.Success<List<Transaction>> -> {
                     _expenses.value = result.data
                     _sumOfExpenses.value = _expenses.value.sumOf { it.amount }
+                    _uiState.value = State.Content
                 }
             }
         }

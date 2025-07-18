@@ -2,6 +2,11 @@ package com.natan.shamilov.shmr25.app.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -30,6 +35,10 @@ fun AppGraph() {
     val navigationState = rememberNavigationState()
     val context = LocalContext.current
     val appComponent = context.appComponent
+    var syncInfo by remember { mutableStateOf(Pair<Long?, String?>(null, null)) }
+    LaunchedEffect(Unit) {
+        syncInfo = appComponent.syncPreferencesProvider().getLastSyncInfo()
+    }
     NavHost(
         navController = navigationState.navHostController,
         startDestination = SplashFlow.Splash.route
@@ -46,7 +55,7 @@ fun AppGraph() {
         }
 
         composable(Screen.Main.route) {
-            MainScreen()
+            MainScreen(syncInfo = syncInfo)
         }
     }
 }

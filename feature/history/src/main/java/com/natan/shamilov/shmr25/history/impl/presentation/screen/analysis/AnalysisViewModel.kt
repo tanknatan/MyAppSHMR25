@@ -20,6 +20,8 @@ import javax.inject.Inject
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.normalizePercentages
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
 
 class AnalysisViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
@@ -90,8 +92,8 @@ class AnalysisViewModel @Inject constructor(
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
 
-            val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
-            val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
+            val startDate = toStartOfDayIso(startLocalDate.toString())
+            val endDate = toEndOfDayIso(endLocalDate.toString())
 
             when (
                 val historyListResult = getHistoryByPeriodUseCase(

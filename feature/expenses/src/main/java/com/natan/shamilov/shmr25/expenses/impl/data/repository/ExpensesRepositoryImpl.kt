@@ -6,6 +6,7 @@ import com.natan.shamilov.shmr25.common.impl.data.model.CreateTransactionRespons
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 import com.natan.shamilov.shmr25.expenses.impl.domain.repository.ExpensesRepository
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.getUtcDayBounds
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -14,10 +15,10 @@ class ExpensesRepositoryImpl @Inject constructor(
     private val transactionsProvider: TransactionsProvider,
 ) : ExpensesRepository {
 
-    private val today = LocalDate.now().toString()
-
-    override suspend fun getTransactionList(): Result<List<Transaction>> =
-        transactionsProvider.getHistoryByPeriod(accountProvider.getAccountsList(), today, today, false)
+    override suspend fun getTransactionList(): Result<List<Transaction>> {
+        val (start, end) = getUtcDayBounds(LocalDate.now())
+       return transactionsProvider.getHistoryByPeriod(accountProvider.getAccountsList(), start, end, false)
+    }
 
     override suspend fun getTransactionById(id: Int): Result<Transaction> = transactionsProvider.getTransactionById(id)
 

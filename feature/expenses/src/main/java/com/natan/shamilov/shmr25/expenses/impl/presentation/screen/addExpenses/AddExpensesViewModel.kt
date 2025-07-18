@@ -1,5 +1,6 @@
 package com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
@@ -126,6 +127,13 @@ class AddExpensesViewModel @Inject constructor(
     fun createTransaction(onSuccess: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = State.Loading
+
+            val createAt = toUtcIsoString(
+                dateMillis = _selectedDate.value,
+                time = _selectedTime.value
+
+            )
+            Log.d("create", createAt)
             when (
                 createExpensesUseCase(
                     accountId = _selectedAccount.value!!.id,
@@ -134,6 +142,7 @@ class AddExpensesViewModel @Inject constructor(
                     transactionDate = toUtcIsoString(
                         dateMillis = _selectedDate.value,
                         time = _selectedTime.value
+
                     ),
                     comment = comment.value
                 )

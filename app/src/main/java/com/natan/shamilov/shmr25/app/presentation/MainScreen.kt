@@ -9,7 +9,12 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
@@ -17,19 +22,21 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.natan.shamilov.shmr25.account.impl.di.DaggerAccountsComponent
 import com.natan.shamilov.shmr25.app.appComponent
 import com.natan.shamilov.shmr25.app.presentation.components.MyNavigationBar
+import com.natan.shamilov.shmr25.app.presentation.components.SyncSnackbar
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.app.presentation.navigation.rememberNavigationState
 import com.natan.shamilov.shmr25.categories.impl.di.DaggerCategoriesComponent
 import com.natan.shamilov.shmr25.categories.impl.presentation.navigation.catigoriesGraph
 import com.natan.shamilov.shmr25.expenses.impl.di.DaggerExpensesComponent
-import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
+import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.expensesGraph
-import com.natan.shamilov.shmr25.history.impl.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.feature.option.presentation.navigation.optionsGraph
 import com.natan.shamilov.shmr25.history.impl.di.DaggerHistoryComponent
+import com.natan.shamilov.shmr25.history.impl.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.incomes.impl.di.DaggerIncomesComponent
 import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.incomesGraph
+import kotlinx.coroutines.launch
 
 /**
  * Основной экран приложения.
@@ -44,7 +51,7 @@ import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.incomesGra
  * @param modifier Модификатор для настройки внешнего вида и поведения экрана
  */
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
     val navigationState = rememberNavigationState()
     val navBackStackEntry = navigationState.navHostController.currentBackStackEntryAsState()
     val context = LocalContext.current
@@ -56,6 +63,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
         NavigationItem.Categories,
         NavigationItem.Options
     )
+    val snackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar(
+                message = "Добро пожаловать!",
+            )
+        }
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
@@ -64,6 +80,15 @@ fun MainScreen(modifier: Modifier = Modifier) {
                 navigationState = navigationState,
                 navBackStackEntry = navBackStackEntry
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                SyncSnackbar(
+                    lastSyncTime = syncInfo.first ?: 0L,
+                    lastSyncStatus = syncInfo.second.orEmpty(),
+                    onDismiss = { snackbarHostState.currentSnackbarData?.dismiss() }
+                )
+            }
         },
         contentWindowInsets = WindowInsets.navigationBars
     ) { innerPadding ->

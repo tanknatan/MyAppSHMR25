@@ -3,10 +3,12 @@ package com.natan.shamilov.shmr25.history.impl.presentation.screen.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
-import com.natan.shamilov.shmr25.common.impl.data.model.Result
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetHistoryByPeriodUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,7 +19,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 /**
@@ -105,8 +106,10 @@ class HistoryViewModel @Inject constructor(
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
 
-            val startDate = startLocalDate.format(DateTimeFormatter.ISO_DATE)
-            val endDate = endLocalDate.format(DateTimeFormatter.ISO_DATE)
+            val startDate = toStartOfDayIso(startLocalDate.toString())
+            val endDate = toEndOfDayIso(endLocalDate.toString())
+            Log.d("HistoryViewModel", "Загружаем историю за период $startLocalDate - $endLocalDate")
+            Log.d("HistoryViewModel", "Загружаем историю за период $startDate - $endDate")
             when (
                 val historyListResult = getHistoryByPeriodUseCase(
                     startDate = startDate,

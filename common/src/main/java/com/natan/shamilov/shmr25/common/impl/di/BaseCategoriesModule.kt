@@ -8,6 +8,7 @@ import dagger.Module
 @Module
 abstract class BaseCategoriesModule {
     @Binds
+    @ViewModelFactoryScope
     abstract fun bindCategoriesProvider(
         impl: CategoriesRepositoryImpl,
     ): CategoriesProvider

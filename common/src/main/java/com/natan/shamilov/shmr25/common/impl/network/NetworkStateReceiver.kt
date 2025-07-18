@@ -19,8 +19,8 @@ import javax.inject.Singleton
 class NetworkStateReceiver @Inject constructor(
     context: Context
 ) {
-    private val connectivityManager: ConnectivityManager? =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    private val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
     private val _isNetworkAvailable = MutableStateFlow(getCurrentNetworkState())
     val isNetworkAvailable: StateFlow<Boolean> = _isNetworkAvailable.asStateFlow()
@@ -42,33 +42,18 @@ class NetworkStateReceiver @Inject constructor(
     }
 
     private fun getCurrentNetworkState(): Boolean {
-        return try {
-            val manager = connectivityManager ?: return false
-            val activeNetwork = manager.activeNetwork ?: return false
-            val capabilities = manager.getNetworkCapabilities(activeNetwork) ?: return false
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
 
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-        } catch (e: Exception) {
-            false
-        }
+        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
     }
 
     fun register() {
-        try {
-            // Обновляем состояние перед регистрацией
-            _isNetworkAvailable.value = getCurrentNetworkState()
-            connectivityManager?.registerDefaultNetworkCallback(networkCallback)
-        } catch (e: Exception) {
-            // Если не удается зарегистрировать callback, просто игнорируем
-        }
+        connectivityManager.registerDefaultNetworkCallback(networkCallback)
     }
 
     fun unregister() {
-        try {
-            connectivityManager?.unregisterNetworkCallback(networkCallback)
-        } catch (e: Exception) {
-            // Если не удается отменить регистрацию, просто игнорируем
-        }
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }

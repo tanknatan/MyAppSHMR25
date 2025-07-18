@@ -2,12 +2,11 @@ package com.natan.shamilov.shmr25.incomes.impl.data.repository
 
 import com.natan.shamilov.shmr25.common.api.AccountProvider
 import com.natan.shamilov.shmr25.common.api.TransactionsProvider
-import com.natan.shamilov.shmr25.common.impl.data.api.TransactionsApi
 import com.natan.shamilov.shmr25.common.impl.data.model.CreateTransactionResponse
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.getUtcDayBounds
 import com.natan.shamilov.shmr25.incomes.impl.domain.repository.IncomesRepository
-import java.time.LocalDate
 import javax.inject.Inject
 
 class IncomesRepositoryImpl @Inject constructor(
@@ -15,10 +14,10 @@ class IncomesRepositoryImpl @Inject constructor(
     private val transactionsProvider: TransactionsProvider,
 ) : IncomesRepository {
 
-    private val today = LocalDate.now().toString()
-
-    override suspend fun getTransactionList(): Result<List<Transaction>> =
-        transactionsProvider.getHistoryByPeriod(accountProvider.getAccountsList(), today, today, true)
+    override suspend fun getTransactionList(): Result<List<Transaction>> {
+        val (start, end) = getUtcDayBounds(java.time.LocalDate.now())
+        return transactionsProvider.getHistoryByPeriod(accountProvider.getAccountsList(), start, end, true)
+    }
 
     override suspend fun getTransactionById(id: Int): Result<Transaction> = transactionsProvider.getTransactionById(id)
 

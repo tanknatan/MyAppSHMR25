@@ -8,6 +8,7 @@ import dagger.Module
 @Module
 abstract class BaseAccountModule {
     @Binds
+    @ViewModelFactoryScope
     abstract fun bindAccountProvider(
         impl: BaseAccountRepositoryImpl,
     ): AccountProvider

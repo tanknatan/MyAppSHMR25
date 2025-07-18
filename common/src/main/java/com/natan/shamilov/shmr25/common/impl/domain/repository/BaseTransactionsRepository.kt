@@ -2,7 +2,6 @@ package com.natan.shamilov.shmr25.common.impl.domain.repository
 
 import com.natan.shamilov.shmr25.common.impl.data.model.CreateTransactionResponse
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
-import com.natan.shamilov.shmr25.common.impl.data.model.TransactionDto
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
 

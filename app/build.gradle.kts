@@ -105,6 +105,7 @@ dependencies {
     implementation(project(":feature:incomes"))
     implementation(project(":feature:options"))
     implementation(project(":feature:splash"))
+    implementation(project(":feature:login"))
     // Общий модуль
     implementation(project(":common"))
     //Room

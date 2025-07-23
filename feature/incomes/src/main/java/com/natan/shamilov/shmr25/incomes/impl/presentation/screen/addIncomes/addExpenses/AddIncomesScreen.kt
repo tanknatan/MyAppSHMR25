@@ -31,7 +31,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses.AddIncomesViewModel
-import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.R
 import java.time.Instant
 import java.time.LocalTime

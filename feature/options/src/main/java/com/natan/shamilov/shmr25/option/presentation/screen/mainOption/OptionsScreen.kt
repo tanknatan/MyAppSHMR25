@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.feature.option.presentation.screen
+package com.natan.shamilov.shmr25.option.presentation.screen.mainOption
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,12 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
-import com.natan.shamilov.shmr25.options.R
 import com.natan.shamilov.shmr25.feature.option.presentation.components.ThemeCard
-import com.natan.shamilov.shmr25.feature.option.presentation.navigation.OptionsFlow
+import com.natan.shamilov.shmr25.option.presentation.navigation.OptionsFlow
+import com.natan.shamilov.shmr25.options.R
 
 @Composable
-fun OptionScreen() {
+fun OptionScreen(onChoseOption: (Int) -> Unit) {
     Scaffold(
         topBar = {
             CustomTopAppBar(
@@ -32,13 +32,14 @@ fun OptionScreen() {
     ) { innerPadding ->
 
         OptionsContent(
-            paddingValues = innerPadding
+            paddingValues = innerPadding,
+            onChoseOption = { onChoseOption(it) }
         )
     }
 }
 
 @Composable
-fun OptionsContent(paddingValues: PaddingValues) {
+fun OptionsContent(paddingValues: PaddingValues, onChoseOption: (Int) -> Unit) {
     var isDarkTheme by remember { mutableStateOf(false) }
     val optionList = listOf(
         R.string.main_color,
@@ -59,7 +60,7 @@ fun OptionsContent(paddingValues: PaddingValues) {
             AppCard(
                 title = stringResource(option),
                 canNavigate = true,
-                onNavigateClick = {},
+                onNavigateClick = { onChoseOption(option) },
                 isSetting = true
             )
         }

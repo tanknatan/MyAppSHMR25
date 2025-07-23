@@ -7,6 +7,42 @@ import androidx.compose.ui.graphics.Color
 val PrimaryGreen = Color(0xFF2AE881)
 
 @Stable
+val PrimaryBlue = Color(0xFF3A7BFF)
+
+@Stable
+val PrimaryRed = Color(0xFFFA3A3A)
+
+@Stable
+val PrimaryYellow = Color(0xFFFAFA3A)
+
+@Stable
+val PrimaryPurple = Color(0xFFA33AFF)
+
+@Stable
+val PrimaryBlack = Color(0xFF000000)
+
+@Stable
+val PrimaryWhite = Color(0xFFFFFFFF)
+
+@Stable
+val SecondaryBlack = Color(0xFF000000)
+
+@Stable
+val SecondaryWhite = Color(0xFFFFFFFF)
+
+@Stable
+val SecondaryPurple = Color(0xFFE6E6FA)
+
+@Stable
+val SecondaryRed = Color(0xFFFAE6E6)
+
+@Stable
+val SecondaryYellow = Color(0xFFFFFAE6)
+
+@Stable
+val SecondaryBlue = Color(0xFFD4EFFF)
+
+@Stable
 val SecondaryGreen = Color(0xFFD4FAE6)
 
 @Stable

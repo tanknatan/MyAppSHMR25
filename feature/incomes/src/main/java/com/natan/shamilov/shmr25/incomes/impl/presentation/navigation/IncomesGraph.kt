@@ -13,7 +13,6 @@ import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.incomes.impl.presentation.screen.addIncomes.addExpenses.AddIncomesScreen
 import com.natan.shamilov.shmr25.incomes.impl.presentation.screen.editIncomes.EditIncomesScreen
-import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.impl.di.IncomesComponent
 import com.natan.shamilov.shmr25.incomes.impl.presentation.screen.todayIncomes.IncomesTodayScreen
 

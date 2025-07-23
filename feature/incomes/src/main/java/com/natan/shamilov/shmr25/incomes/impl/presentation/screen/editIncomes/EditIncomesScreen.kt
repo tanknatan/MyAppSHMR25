@@ -17,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,7 +27,6 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AmountInputField
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CategoriesDropdownMenu
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
@@ -36,7 +34,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.editIncomes.EditIncomesViewModel
-import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.R
 import java.time.Instant
 import java.time.ZoneId

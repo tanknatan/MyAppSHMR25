@@ -23,7 +23,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
-import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.R
 
 @Composable

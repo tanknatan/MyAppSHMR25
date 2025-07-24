@@ -15,14 +15,17 @@ import com.natan.shamilov.shmr25.account.R
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
-import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountViewModel
+import com.natan.shamilov.shmr25.schedule.AccountSchedule
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 @Composable
 fun AccountScreen(
@@ -86,7 +89,12 @@ fun AccountContent(
     selectedAccount: Account?,
     onAccountSelected: (Account) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(paddingValues)) {
+    val (testExpenses, testIncome) = generateTestDataFor31Days()
+    Column(
+        modifier = Modifier.padding(
+            paddingValues = paddingValues
+        )
+    ) {
         AccountDropdownMenu(
             accounts = accounts,
             selectedAccount = selectedAccount,
@@ -110,6 +118,51 @@ fun AccountContent(
                 canNavigate = true,
                 onNavigateClick = {}
             )
+            AccountSchedule(
+                expenses = testExpenses,
+                incomes = testIncome
+            )
         }
     }
 }
+
+fun generateTestDataFor31Days(): Pair<Map<String, Double>, Map<String, Double>> {
+    val expenses = mutableMapOf<String, Double>()
+    val incomes = mutableMapOf<String, Double>()
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val today = LocalDate.now()
+
+    for (i in 0 until 10) {
+        val date = today.minusDays(i.toLong()).format(formatter)
+
+        // Генерируем случайную сумму от 10 до 50_000_000
+        val expense = Random.nextDouble(0.0, 50.0)
+        val income = Random.nextDouble(0.0, 50.0)
+
+        expenses[date] = expense
+        incomes[date] = income
+    }
+    for (i in 11 until 20) {
+        val date = today.minusDays(i.toLong()).format(formatter)
+
+        // Генерируем случайную сумму от 10 до 50_000_000
+        val expense = 0.0
+        val income = 0.0
+
+        expenses[date] = expense
+        incomes[date] = income
+    }
+    for (i in 21 until 31) {
+        val date = today.minusDays(i.toLong()).format(formatter)
+
+        // Генерируем случайную сумму от 10 до 50_000_000
+        val expense = Random.nextDouble(10000.0, 50_000_000.0)
+        val income = Random.nextDouble(10000.0, 50_000_000.0)
+
+        expenses[date] = expense
+        incomes[date] = income
+    }
+
+    return Pair(expenses, incomes)
+}
+

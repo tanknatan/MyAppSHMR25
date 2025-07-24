@@ -82,12 +82,17 @@ fun PinCodeContent(paddingValues: PaddingValues) {
             Spacer(modifier = Modifier.height(16.dp))
             PinIndicators(currentPin = currentPin, isError = isError)
         }
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter),
-            contentAlignment = Alignment.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
         ) {
+            errorMessage?.let {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(text = it, color = Color.Red)
+            }
             PinKeyboard(
                 onNumberClick = {
                     isError = false
@@ -102,11 +107,6 @@ fun PinCodeContent(paddingValues: PaddingValues) {
                     }
                 }
             )
-        }
-
-        errorMessage?.let {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = it, color = Color.Red)
         }
 
         if (currentPin.length == 4) {

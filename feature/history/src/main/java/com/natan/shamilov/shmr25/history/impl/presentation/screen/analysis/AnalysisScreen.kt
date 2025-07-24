@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,11 +26,12 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.history.R
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.HistoryFlow
+import com.natan.shamilov.shmr25.history.impl.presentation.utils.generateColorsHSV
+import com.natan.shamilov.shmr25.history.impl.presentation.utils.toPieChartData
+import com.natan.shamilov.shmr25.schedule.AnalysisSchedule
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -86,13 +88,10 @@ private fun AnalysisContent(
     val historyUiModel by viewModel.analyticsUiModel.collectAsStateWithLifecycle()
     val startDate by viewModel.selectedPeriodStart.collectAsStateWithLifecycle()
     val endDate by viewModel.selectedPeriodEnd.collectAsStateWithLifecycle()
-
-    val isoFormatter = remember { DateTimeFormatter.ISO_DATE_TIME }
-
+    val colors = historyUiModel?.categoryStats?.let { generateColorsHSV(it.size) }
     var showDialog by remember { mutableStateOf(false) }
     var isStartDatePicker by remember { mutableStateOf(true) }
 
-    val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
     val formatter = DateTimeFormatter.ofPattern("LLLL yyyy", Locale("ru"))
 
     Column(modifier = Modifier.padding(paddingValues)) {
@@ -122,6 +121,10 @@ private fun AnalysisContent(
             title = stringResource(R.string.total_amount),
             amount = historyUiModel?.totalAmount
         )
+        AnalysisSchedule(
+            data = historyUiModel?.toPieChartData() ?: mapOf("Отсутствуют" to 100f),
+            colors = colors ?: listOf(Color.Gray),
+        )
 
         if (historyUiModel?.categoryStats?.isEmpty() == true) {
             ListEmptyScreen(onRetry = {
@@ -138,6 +141,7 @@ private fun AnalysisContent(
                             avatarEmoji = item.emoji,
                             percent = item.percent,
                             subPercent = item.amount,
+                            color = colors?.getOrNull(model.categoryStats.indexOf(item)),
                             //currency = item.currency
                         )
                     }

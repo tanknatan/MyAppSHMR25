@@ -1,12 +1,12 @@
-package com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts
+package com.natan.shamilov.shmr25.account.impl.presentation.screen.accounts
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetSelectedAccountUseCase
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
-import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -10,6 +10,7 @@ lifecycleRuntimeKtx = "2.9.1"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 lottie = "6.2.0"
+mpandroidchart = "v3.1.0"
 navigationCompose = "2.9.0"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
@@ -43,6 +44,7 @@ kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutine
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 #Splash
 material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
+mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 splash = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash" }
 #Dagger 2
 dagger = { group = "com.google.dagger", name = "dagger", version.ref = "dagger" }

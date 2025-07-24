@@ -6,27 +6,34 @@ fun normalizePercentages(
     stats: List<Pair<Triple<Int, String, String>, Double>>,
     totalAmount: Double
 ): List<Triple<Triple<Int, String, String>, Double, Double>> {
+    if (totalAmount == 0.0) {
+        return stats.map { (key, _) -> Triple(key, 0.0, 0.0) }
+    }
+
     val raw = stats.map { (key, amount) ->
-        val percent = if (totalAmount == 0.0) 0.0 else (amount / totalAmount) * 100
+        val percent = (amount / totalAmount) * 100
         Triple(key, amount, percent)
     }
 
-    val minThreshold = 0.01
-    val adjusted = raw.map { (key, amount, percent) ->
-        val fixed = if (percent in 0.0..minThreshold && amount > 0) minThreshold else percent
-        Triple(key, amount, fixed)
+    val minPercent = 1.0
+    val (belowMin, aboveMin) = raw.partition { it.third < minPercent && it.second > 0 }
+
+    val adjustedBelowMin = belowMin.map { (key, amount, _) ->
+        Triple(key, amount, minPercent)
     }
 
-    val totalAdjusted = adjusted.sumOf { it.third }
+    val remainingPercent = 100.0 - adjustedBelowMin.sumOf { it.third }
+    val totalAbove = aboveMin.sumOf { it.third }
 
-    return if (totalAdjusted <= 100.0) {
-        adjusted.map { (key, amount, percent) ->
-            Triple(key, amount, round(percent * 100) / 100)
-        }
-    } else {
-        adjusted.map { (key, amount, percent) ->
-            val scaled = (percent / totalAdjusted) * 100
-            Triple(key, amount, round(scaled * 100) / 100)
-        }
+    val adjustedAboveMin = aboveMin.map { (key, amount, percent) ->
+        val scaledPercent = if (totalAbove == 0.0) 0.0 else (percent / totalAbove) * remainingPercent
+        Triple(key, amount, round(scaledPercent * 100) / 100)
     }
+
+    val adjusted = (adjustedBelowMin + adjustedAboveMin).map { (key, amount, percent) ->
+        Triple(key, amount, round(percent * 100) / 100)
+    }
+
+    return adjusted
 }
+

@@ -51,7 +51,8 @@ fun AppGraph() {
                 LocalViewModelFactory provides splashComponent.viewModelFactory()
             ) {
                 SplashScreen(onNextScreen = {
-                    navigationState.splashNavigate(LoginFlow.Login)
+                   // navigationState.splashNavigate(LoginFlow.Login)
+                    navigationState.splashNavigate(Screen.Main)
                 })
             }
         }

@@ -23,9 +23,6 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionBut
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 import com.natan.shamilov.shmr25.schedule.AccountSchedule
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 @Composable
 fun AccountScreen(
@@ -68,13 +65,15 @@ fun AccountScreen(
             is State.Content -> {
                 val accounts by viewModel.accounts.collectAsStateWithLifecycle()
                 val selectedAccount by viewModel.selectedAccount.collectAsStateWithLifecycle()
+                val scheduleData by viewModel.scheduleData.collectAsStateWithLifecycle()
                 AccountContent(
                     paddingValues = innerPadding,
                     accounts = accounts,
                     selectedAccount = selectedAccount,
                     onAccountSelected = {
                         viewModel.selectAccount(it)
-                    }
+                    },
+                    scheduleData = scheduleData
 
                 )
             }
@@ -88,8 +87,8 @@ fun AccountContent(
     accounts: List<Account>,
     selectedAccount: Account?,
     onAccountSelected: (Account) -> Unit,
+    scheduleData: Pair<Map<String, Double>, Map<String, Double>>?,
 ) {
-    val (testExpenses, testIncome) = generateTestDataFor31Days()
     Column(
         modifier = Modifier.padding(
             paddingValues = paddingValues
@@ -119,50 +118,9 @@ fun AccountContent(
                 onNavigateClick = {}
             )
             AccountSchedule(
-                expenses = testExpenses,
-                incomes = testIncome
+                expenses = scheduleData?.second ?: emptyMap(),
+                incomes = scheduleData?.first ?: emptyMap(),
             )
         }
     }
 }
-
-fun generateTestDataFor31Days(): Pair<Map<String, Double>, Map<String, Double>> {
-    val expenses = mutableMapOf<String, Double>()
-    val incomes = mutableMapOf<String, Double>()
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    val today = LocalDate.now()
-
-    for (i in 0 until 10) {
-        val date = today.minusDays(i.toLong()).format(formatter)
-
-        // Генерируем случайную сумму от 10 до 50_000_000
-        val expense = Random.nextDouble(0.0, 50.0)
-        val income = Random.nextDouble(0.0, 50.0)
-
-        expenses[date] = expense
-        incomes[date] = income
-    }
-    for (i in 11 until 20) {
-        val date = today.minusDays(i.toLong()).format(formatter)
-
-        // Генерируем случайную сумму от 10 до 50_000_000
-        val expense = 0.0
-        val income = 0.0
-
-        expenses[date] = expense
-        incomes[date] = income
-    }
-    for (i in 21 until 31) {
-        val date = today.minusDays(i.toLong()).format(formatter)
-
-        // Генерируем случайную сумму от 10 до 50_000_000
-        val expense = Random.nextDouble(10000.0, 50_000_000.0)
-        val income = Random.nextDouble(10000.0, 50_000_000.0)
-
-        expenses[date] = expense
-        incomes[date] = income
-    }
-
-    return Pair(expenses, incomes)
-}
-

@@ -34,4 +34,5 @@ interface AccountRepository {
     suspend fun loadAccountsList(): Result<Unit>
     suspend fun getSelectedAccount(): Account?
     fun setSelectedAccount(accountId: Int)
+    suspend fun getIncomeExpenseMapsForLast31Days(): Pair<Map<String, Double>, Map<String, Double>>
 }

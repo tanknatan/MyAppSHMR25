@@ -63,8 +63,6 @@ fun AccountSchedule(
     incomes: Map<String, Double>,
 ) {
     var selectedChart by remember { mutableStateOf(ChartType.Bar) }
-    val expenseBarColor = Color(0xFFE57373)
-    val incomeBarColor = Color(0xFF81C784)
     val alpha by animateFloatAsState(
         targetValue = 1f,
         animationSpec = tween(durationMillis = 1000)
@@ -93,15 +91,6 @@ fun AccountSchedule(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            LegendItem(color = expenseBarColor, label = "Расходы")
-            LegendItem(color = incomeBarColor, label = "Доходы")
-        }
-        // График
         when (selectedChart) {
             ChartType.Line -> IncomeExpenseLineChart(
                 expensesMap = expenses,
@@ -239,6 +228,7 @@ fun IncomeExpenseLineChart(
                 .fillMaxWidth()
                 .height(300.dp)
         )
+        Spacer(modifier = Modifier.height(16.dp))
         selectedEntry.value?.let { (date, expenseSum, incomeSum) ->
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
@@ -265,50 +255,43 @@ fun IncomeExpenseBarChart(
     incomeMap: Map<String, Double>,
     modifier: Modifier = Modifier,
 ) {
+    val positiveColor = Color(0xFF81C784)
+    val negativeColor = Color(0xFFE57373)
+    val zeroValueColor = Color(0x0002CBF5)
     val minBarHeightRatio = 0.05f
-    val zeroValueColor = Color(0xFF02CBF5)
-    val expenseBarColor = Color(0xFFE57373)
-    val incomeBarColor = Color(0xFF81C784)
-
-    val maxValue = maxOf(
-        expensesMap.values.maxOrNull() ?: 0.0,
-        incomeMap.values.maxOrNull() ?: 0.0
-    ).takeIf { it > 0.0 } ?: 1.0
-
-    val logMaxValue = kotlin.math.ln(maxValue + 1)
-
-    fun normalizeValue(value: Double): Float {
-        if (value == 0.0) return 0f
-        val ratio = kotlin.math.ln(value + 1) / logMaxValue
-        return maxOf(ratio.toFloat(), minBarHeightRatio)
-    }
 
     val sortedDates = (expensesMap.keys + incomeMap.keys).toSortedSet().toList()
 
-    val createEntries: (Map<String, Double>) -> List<BarEntry> = { map ->
-        sortedDates.mapIndexed { index, date ->
-            val value = map[date] ?: 0.0
-            val y = if (value == 0.0) minBarHeightRatio else normalizeValue(value)
-            BarEntry(index.toFloat(), y, date)
-        }
+    val maxAbsDiff = sortedDates.maxOfOrNull {
+        kotlin.math.abs((incomeMap[it] ?: 0.0) - (expensesMap[it] ?: 0.0))
+    }?.takeIf { it > 0.0 } ?: 1.0
+
+    val logMaxValue = ln(maxAbsDiff + 1)
+
+    fun normalizeDiff(value: Double): Float {
+        if (value == 0.0) return 0f
+        val ratio = ln(kotlin.math.abs(value) + 1) / logMaxValue
+        return maxOf(ratio.toFloat(), minBarHeightRatio)
     }
 
-    val expenseEntries = createEntries(expensesMap)
-    val incomeEntries = createEntries(incomeMap)
+    val netEntries = mutableListOf<BarEntry>()
+    val barColors = mutableListOf<Int>()
 
-    fun getColors(dataMap: Map<String, Double>, normalColor: Color): List<Int> =
-        sortedDates.map { date ->
-            if ((dataMap[date] ?: 0.0) == 0.0) zeroValueColor else normalColor
-        }.map { it.toArgb() }
+    sortedDates.forEachIndexed { index, date ->
+        val income = incomeMap[date] ?: 0.0
+        val expense = expensesMap[date] ?: 0.0
+        val diff = income - expense
 
-    val expenseColors = getColors(expensesMap, expenseBarColor)
-    val incomeColors = getColors(incomeMap, incomeBarColor)
+        val y = if (diff == 0.0) minBarHeightRatio else normalizeDiff(diff)
+        netEntries.add(BarEntry(index.toFloat(), y, Triple(date, expense, income)))
 
-    fun createBarDataSet(entries: List<BarEntry>, colors: List<Int>, label: String): BarDataSet =
-        BarDataSet(entries, label).apply {
-            setColors(colors)
-            setDrawValues(false)
+        val color = when {
+            diff > 0 -> positiveColor
+            diff < 0 -> negativeColor
+            else -> zeroValueColor
         }
+        barColors.add(color.toArgb())
+    }
 
     val selectedEntry = remember { mutableStateOf<Triple<String, Double, Double>?>(null) }
 
@@ -321,13 +304,6 @@ fun IncomeExpenseBarChart(
                     axisRight.isEnabled = false
                     axisLeft.isEnabled = false
                     legend.isEnabled = false
-                    legend.apply {
-                        verticalAlignment = Legend.LegendVerticalAlignment.TOP
-                        horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-                        orientation = Legend.LegendOrientation.HORIZONTAL
-                        setDrawInside(false)
-                        textSize = 12f
-                    }
 
                     xAxis.apply {
                         position = XAxis.XAxisPosition.BOTTOM
@@ -337,22 +313,19 @@ fun IncomeExpenseBarChart(
                         textSize = 10f
                         axisMinimum = 0f
                     }
+
                     animateX(1000)
                     animateY(1000)
                     setFitBars(true)
                     setPinchZoom(false)
                     setScaleEnabled(false)
-                    setExtraOffsets(0f, 0f, 0f, 0f)
+                    setExtraOffsets(16f, 0f, 16f, 0f)
                     renderer = RoundedBarChartRenderer(this, animator, viewPortHandler)
 
                     setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                         override fun onValueSelected(e: Entry?, h: Highlight?) {
                             if (e is BarEntry) {
-                                val date = e.data as? String ?: ""
-                                val index = e.x.toInt()
-                                val expenseSum = expensesMap[sortedDates.getOrNull(index)] ?: 0.0
-                                val incomeSum = incomeMap[sortedDates.getOrNull(index)] ?: 0.0
-                                selectedEntry.value = Triple(date, expenseSum, incomeSum)
+                                selectedEntry.value = e.data as? Triple<String, Double, Double>
                             } else {
                                 selectedEntry.value = null
                             }
@@ -365,25 +338,17 @@ fun IncomeExpenseBarChart(
                 }
             },
             update = { chart ->
-                val expenseSet = createBarDataSet(expenseEntries, expenseColors, "Расходы")
-                val incomeSet = createBarDataSet(incomeEntries, incomeColors, "Доходы")
-
-                val groupCount = sortedDates.size
-
-                val groupSpace = 0.2f // пространство между группами (днями)
-                val barSpace = 0.05f // пространство между столбцами внутри группы
-                val barWidth = 0.35f // ширина столбца (в сумме barWidth * 2 + barSpace <= 1 - groupSpace)
-
-                val barData = BarData(expenseSet, incomeSet).apply {
-                    this.barWidth = barWidth
+                val dataSet = BarDataSet(netEntries, "Разница").apply {
+                    setColors(barColors)
+                    setDrawValues(false)
                 }
 
-                chart.data = barData
+                chart.data = BarData(dataSet).apply {
+                    barWidth = 0.5f
+                }
 
-                chart.xAxis.axisMinimum = 0f
-                chart.xAxis.axisMaximum = 0f + chart.barData.getGroupWidth(groupSpace, barSpace) * groupCount
-
-                chart.groupBars(0f, groupSpace, barSpace) // позиция начала (0), затем отступы
+                chart.xAxis.axisMinimum = -0.5f
+                chart.xAxis.axisMaximum = sortedDates.size - 0.5f
 
                 chart.invalidate()
             },
@@ -391,6 +356,7 @@ fun IncomeExpenseBarChart(
                 .fillMaxWidth()
                 .height(300.dp)
         )
+        Spacer(modifier = Modifier.height(16.dp))
         selectedEntry.value?.let { (date, expenseSum, incomeSum) ->
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
@@ -403,8 +369,8 @@ fun IncomeExpenseBarChart(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    Text(text = "Расходы: ${"%.2f".format(expenseSum)}", color = expenseBarColor)
-                    Text(text = "Доходы: ${"%.2f".format(incomeSum)}", color = incomeBarColor)
+                    Text(text = "Расходы: ${"%.2f".format(expenseSum)}", color = negativeColor)
+                    Text(text = "Доходы: ${"%.2f".format(incomeSum)}", color = positiveColor)
                 }
             }
         }

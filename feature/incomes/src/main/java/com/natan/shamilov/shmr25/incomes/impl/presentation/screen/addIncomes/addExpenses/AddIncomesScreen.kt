@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
@@ -29,10 +28,10 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDia
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
-import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses.AddIncomesViewModel
-import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.R
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 import java.time.Instant
 import java.time.LocalTime
 import java.time.ZoneId
@@ -55,8 +54,12 @@ fun AddIncomesScreen(
                 IncomesFlow.AddIncome.startIcone,
                 IncomesFlow.AddIncome.title,
                 IncomesFlow.AddIncome.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }
@@ -76,7 +79,7 @@ fun AddIncomesScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.not_network))
+                    Text(text = localizedString(R.string.not_network))
                 }
             }
 
@@ -109,7 +112,7 @@ fun AddIncomesContent(
     var showTimeDialog by remember { mutableStateOf(false) }
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: "Выбрать"
+    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: localizedString(R.string.select)
     Column(modifier = Modifier.padding(paddingValues)) {
         AccountDropdownMenu(
             accounts = accounts,
@@ -130,11 +133,10 @@ fun AddIncomesContent(
             onAmountChange = {
                 viewModel.updateAmount(it)
             },
-            label = "Сумма",
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
-            title = "Дата",
+            title = localizedString(R.string.date),
             onNavigateClick = {
                 showDialog = true
             },
@@ -144,14 +146,14 @@ fun AddIncomesContent(
         )
 
         AppCard(
-            title = "Время",
+            title = localizedString(R.string.time),
             stringDate = formattedTime,
             onNavigateClick = { showTimeDialog = true }
         )
         SingleLineTextField(
             value = comment,
             onValueChange = { viewModel.updateText(it) },
-            placeholder = stringResource(R.string.comment)
+            placeholder = localizedString(R.string.comment)
         )
 
         if (showDialog) {

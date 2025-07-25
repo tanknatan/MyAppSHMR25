@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account">Счет</string>
+    <string name="my_account">Мой счет</string>
+    <string name="add_account">Добавить счет</string>
+    <string name="edit_account">Редактировать счет</string>
+    <string name="save">Сохранить изменения</string>
+    <string name="avatarEmoji">💰</string>
+    <string name="currency">Валюта</string>
+    <string name="create_account">Создать счёт</string>
+    <string name="not_network">Нет сети</string>
+    <string name="choose_account">Выберите аккаунт</string>
+    <string name="choose_currency">Выбрать валюту</string>
+    <string name="cancel">Отмена</string>
+
+</resources>

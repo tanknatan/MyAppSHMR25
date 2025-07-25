@@ -2,7 +2,7 @@ package com.natan.shamilov.shmr25.account.impl.di
 
 import androidx.lifecycle.ViewModel
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelKey
-import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountViewModel
+import com.natan.shamilov.shmr25.account.impl.presentation.screen.accounts.AccountViewModel
 import com.natan.shamilov.shmr25.account.impl.presentation.screen.addAccount.AddAccountViewModel
 import com.natan.shamilov.shmr25.account.impl.presentation.screen.editAccount.EditAccountViewModel
 import dagger.Binds

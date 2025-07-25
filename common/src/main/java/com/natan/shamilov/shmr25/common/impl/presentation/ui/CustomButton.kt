@@ -11,13 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.PrimaryGreen
 
 @Composable
 fun CustomButton(
     onButtonClick: () -> Unit,
     isEnabled: Boolean,
     text: String,
-    color: Color = MaterialTheme.colorScheme.primary,
+    color: Color = PrimaryGreen,
 ) {
     Button(
         onClick = {
@@ -31,7 +32,7 @@ fun CustomButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContainerColor = MaterialTheme.colorScheme.surface,
+            disabledContainerColor = Color.Gray,
             disabledContentColor = MaterialTheme.colorScheme.onSurface
         )
     ) {

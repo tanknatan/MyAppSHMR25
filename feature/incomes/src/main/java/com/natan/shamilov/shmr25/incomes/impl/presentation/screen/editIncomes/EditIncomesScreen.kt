@@ -17,8 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,16 +26,16 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AmountInputField
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CategoriesDropdownMenu
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.editIncomes.EditIncomesViewModel
-import com.natan.shamilov.shmr25.feature.incomes.presentation.navigation.IncomesFlow
 import com.natan.shamilov.shmr25.incomes.R
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -60,8 +58,12 @@ fun EditIncomesScreen(
                 IncomesFlow.EditIncome.startIcone,
                 IncomesFlow.EditIncome.title,
                 IncomesFlow.EditIncome.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }
@@ -81,7 +83,7 @@ fun EditIncomesScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.not_network))
+                    Text(text = localizedString(R.string.not_network))
                 }
             }
 
@@ -116,7 +118,7 @@ fun EditIncomesContent(
     var showTimeDialog by remember { mutableStateOf(false) }
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: "Выбрать"
+    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: localizedString(R.string.select)
     Column(modifier = Modifier.padding(paddingValues)) {
         AccountDropdownMenu(
             accounts = accounts,
@@ -137,11 +139,10 @@ fun EditIncomesContent(
             onAmountChange = {
                 viewModel.updateAmount(it)
             },
-            label = "Сумма",
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
-            title = "Дата",
+            title = localizedString(R.string.date),
             onNavigateClick = {
                 showDialog = true
             },
@@ -151,14 +152,14 @@ fun EditIncomesContent(
         )
 
         AppCard(
-            title = "Время",
+            title = localizedString(R.string.time),
             stringDate = formattedTime,
             onNavigateClick = { showTimeDialog = true }
         )
         SingleLineTextField(
             value = comment,
             onValueChange = { viewModel.updateText(it) },
-            placeholder = stringResource(R.string.comment)
+            placeholder = localizedString(R.string.comment)
         )
         Spacer(modifier = Modifier.height(16.dp))
 //        CustomButton(

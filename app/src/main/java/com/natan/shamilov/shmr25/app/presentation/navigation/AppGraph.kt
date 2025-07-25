@@ -13,6 +13,9 @@ import androidx.navigation.compose.composable
 import com.natan.shamilov.shmr25.app.appComponent
 import com.natan.shamilov.shmr25.app.presentation.MainScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.login.impl.di.DaggerLoginComponent
+import com.natan.shamilov.shmr25.login.impl.presentation.navigation.LoginFlow
+import com.natan.shamilov.shmr25.login.impl.presentation.screen.PinCodeLoginScreen
 import com.natan.shamilov.shmr25.splash.impl.SplashFlow
 import com.natan.shamilov.shmr25.splash.impl.SplashScreen
 import com.natan.shamilov.shmr25.splash.impl.di.DaggerSplashComponent
@@ -48,7 +51,23 @@ fun AppGraph() {
             CompositionLocalProvider(
                 LocalViewModelFactory provides splashComponent.viewModelFactory()
             ) {
-                SplashScreen(onNextScreen = {
+                SplashScreen(
+                    onMainScreen = {
+                        navigationState.splashNavigate(Screen.Main)
+                    },
+                    onLoginScreen = {
+                        navigationState.splashNavigate(LoginFlow.Login)
+                    }
+                )
+            }
+        }
+
+        composable(LoginFlow.Login.route) {
+            val loginComponent = DaggerLoginComponent.factory().create(appComponent)
+            CompositionLocalProvider(
+                LocalViewModelFactory provides loginComponent.viewModelFactory()
+            ) {
+                PinCodeLoginScreen(onContinue = {
                     navigationState.splashNavigate(Screen.Main)
                 })
             }

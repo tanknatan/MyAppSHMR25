@@ -8,21 +8,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.account.R
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
-import com.natan.shamilov.shmr25.feature.account.presentation.screen.accounts.AccountViewModel
+import com.natan.shamilov.shmr25.graph.AccountSchedule
 
 @Composable
 fun AccountScreen(
@@ -43,6 +43,7 @@ fun AccountScreen(
                 AccountFlow.Account.endIcone,
                 onBackOrCanselClick = {},
                 onNavigateClick = {
+                    viewModel.vibrate()
                     viewModel.selectedAccount.value?.id?.let {
                         onEditAccountClick(it.toString())
                     }
@@ -50,7 +51,10 @@ fun AccountScreen(
             )
         },
         floatingActionButton = {
-            MyFloatingActionButton({ onFABClick() })
+            MyFloatingActionButton({
+                viewModel.vibrate()
+                onFABClick()
+            })
         }
     ) { innerPadding ->
         when (uiState) {
@@ -59,19 +63,23 @@ fun AccountScreen(
             }
 
             is State.Error -> {
-                ErrorScreen(innerPadding = innerPadding) { viewModel.initialize() }
+                ErrorScreen(innerPadding = innerPadding) {
+                    viewModel.initialize()
+                }
             }
 
             is State.Content -> {
                 val accounts by viewModel.accounts.collectAsStateWithLifecycle()
                 val selectedAccount by viewModel.selectedAccount.collectAsStateWithLifecycle()
+                val scheduleData by viewModel.scheduleData.collectAsStateWithLifecycle()
                 AccountContent(
                     paddingValues = innerPadding,
                     accounts = accounts,
                     selectedAccount = selectedAccount,
                     onAccountSelected = {
                         viewModel.selectAccount(it)
-                    }
+                    },
+                    scheduleData = scheduleData
 
                 )
             }
@@ -85,8 +93,13 @@ fun AccountContent(
     accounts: List<Account>,
     selectedAccount: Account?,
     onAccountSelected: (Account) -> Unit,
+    scheduleData: Pair<Map<String, Double>, Map<String, Double>>?,
 ) {
-    Column(modifier = Modifier.padding(paddingValues)) {
+    Column(
+        modifier = Modifier.padding(
+            paddingValues = paddingValues
+        )
+    ) {
         AccountDropdownMenu(
             accounts = accounts,
             selectedAccount = selectedAccount,
@@ -98,17 +111,20 @@ fun AccountContent(
             TopGreenCard(
                 title = account.name,
                 amount = account.balance,
-                currency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {},
-                avatarEmoji = stringResource(R.string.avatarEmoji)
+                avatarEmoji = localizedString(R.string.avatarEmoji)
             )
 
             TopGreenCard(
-                title = stringResource(R.string.currency),
+                title = localizedString(R.string.currency),
                 cucurrency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {}
+            )
+            AccountSchedule(
+                expenses = scheduleData?.second ?: emptyMap(),
+                incomes = scheduleData?.first ?: emptyMap(),
             )
         }
     }

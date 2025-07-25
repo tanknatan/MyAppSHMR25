@@ -2,7 +2,6 @@ package com.natan.shamilov.shmr25.app.di.moduls
 
 import android.content.Context
 import androidx.room.Room
-import com.natan.shamilov.shmr25.app.di.AppScope
 import com.natan.shamilov.shmr25.common.impl.data.storage.dao.AccountDao
 import com.natan.shamilov.shmr25.common.impl.data.storage.dao.CategoriesDao
 import com.natan.shamilov.shmr25.common.impl.data.storage.database.AppDatabase

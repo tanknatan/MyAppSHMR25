@@ -50,7 +50,6 @@ import com.natan.shamilov.shmr25.common.impl.presentation.utils.toCurrencyString
  * @param onNavigateClick Callback для обработки нажатия при навигации
  * @param isSetting Флаг, указывающий является ли карточка элементом настроек
  */
-@JvmOverloads
 @Composable
 fun AppCard(
     title: String,
@@ -66,6 +65,7 @@ fun AppCard(
     isSetting: Boolean = false,
     currency: String? = null,
     date: String? = null,
+    color: Color? = null,
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -114,7 +114,7 @@ fun AppCard(
                     modifier = Modifier
                         .size(30.dep)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondary),
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(avatarEmoji, fontSize = 19.sp, fontFamily = rodotoFont)
@@ -123,13 +123,22 @@ fun AppCard(
             }
 
             Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontSize = 16.sp,
-                    fontFamily = rodotoFont
-
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 16.sp,
+                        fontFamily = rodotoFont
+                    )
+                    if (color != null) {
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(12.dp)
+                                .background(color = color, shape = CircleShape)
+                        )
+                    }
+                }
                 if (!subtitle.isNullOrEmpty()) {
                     Text(
                         text = subtitle,

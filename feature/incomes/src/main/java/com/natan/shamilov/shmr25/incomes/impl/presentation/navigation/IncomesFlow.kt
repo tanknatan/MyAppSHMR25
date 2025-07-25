@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.feature.incomes.presentation.navigation
+package com.natan.shamilov.shmr25.incomes.impl.presentation.navigation
 
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen

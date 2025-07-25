@@ -17,11 +17,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.dep
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
 
 /**
@@ -45,7 +46,7 @@ fun CustomTopAppBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
+            .background(MaterialTheme.colorScheme.primaryContainer)
             .windowInsetsPadding(WindowInsets.statusBars)
             .height(64.dep),
         verticalAlignment = Alignment.CenterVertically,
@@ -72,9 +73,10 @@ fun CustomTopAppBar(
             Text(
                 modifier = Modifier,
                 textAlign = TextAlign.Center,
-                text = stringResource(title),
+                text = localizedString(title),
                 fontSize = 22.sp,
-                fontFamily = rodotoFont
+                fontFamily = rodotoFont,
+                color = Color.Black
             )
         }
         if (endIcone == null || onNavigateClick == null) {

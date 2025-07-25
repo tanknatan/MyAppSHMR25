@@ -1,12 +1,13 @@
 package com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toUtcIsoString
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.CreateExpensesUseCase
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.GetAccountUseCase
@@ -31,7 +32,8 @@ class AddExpensesViewModel @Inject constructor(
     private val getSelectedAccountUseCase: GetSelectedAccountUseCase,
     private val setSelectedAccountUseCase: SetSelectedAccountUseCase,
     private val createExpensesUseCase: CreateExpensesUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider
+) : BaseViewModel(hapticProvider) {
     private val _uiState = MutableStateFlow<State>(State.Content)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 

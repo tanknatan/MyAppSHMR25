@@ -34,6 +34,16 @@ fun getUtcDayBounds(date: LocalDate): Pair<String, String> {
     return start to end
 }
 
+fun getLast31DaysUtcBounds(): Pair<String, String> {
+    val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+
+    val now = LocalDate.now()
+    val endOfToday = now.atTime(LocalTime.MAX).atOffset(ZoneOffset.UTC).format(formatter)
+    val startOf31DaysAgo = now.minusDays(30).atStartOfDay().atOffset(ZoneOffset.UTC).format(formatter)
+
+    return startOf31DaysAgo to endOfToday
+}
+
 fun toStartOfDayIso(dateString: String): String {
     val date = LocalDate.parse(dateString)
     val zdt: ZonedDateTime = date

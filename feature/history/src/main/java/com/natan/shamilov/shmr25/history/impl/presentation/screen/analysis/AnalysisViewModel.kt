@@ -1,10 +1,16 @@
 package com.natan.shamilov.shmr25.history.impl.presentation.screen.analysis
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
+import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.normalizePercentages
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
+import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetHistoryByPeriodUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,17 +21,12 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import javax.inject.Inject
-import com.natan.shamilov.shmr25.common.impl.data.model.Result
-import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
-import com.natan.shamilov.shmr25.common.impl.presentation.utils.normalizePercentages
-import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
-import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
 
 class AnalysisViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
 
     private val _analyticsUiModel = MutableStateFlow<AnalyticsUiModel?>(null)
     val analyticsUiModel: StateFlow<AnalyticsUiModel?> = _analyticsUiModel.asStateFlow()
@@ -123,16 +124,18 @@ class AnalysisViewModel @Inject constructor(
 
                     val normalized = normalizePercentages(grouped, totalAmount)
 
-                    val categoryStats = normalized.map { (key, amount, percent) ->
-                        val (categoryId, name, emoji) = key
-                        CategoryStatUiModel(
-                            categoryId = categoryId,
-                            categoryName = name,
-                            amount = amount,
-                            percent = percent,
-                            emoji = emoji
-                        )
-                    }
+                    val categoryStats = normalized
+                        .map { (key, amount, percent) ->
+                            val (categoryId, name, emoji) = key
+                            CategoryStatUiModel(
+                                categoryId = categoryId,
+                                categoryName = name,
+                                amount = amount,
+                                percent = percent,
+                                emoji = emoji
+                            )
+                        }
+                        .sortedByDescending { it.percent }
 
                     _analyticsUiModel.value = AnalyticsUiModel(
                         totalAmount = totalAmount,

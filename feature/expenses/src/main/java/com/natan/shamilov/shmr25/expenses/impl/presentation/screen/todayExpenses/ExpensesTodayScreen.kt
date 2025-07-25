@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
@@ -23,6 +22,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.expenses.R
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 
@@ -31,7 +31,7 @@ fun ExpensesTodayScreen(
     viewModel: ExpensesViewModel = viewModel(factory = LocalViewModelFactory.current),
     onHistoryClick: () -> Unit,
     onFABClick: () -> Unit,
-    onItemClick: (Transaction) -> Unit
+    onItemClick: (Transaction) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -46,11 +46,17 @@ fun ExpensesTodayScreen(
                 ExpensesFlow.ExpensesToday.title,
                 ExpensesFlow.ExpensesToday.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { onHistoryClick() }
+                onNavigateClick = {
+                    viewModel.vibrate()
+                    onHistoryClick()
+                }
             )
         },
         floatingActionButton = {
-            MyFloatingActionButton({ onFABClick() })
+            MyFloatingActionButton({
+                viewModel.vibrate()
+                onFABClick()
+            })
         }
     ) { innerPadding ->
         when (uiState) {
@@ -59,7 +65,10 @@ fun ExpensesTodayScreen(
             }
 
             is State.Error -> {
-                ErrorScreen(innerPadding = innerPadding) { viewModel.initialize() }
+                ErrorScreen(innerPadding = innerPadding) {
+                    viewModel.vibrate()
+                    viewModel.initialize()
+                }
             }
 
             is State.Content -> {
@@ -69,7 +78,10 @@ fun ExpensesTodayScreen(
                     paddingValues = innerPadding,
                     total = total,
                     myExpenses = myExpenses,
-                    onRetry = { viewModel.initialize() },
+                    onRetry = {
+                        viewModel.vibrate()
+                        viewModel.initialize()
+                    },
                     onItemClick = { expense ->
                         onItemClick(expense)
                     }
@@ -89,7 +101,7 @@ fun ExpensesTodayContent(
 ) {
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
-            title = stringResource(R.string.total),
+            title = localizedString(R.string.total),
             amount = total
         )
         if (myExpenses.isEmpty()) {

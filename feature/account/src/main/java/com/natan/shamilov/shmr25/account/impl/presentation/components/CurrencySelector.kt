@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.feature.account.presentation.components
+package com.natan.shamilov.shmr25.account.impl.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -29,13 +29,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.account.R
-import com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption
-import com.natan.shamilov.shmr25.common.impl.domain.entity.currencyOptions
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 @Composable
 fun CurrencySelectorButton(
     selectedCurrency: com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption?,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     // Используем Surface с OutlinedTextField-стилем + кликабельность
     Column(
@@ -43,7 +42,7 @@ fun CurrencySelectorButton(
     ) {
         // Лейбл как у TextField
         Text(
-            text = "Валюта",
+            text = localizedString(R.string.currency),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.padding(start = 12.dp, bottom = 4.dp)
@@ -62,7 +61,8 @@ fun CurrencySelectorButton(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = selectedCurrency?.let { "${it.name} ${it.symbol}" } ?: "Выбрать валюту",
+                    text = selectedCurrency?.let { "${it.name} ${it.symbol}" }
+                        ?: localizedString(R.string.choose_currency),
                     color = if (selectedCurrency != null) {
                         MaterialTheme.colorScheme.onSurface
                     } else {
@@ -83,7 +83,7 @@ fun CurrencySelectorButton(
 fun CurrencyBottomSheet(
     onDismiss: () -> Unit,
     onCurrencySelected: (com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption) -> Unit,
-    sheetState: SheetState
+    sheetState: SheetState,
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -132,7 +132,7 @@ fun CurrencyBottomSheet(
                         contentDescription = null,
                         tint = Color.White
                     )
-                    Text(text = "Отмена", color = Color.White)
+                    Text(text = localizedString(R.string.cancel), color = Color.White)
                 }
             }
         }

@@ -15,12 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.natan.shamilov.shmr25.common.R
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 @Composable
 fun BalanceInput(
     balance: String,
     onBalanceChange: (String) -> Unit,
-    isError: Boolean
+    isError: Boolean,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextField(
@@ -36,6 +38,7 @@ fun BalanceInput(
                                 val decimals = parts[1].take(2)
                                 "${parts[0]}.$decimals"
                             }
+
                             else -> raw // fallback
                         }
                     }
@@ -45,7 +48,7 @@ fun BalanceInput(
                     onBalanceChange(filtered)
                 }
             },
-            label = { Text("Сумма на счёте") },
+            label = { Text(localizedString(R.string.account_balance)) },
             isError = isError,
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
@@ -66,7 +69,7 @@ fun BalanceInput(
         )
         if (isError) {
             Text(
-                text = "Введите сумму",
+                text = localizedString(R.string.enter_amount),
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)

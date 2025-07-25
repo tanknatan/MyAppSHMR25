@@ -1,7 +1,5 @@
 package com.natan.shamilov.shmr25.common.impl.presentation.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,70 +13,53 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.common.R
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 @Composable
 fun AmountInputField(
     amount: String,
     onAmountChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    label: String = stringResource(R.string.total_amount), // "Сумма"
     currency: String? = "₽",
 ) {
+    val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(70.dp)
-            .drawBehind {
-                // нижняя серая линия
-                val strokeWidth = 1.dp.toPx()
-                drawLine(
-                    color = Color(0xFFE2DDE8),
-                    start = Offset(0f, size.height - strokeWidth / 2),
-                    end = Offset(size.width, size.height - strokeWidth / 2),
-                    strokeWidth = strokeWidth
-                )
-            }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
-                .background(Color.White)
                 .drawBehind {
                     // нижняя серая линия
                     val strokeWidth = 1.dp.toPx()
                     drawLine(
-                        color = Color(0xFFE2DDE8),
+                        color = borderColor,
                         start = Offset(0f, size.height - strokeWidth / 2),
                         end = Offset(size.width, size.height - strokeWidth / 2),
                         strokeWidth = strokeWidth
                     )
                 }
-                .border(
-                    width = 1.dp,
-                    color = Color.Transparent,
-                    shape = TextFieldDefaults.shape
-                )
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black)
+                text = localizedString(R.string.total_amount),
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Row(
@@ -112,7 +93,7 @@ fun AmountInputField(
                         imeAction = ImeAction.Done
                     ),
                     textStyle = MaterialTheme.typography.bodyLarge.copy(
-                        color = Color.Black,
+                        color = MaterialTheme.colorScheme.onSurface,
                         textAlign = TextAlign.End
                     ),
                     modifier = Modifier.widthIn(min = 60.dp)
@@ -123,7 +104,7 @@ fun AmountInputField(
                 if (currency != null) {
                     Text(
                         text = currency,
-                        style = MaterialTheme.typography.bodyLarge.copy(color = Color.Black)
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
             }

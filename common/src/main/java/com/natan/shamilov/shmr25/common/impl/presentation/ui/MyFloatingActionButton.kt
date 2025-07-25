@@ -22,7 +22,7 @@ fun MyFloatingActionButton(onFabClick: () -> Unit) {
     FloatingActionButton(
         onClick = { onFabClick() },
         shape = CircleShape,
-        containerColor = MaterialTheme.colorScheme.primary,
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
         elevation = FloatingActionButtonDefaults.elevation(
             defaultElevation = 0.dp,
             focusedElevation = 0.dp,

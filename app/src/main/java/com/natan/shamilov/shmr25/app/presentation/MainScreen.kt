@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.natan.shamilov.shmr25.account.impl.di.DaggerAccountsComponent
@@ -27,15 +28,17 @@ import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.app.presentation.navigation.rememberNavigationState
 import com.natan.shamilov.shmr25.categories.impl.di.DaggerCategoriesComponent
 import com.natan.shamilov.shmr25.categories.impl.presentation.navigation.catigoriesGraph
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.expenses.impl.di.DaggerExpensesComponent
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.expensesGraph
-import com.natan.shamilov.shmr25.feature.option.presentation.navigation.optionsGraph
 import com.natan.shamilov.shmr25.history.impl.di.DaggerHistoryComponent
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.incomes.impl.di.DaggerIncomesComponent
 import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.incomesGraph
+import com.natan.shamilov.shmr25.option.impl.di.DaggerOptionsComponent
+import com.natan.shamilov.shmr25.option.impl.presentation.navigation.optionsGraph
 import kotlinx.coroutines.launch
 
 /**
@@ -51,7 +54,10 @@ import kotlinx.coroutines.launch
  * @param modifier Модификатор для настройки внешнего вида и поведения экрана
  */
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
+fun MainScreen(
+    modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>,
+    viewModel: MainViewModel = viewModel(factory = LocalViewModelFactory.current),
+) {
     val navigationState = rememberNavigationState()
     val navBackStackEntry = navigationState.navHostController.currentBackStackEntryAsState()
     val context = LocalContext.current
@@ -78,7 +84,8 @@ fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
             MyNavigationBar(
                 navigationList = navigationList,
                 navigationState = navigationState,
-                navBackStackEntry = navBackStackEntry
+                navBackStackEntry = navBackStackEntry,
+                onHaptiv = { viewModel.vibrate() }
             )
         },
         snackbarHost = {
@@ -118,7 +125,10 @@ fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
                 navHostController = navigationState.navHostController,
                 DaggerCategoriesComponent.factory().create(appComponent)
             )
-            optionsGraph(navHostController = navigationState.navHostController)
+            optionsGraph(
+                navHostController = navigationState.navHostController,
+                DaggerOptionsComponent.factory().create(appComponent)
+            )
             historyGraph(
                 navHostController = navigationState.navHostController,
                 DaggerHistoryComponent.factory().create(appComponent)

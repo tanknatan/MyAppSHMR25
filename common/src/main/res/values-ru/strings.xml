@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account">Счет</string>
+    <string name="category">Статья</string>
+    <string name="not_network">Нет сети</string>
+    <string name="total_amount">Сумма</string>
+    <string name="avatarEmoji">💰</string>
+    <string name="account_name">Имя счёта</string>
+    <string name="retry">Повторить</string>
+    <string name="choose_account">Выберите аккаунт</string>
+    <string name="choose_category">Выберите статью</string>
+    <string name="list_empty">Список пуст</string>
+    <string name="account_name_required">Имя счёта обязательно</string>
+    <string name="account_balance">Сумма на счёте</string>
+    <string name="enter_amount">Введите сумму</string>
+
+</resources>

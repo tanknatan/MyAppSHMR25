@@ -74,7 +74,7 @@ fun CustomDatePickerDialog(
             Column(
                 modifier = Modifier
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color(0xFFE6FFF2))
+                    .background(MaterialTheme.colorScheme.secondaryContainer)
             ) {
                 DatePickerHeader(
                     displayedMonth = displayedMonth,
@@ -341,7 +341,7 @@ private fun DayCell(
             .size(40.dp)
             .aspectRatio(1f)
             .clip(CircleShape)
-            .background(if (isSelected) Color(0xFF00C853) else Color.Transparent)
+            .background(if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent)
             .clickable(onClick = onClick)
     ) {
         Text(

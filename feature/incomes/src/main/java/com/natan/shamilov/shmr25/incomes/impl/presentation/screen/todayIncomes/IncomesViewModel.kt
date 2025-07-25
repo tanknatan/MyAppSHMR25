@@ -1,11 +1,12 @@
 package com.natan.shamilov.shmr25.incomes.impl.presentation.screen.todayIncomes
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.incomes.impl.domain.usecase.LoadIncomesByPeriodUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 class IncomesViewModel @Inject constructor(
     private val loadIncomesByPeriodUseCase: LoadIncomesByPeriodUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
 
     private val _incomes = MutableStateFlow<List<Transaction>>(emptyList())
     val incomes: StateFlow<List<Transaction>> = _incomes.asStateFlow()

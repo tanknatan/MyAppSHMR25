@@ -7,7 +7,10 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.natan.shamilov.shmr25.app.di.AppComponent
 import com.natan.shamilov.shmr25.app.di.DaggerAppComponent
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Класс приложения.
@@ -15,7 +18,7 @@ import com.natan.shamilov.shmr25.app.di.DaggerAppComponent
  */
 class ShmrApp : Application() {
     lateinit var appComponent: AppComponent
-
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     override fun onCreate() {
         super.onCreate()
         appComponent = DaggerAppComponent.factory().create(this)
@@ -38,11 +41,13 @@ class ShmrApp : Application() {
     }
 
     private fun schedulePeriodicSync() {
-        try {
-             appComponent.workManagerProvider().schedulePeriodicSync()
-            Log.d("FinanceApp", "Periodic sync scheduled successfully")
-        } catch (e: Exception) {
-            Log.e("FinanceApp", "Failed to schedule periodic sync", e)
+        applicationScope.launch {
+            try {
+                appComponent.workManagerProvider().schedulePeriodicSync()
+                Log.d("FinanceApp", "Periodic sync scheduled successfully")
+            } catch (e: Exception) {
+                Log.e("FinanceApp", "Failed to schedule periodic sync", e)
+            }
         }
     }
 }

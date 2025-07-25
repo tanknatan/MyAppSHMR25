@@ -7,8 +7,8 @@ import com.natan.shamilov.shmr25.common.impl.domain.repository.SyncPreferencesRe
 import javax.inject.Inject
 
 class SyncPreferencesRepositoryImpl @Inject constructor(
-    private val context: Context,
-) : SyncPreferencesRepository, SyncPreferencesProvider {
+    private val context: Context
+): SyncPreferencesRepository, SyncPreferencesProvider {
 
     private val sharedPreferences = context.getSharedPreferences(
         SYNC_PREF,
@@ -47,9 +47,20 @@ class SyncPreferencesRepositoryImpl @Inject constructor(
         return Pair(time, status)
     }
 
+    override suspend fun saveSyncInterval(interval: Long) {
+        sharedPreferences.edit {
+            putLong(KEY_SYNC_INTERVAL, interval)
+        }
+    }
+
+    override suspend fun getSyncInterval(): Long {
+        return sharedPreferences.getLong(KEY_SYNC_INTERVAL, 4L)
+    }
+
     companion object {
         private const val SYNC_PREF = "sync_preferences"
         private const val KEY_LAST_SYNC_TIME = "last_sync_time"
         private const val KEY_LAST_SYNC_STATUS = "last_sync_status"
+        private const val KEY_SYNC_INTERVAL = "sync_interval"
     }
 }

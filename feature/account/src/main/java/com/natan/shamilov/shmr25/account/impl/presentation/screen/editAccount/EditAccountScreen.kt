@@ -21,11 +21,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.account.R
+import com.natan.shamilov.shmr25.account.impl.presentation.components.CurrencyBottomSheet
+import com.natan.shamilov.shmr25.account.impl.presentation.components.CurrencySelectorButton
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountNameInput
@@ -33,8 +34,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.BalanceInput
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
-import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencySelectorButton
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 import kotlinx.coroutines.launch
 
@@ -55,8 +55,8 @@ fun EditAccountScreen(
     val isFormValid by remember(accountName, balance, selectedCurrency) {
         derivedStateOf {
             accountName.isNotBlank() &&
-                balance.isNotBlank() &&
-                selectedCurrency != null
+                    balance.isNotBlank() &&
+                    selectedCurrency != null
         }
     }
     Scaffold(
@@ -65,7 +65,10 @@ fun EditAccountScreen(
                 AccountFlow.EditAccount.startIcone,
                 AccountFlow.EditAccount.title,
                 AccountFlow.EditAccount.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = { },
             )
         },
@@ -82,7 +85,7 @@ fun EditAccountScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.not_network))
+                    Text(text = localizedString(R.string.not_network))
                 }
             }
 
@@ -174,7 +177,7 @@ fun EditAccountContent(
                     onSuccess = { onBackPressed() }
                 )
             },
-            text = stringResource(R.string.save),
+            text = localizedString(R.string.save),
             isEnabled = isFormValid
         )
     }

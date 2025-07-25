@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
 }
-
 android {
     namespace = "com.natan.shamilov.shmr25"
     compileSdk = 35
@@ -17,7 +16,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -58,6 +56,20 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/license.txt"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/LGPL2.1"
+            excludes += "META-INF/AL2.0"
+        }
     }
 }
 
@@ -105,6 +117,7 @@ dependencies {
     implementation(project(":feature:incomes"))
     implementation(project(":feature:options"))
     implementation(project(":feature:splash"))
+    implementation(project(":feature:login"))
     // Общий модуль
     implementation(project(":common"))
     //Room
@@ -113,4 +126,7 @@ dependencies {
     kapt(libs.room.compiler)
     //WorkManager
     implementation(libs.work.runtime)
+    //Mockk
+    androidTestImplementation(libs.mockk.android)
+    testImplementation(libs.mockk)
 }

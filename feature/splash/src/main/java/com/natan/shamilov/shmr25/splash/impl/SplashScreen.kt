@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -22,7 +23,8 @@ import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 
 @Composable
 fun SplashScreen(
-    onNextScreen: () -> Unit,
+    onMainScreen: () -> Unit,
+    onLoginScreen: () -> Unit,
     viewModel: SplashViewModel = viewModel(factory = LocalViewModelFactory.current),
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Asset("my_animation.json"))
@@ -31,16 +33,25 @@ fun SplashScreen(
         iterations = 1
     )
     val shouldNavigate by viewModel.uiState.collectAsStateWithLifecycle()
+    val isPinCodeSet by viewModel.isPinCodeSet.collectAsStateWithLifecycle()
 
     LaunchedEffect(progress) {
         if (progress == 1f && shouldNavigate) {
-            onNextScreen()
+            if (isPinCodeSet) {
+                onLoginScreen()
+            } else {
+                onMainScreen()
+            }
         }
     }
 
     LaunchedEffect(shouldNavigate) {
         if (progress == 1f && shouldNavigate) {
-            onNextScreen()
+            if (isPinCodeSet) {
+                onLoginScreen()
+            } else {
+                onMainScreen()
+            }
         }
     }
 
@@ -48,7 +59,7 @@ fun SplashScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = Color.White
+                color = MaterialTheme.colorScheme.background
             ),
         contentAlignment = Alignment.Center
     ) {

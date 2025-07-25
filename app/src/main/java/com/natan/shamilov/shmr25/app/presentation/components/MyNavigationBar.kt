@@ -24,6 +24,7 @@ fun MyNavigationBar(
     navigationList: List<NavigationItem>,
     navigationState: NavigationState,
     navBackStackEntry: State<NavBackStackEntry?>,
+    onHaptiv: () -> Unit,
 ) {
     NavigationBar(
         modifier = Modifier.navigationBarsPadding(),
@@ -45,7 +46,10 @@ fun MyNavigationBar(
 
             NavigationBarItem(
                 selected = selected,
-                onClick = { navigationState.bottomNavigate(item.screen) },
+                onClick = {
+                    onHaptiv()
+                    navigationState.bottomNavigate(item.screen)
+                },
                 icon = {
                     Icon(
                         painter = painterResource(item.iconId),

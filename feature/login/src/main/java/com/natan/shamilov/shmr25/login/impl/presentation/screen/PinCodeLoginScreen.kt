@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
@@ -43,7 +44,8 @@ fun PinCodeLoginScreen(
     ) {
         Text(
             text = localizedString(R.string.enter_pin),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.testTag("pin_title")
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -52,12 +54,14 @@ fun PinCodeLoginScreen(
 
         PinKeyboard(
             onNumberClick = {
+                viewModel.vibrate()
                 if (enteredPin.length < 4) {
                     isError = false
                     enteredPin += it
                 }
             },
             onDelete = {
+                viewModel.vibrate()
                 if (enteredPin.isNotEmpty()) {
                     enteredPin = enteredPin.dropLast(1)
                 }
@@ -69,6 +73,7 @@ fun PinCodeLoginScreen(
                     isError = false
                     onContinue()
                 } else {
+                    viewModel.vibrate()
                     isError = true
                     enteredPin = ""
                 }

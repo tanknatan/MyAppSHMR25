@@ -19,6 +19,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.dep
@@ -28,7 +29,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
 fun ThemeCard(
     title: String,
     isDarkTheme: Boolean,
-    onToggle: (Boolean) -> Unit
+    onToggle: (Boolean) -> Unit,
 ) {
     val borderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
     Card(
@@ -77,6 +78,7 @@ fun ThemeCard(
 
             Switch(
                 checked = isDarkTheme,
+                modifier = Modifier.testTag("theme_toggle_switch"),
                 onCheckedChange = onToggle,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = White,

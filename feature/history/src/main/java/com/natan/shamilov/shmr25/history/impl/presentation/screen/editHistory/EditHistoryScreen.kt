@@ -57,8 +57,12 @@ fun EditHistoryScreen(
                 HistoryFlow.EditHistory.startIcone,
                 R.string.my_transactions,
                 HistoryFlow.EditHistory.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }
@@ -86,7 +90,6 @@ fun EditHistoryScreen(
                 EditHistoryContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel,
-                    onBackPressed = { onBackPressed() }
                 )
             }
         }
@@ -97,7 +100,6 @@ fun EditHistoryScreen(
 fun EditHistoryContent(
     paddingValues: PaddingValues,
     viewModel: EditHistoryViewModel,
-    onBackPressed: () -> Unit,
 ) {
     val accounts by viewModel.accounts.collectAsStateWithLifecycle()
     val categories by viewModel.categories.collectAsStateWithLifecycle()

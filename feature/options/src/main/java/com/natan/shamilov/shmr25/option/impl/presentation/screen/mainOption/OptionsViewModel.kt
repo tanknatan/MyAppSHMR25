@@ -13,13 +13,12 @@ import javax.inject.Inject
 class OptionsViewModel @Inject constructor(
     private val optionsProvider: OptionsProvider,
 ) : ViewModel() {
+    private var _isDarkTheme = MutableStateFlow(false)
+    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
     init {
         getThemeMode()
     }
-
-    private var _isDarkTheme = MutableStateFlow(false)
-    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme.asStateFlow()
 
     fun getThemeMode() {
         viewModelScope.launch(Dispatchers.IO) {

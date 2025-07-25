@@ -256,7 +256,7 @@ fun IncomeExpenseBarChart(
 ) {
     val positiveColor = Color(0xFF81C784)
     val negativeColor = Color(0xFFE57373)
-    val zeroValueColor = Color(0x0002CBF5)
+    val zeroValueColor = Color(0x8B8F8F8F)
     val minBarHeightRatio = 0.05f
 
     val sortedDates = (expensesMap.keys + incomeMap.keys).toSortedSet().toList()

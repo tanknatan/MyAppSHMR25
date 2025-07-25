@@ -56,7 +56,9 @@ fun AddAccountScreen(
                 AccountFlow.AddAccount.startIcone,
                 AccountFlow.AddAccount.title,
                 AccountFlow.AddAccount.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed() },
                 onNavigateClick = { },
             )
         },

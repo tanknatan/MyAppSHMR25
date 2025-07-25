@@ -2,7 +2,7 @@ package com.natan.shamilov.shmr25.incomes.impl.di
 
 import androidx.lifecycle.ViewModel
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelKey
-import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses.AddIncomesViewModel
+import com.natan.shamilov.shmr25.incomes.impl.presentation.screen.addIncomes.addExpenses.AddIncomesViewModel
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.editIncomes.EditIncomesViewModel
 import com.natan.shamilov.shmr25.incomes.impl.presentation.screen.todayIncomes.IncomesViewModel
 import dagger.Binds

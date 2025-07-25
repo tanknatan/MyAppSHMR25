@@ -54,8 +54,12 @@ fun AddExpensesScreen(
                 ExpensesFlow.AddExpense.startIcone,
                 ExpensesFlow.AddExpense.title,
                 ExpensesFlow.AddExpense.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }

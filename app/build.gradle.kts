@@ -57,6 +57,20 @@ android {
         compose = true
         buildConfig = true
     }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
+            excludes += "META-INF/LICENSE"
+            excludes += "META-INF/NOTICE"
+            excludes += "META-INF/NOTICE.txt"
+            excludes += "META-INF/license.txt"
+            excludes += "META-INF/DEPENDENCIES"
+            excludes += "META-INF/LGPL2.1"
+            excludes += "META-INF/AL2.0"
+        }
+    }
 }
 
 dependencies {
@@ -112,4 +126,7 @@ dependencies {
     kapt(libs.room.compiler)
     //WorkManager
     implementation(libs.work.runtime)
+    //Mockk
+    androidTestImplementation(libs.mockk.android)
+    testImplementation(libs.mockk)
 }

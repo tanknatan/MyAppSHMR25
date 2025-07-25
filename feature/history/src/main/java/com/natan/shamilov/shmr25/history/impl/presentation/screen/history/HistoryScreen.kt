@@ -13,7 +13,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
@@ -27,6 +26,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.history.R
 import java.time.Instant
 import java.time.LocalDateTime
@@ -56,8 +56,14 @@ fun HistoryScreen(
                     HistoryType.INCOME -> R.string.incomes_history
                 },
                 endIcone = R.drawable.ic_analytics,
-                onBackOrCanselClick = { onBackClick() },
-                onNavigateClick = { onNavigateClick() }
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackClick()
+                },
+                onNavigateClick = {
+                    viewModel.vibrate()
+                    onNavigateClick()
+                }
             )
         }
     ) { innerPadding ->
@@ -74,7 +80,10 @@ fun HistoryScreen(
                 HistoryContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel,
-                    onRetry = { viewModel.initialize(type) },
+                    onRetry = {
+                        viewModel.vibrate()
+                        viewModel.initialize(type)
+                    },
                     onItemClick = { item ->
                         onItemClick(item)
                     }

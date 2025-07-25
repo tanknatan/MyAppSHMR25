@@ -14,6 +14,7 @@ import com.natan.shamilov.shmr25.app.di.moduls.OptionsDependenciesModule
 import com.natan.shamilov.shmr25.app.di.moduls.SplashDependenciesModule
 import com.natan.shamilov.shmr25.app.di.moduls.ViewModelModule
 import com.natan.shamilov.shmr25.categories.api.CategoriesDependencies
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.api.OptionsProvider
 import com.natan.shamilov.shmr25.common.api.SyncPreferencesProvider
 import com.natan.shamilov.shmr25.common.api.WorkManagerProvider
@@ -87,6 +88,8 @@ interface AppComponent :
     fun workManagerProvider(): WorkManagerProvider
 
     fun syncPreferencesProvider(): SyncPreferencesProvider
+
+    fun hapticProvider(): HapticProvider
 
     fun optionsProvider(): OptionsProvider
 

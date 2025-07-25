@@ -17,8 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,7 +26,6 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AmountInputField
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CategoriesDropdownMenu
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
@@ -60,8 +57,11 @@ fun EditExpensesScreen(
                 ExpensesFlow.EditExpense.startIcone,
                 ExpensesFlow.EditExpense.title,
                 ExpensesFlow.EditExpense.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed() },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }
@@ -89,7 +89,9 @@ fun EditExpensesScreen(
                 EditExpensesContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel,
-                    onBackPressed = { onBackPressed() },
+                    onBackPressed = {
+                        onBackPressed()
+                    },
                 )
             }
         }
@@ -122,6 +124,7 @@ fun EditExpensesContent(
             accounts = accounts,
             selectedAccount = selectedAccount,
             onAccountSelected = {
+
                 viewModel.selectAccount(it)
             }
         )

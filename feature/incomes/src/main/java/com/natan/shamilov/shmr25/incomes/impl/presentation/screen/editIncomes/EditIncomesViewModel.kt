@@ -1,13 +1,14 @@
 package com.natan.shamilov.shmr25.expenses.impl.presentation.screen.editIncomes
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.formatDateToMillis
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toLocalTimeWithoutSeconds
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toUtcIsoString
@@ -41,8 +42,9 @@ class EditIncomesViewModel @Inject constructor(
     private val getAccountByIdUseCase: GetAccountByIdUseCase,
     private val getCategoryByIdUseCase: GetCategoryByIdUseCase,
     private val editIncomesUseCase: EditIncomeUseCase,
-    private val deletTransactionUseCase : DeletTransactionUseCase
-) : ViewModel() {
+    private val deletTransactionUseCase : DeletTransactionUseCase,
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
     private val _uiState = MutableStateFlow<State>(State.Loading)
     val uiState: StateFlow<State> = _uiState.asStateFlow()
 

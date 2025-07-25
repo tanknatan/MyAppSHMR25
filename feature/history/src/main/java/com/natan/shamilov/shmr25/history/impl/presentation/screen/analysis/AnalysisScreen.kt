@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
@@ -26,11 +25,12 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
+import com.natan.shamilov.shmr25.graph.AnalysisSchedule
 import com.natan.shamilov.shmr25.history.R
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.HistoryFlow
 import com.natan.shamilov.shmr25.history.impl.presentation.utils.generateColorsHSV
 import com.natan.shamilov.shmr25.history.impl.presentation.utils.toPieChartData
-import com.natan.shamilov.shmr25.graph.AnalysisSchedule
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -54,7 +54,10 @@ fun AnalysisScreen(
                 startIcone = HistoryFlow.Analysis.startIcone,
                 title = HistoryFlow.Analysis.title,
                 endIcone = HistoryFlow.Analysis.endIcone,
-                onBackOrCanselClick = { onBackClick() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackClick()
+                },
                 onNavigateClick = { }
             )
         }
@@ -72,7 +75,10 @@ fun AnalysisScreen(
                 AnalysisContent(
                     paddingValues = innerPadding,
                     viewModel = viewModel,
-                    onRetry = { viewModel.initialize(type) },
+                    onRetry = {
+                        viewModel.vibrate()
+                        viewModel.initialize(type)
+                    },
                 )
             }
         }

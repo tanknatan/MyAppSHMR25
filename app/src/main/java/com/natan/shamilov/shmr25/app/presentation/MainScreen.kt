@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.natan.shamilov.shmr25.account.impl.di.DaggerAccountsComponent
@@ -27,6 +28,7 @@ import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.app.presentation.navigation.rememberNavigationState
 import com.natan.shamilov.shmr25.categories.impl.di.DaggerCategoriesComponent
 import com.natan.shamilov.shmr25.categories.impl.presentation.navigation.catigoriesGraph
+import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.expenses.impl.di.DaggerExpensesComponent
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
@@ -52,7 +54,10 @@ import kotlinx.coroutines.launch
  * @param modifier Модификатор для настройки внешнего вида и поведения экрана
  */
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
+fun MainScreen(
+    modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>,
+    viewModel: MainViewModel = viewModel(factory = LocalViewModelFactory.current),
+) {
     val navigationState = rememberNavigationState()
     val navBackStackEntry = navigationState.navHostController.currentBackStackEntryAsState()
     val context = LocalContext.current
@@ -79,7 +84,8 @@ fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
             MyNavigationBar(
                 navigationList = navigationList,
                 navigationState = navigationState,
-                navBackStackEntry = navBackStackEntry
+                navBackStackEntry = navBackStackEntry,
+                onHaptiv = { viewModel.vibrate() }
             )
         },
         snackbarHost = {

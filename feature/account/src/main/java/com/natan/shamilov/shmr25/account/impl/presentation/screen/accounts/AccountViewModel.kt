@@ -1,13 +1,14 @@
 package com.natan.shamilov.shmr25.account.impl.presentation.screen.accounts
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetAccountUseCase
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetIncomeExpenseMapsForLast31DaysUsecase
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetSelectedAccountUseCase
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.SetSelectedAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,8 @@ class AccountViewModel @Inject constructor(
     private val getSelectedAccountUseCase: GetSelectedAccountUseCase,
     private val setSelectedAccountUseCase: SetSelectedAccountUseCase,
     private val getIncomeExpenseMapsForLast31DaysUsecase: GetIncomeExpenseMapsForLast31DaysUsecase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts: StateFlow<List<Account>> = _accounts.asStateFlow()

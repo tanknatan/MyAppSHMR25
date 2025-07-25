@@ -1,12 +1,13 @@
 package com.natan.shamilov.shmr25.history.impl.presentation.screen.analysis
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.normalizePercentages
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
@@ -24,7 +25,8 @@ import javax.inject.Inject
 
 class AnalysisViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
 
     private val _analyticsUiModel = MutableStateFlow<AnalyticsUiModel?>(null)
     val analyticsUiModel: StateFlow<AnalyticsUiModel?> = _analyticsUiModel.asStateFlow()

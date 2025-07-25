@@ -58,8 +58,12 @@ fun EditIncomesScreen(
                 IncomesFlow.EditIncome.startIcone,
                 IncomesFlow.EditIncome.title,
                 IncomesFlow.EditIncome.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }

@@ -1,6 +1,7 @@
 package com.natan.shamilov.shmr25.app.di.moduls
 
 import androidx.lifecycle.ViewModel
+import com.natan.shamilov.shmr25.app.presentation.MainViewModel
 import com.natan.shamilov.shmr25.app.presentation.viewModel.NetworkViewModel
 import com.natan.shamilov.shmr25.app.presentation.viewModel.ThemeViewModel
 import com.natan.shamilov.shmr25.common.impl.di.ViewModelKey
@@ -19,4 +20,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(ThemeViewModel::class)
     fun bindThemeViewModel(themeViewModel: ThemeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(MainViewModel::class)
+    fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
 }

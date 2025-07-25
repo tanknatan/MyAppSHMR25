@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.PrimaryGreen
 
@@ -45,6 +46,7 @@ fun PinKeyboard(
                     Box(
                         modifier = Modifier
                             .size(80.dp)
+                            .testTag("pin_key_$key")
                             .clickable {
                                 when (key) {
                                     "<" -> onDelete()
@@ -73,7 +75,9 @@ fun PinIndicators(
     currentPin: String,
     isError: Boolean,
 ) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .testTag("pin_indicators"), horizontalArrangement = Arrangement.Center) {
         repeat(4) { i ->
             val filled = i < currentPin.length
             val borderColor = when {
@@ -85,6 +89,7 @@ fun PinIndicators(
             Box(
                 modifier = Modifier
                     .size(35.dp)
+                    .testTag("pin_indicator_$i")
                     .border(
                         width = 6.dp,
                         color = borderColor,

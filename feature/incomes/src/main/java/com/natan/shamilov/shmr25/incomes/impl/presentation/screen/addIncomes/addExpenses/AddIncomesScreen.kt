@@ -30,7 +30,6 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
-import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.addExpenses.AddIncomesViewModel
 import com.natan.shamilov.shmr25.incomes.R
 import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 import java.time.Instant
@@ -55,8 +54,12 @@ fun AddIncomesScreen(
                 IncomesFlow.AddIncome.startIcone,
                 IncomesFlow.AddIncome.title,
                 IncomesFlow.AddIncome.endIcone,
-                onBackOrCanselClick = { onBackPressed() },
+                onBackOrCanselClick = {
+                    viewModel.vibrate()
+                    onBackPressed()
+                },
                 onNavigateClick = {
+                    viewModel.vibrate()
                     if (viewModel.isFormValidNow()) {
                         viewModel.createTransaction(onSuccess = { onBackPressed() })
                     }
@@ -109,7 +112,7 @@ fun AddIncomesContent(
     var showTimeDialog by remember { mutableStateOf(false) }
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?:  localizedString(R.string.select)
+    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: localizedString(R.string.select)
     Column(modifier = Modifier.padding(paddingValues)) {
         AccountDropdownMenu(
             accounts = accounts,

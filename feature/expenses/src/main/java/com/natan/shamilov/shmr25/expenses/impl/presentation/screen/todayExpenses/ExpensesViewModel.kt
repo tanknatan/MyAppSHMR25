@@ -1,11 +1,12 @@
 package com.natan.shamilov.shmr25.expenses.impl.presentation.screen.todayExpenses
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.expenses.impl.domain.usecase.LoadExpensesByPeriodUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
  */
 class ExpensesViewModel @Inject constructor(
     private val loadExpensesByPeriodUseCase: LoadExpensesByPeriodUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
     private val _expenses = MutableStateFlow<List<Transaction>>(emptyList())
     val expenses: StateFlow<List<Transaction>> = _expenses.asStateFlow()
 
@@ -46,9 +48,11 @@ class ExpensesViewModel @Inject constructor(
                 is Result.Error -> {
                     _uiState.value = State.Error
                 }
+
                 Result.Loading -> {
                     _uiState.value = State.Loading
                 }
+
                 is Result.Success<List<Transaction>> -> {
                     _expenses.value = result.data
                     _sumOfExpenses.value = _expenses.value.sumOf { it.amount }

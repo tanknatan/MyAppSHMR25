@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
@@ -23,15 +22,16 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.ListEmptyScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
-import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.incomes.R
+import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
 
 @Composable
 fun IncomesTodayScreen(
     viewModel: IncomesViewModel = viewModel(factory = LocalViewModelFactory.current),
     onHistoryClick: () -> Unit,
     onFABClick: () -> Unit,
-    onItemClick: (Transaction) -> Unit
+    onItemClick: (Transaction) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
@@ -45,11 +45,17 @@ fun IncomesTodayScreen(
                 IncomesFlow.IncomesToday.title,
                 IncomesFlow.IncomesToday.endIcone,
                 onBackOrCanselClick = {},
-                onNavigateClick = { onHistoryClick() }
+                onNavigateClick = {
+                    viewModel.vibrate()
+                    onHistoryClick()
+                }
             )
         },
         floatingActionButton = {
-            MyFloatingActionButton({ onFABClick() })
+            MyFloatingActionButton({
+                viewModel.vibrate()
+                onFABClick()
+            })
         }
     ) { innerPadding ->
         when (uiState) {
@@ -68,7 +74,9 @@ fun IncomesTodayScreen(
                     paddingValues = innerPadding,
                     total = total,
                     myIncomes = myIncomes,
-                    onRetry = { viewModel.initialize() },
+                    onRetry = {
+                        viewModel.vibrate()
+                        viewModel.initialize() },
                     onItemClick = { income ->
                         onItemClick(income)
                     },

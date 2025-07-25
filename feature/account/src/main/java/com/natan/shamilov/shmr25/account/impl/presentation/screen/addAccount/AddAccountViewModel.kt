@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.CreateAccountUseCase
+import com.natan.shamilov.shmr25.common.api.HapticProvider
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,8 +22,8 @@ import javax.inject.Inject
  */
 class AddAccountViewModel @Inject constructor(
     private val createAccountUseCase: CreateAccountUseCase,
-    //   private val networkStateReceiver: NetworkStateReceiver
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
 
     private val _accounts = MutableStateFlow<List<Account>>(emptyList())
     val accounts: StateFlow<List<Account>> = _accounts.asStateFlow()
@@ -31,13 +33,6 @@ class AddAccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-//            networkStateReceiver.isNetworkAvailable.collect { isAvailable ->
-//                _uiState.value = if (isAvailable) {
-//                    State.Content
-//                } else {
-//                    State.Error
-//                }
-//            }
         }
         _uiState.value = State.Content
     }

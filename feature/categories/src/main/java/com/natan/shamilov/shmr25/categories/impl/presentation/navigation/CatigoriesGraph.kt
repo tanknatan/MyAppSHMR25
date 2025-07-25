@@ -10,7 +10,7 @@ import androidx.navigation.compose.navigation
 import com.natan.shamilov.shmr25.categories.impl.di.CategoriesComponent
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.CategoriesFlow
-import com.natan.shamilov.shmr25.feature.categories.presentation.screen.CategoriesScreen
+import com.natan.shamilov.shmr25.categories.impl.presentation.screen.CategoriesScreen
 
 fun NavGraphBuilder.catigoriesGraph(navHostController: NavHostController, categoriesComponent: CategoriesComponent) {
     navigation(

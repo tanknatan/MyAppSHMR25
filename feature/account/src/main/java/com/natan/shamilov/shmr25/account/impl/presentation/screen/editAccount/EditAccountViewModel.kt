@@ -1,14 +1,15 @@
 package com.natan.shamilov.shmr25.account.impl.presentation.screen.editAccount
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.natan.shamilov.shmr25.account.impl.domain.usecase.GetSelectedAccountUseCase
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Account
 import com.natan.shamilov.shmr25.common.impl.domain.entity.CurrencyOption
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.currencyOptions
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.feature.account.domain.usecase.EditAccountUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ import javax.inject.Inject
 class EditAccountViewModel @Inject constructor(
     private val editAccountUseCase: EditAccountUseCase,
     private val getselectedAccountUseCase: GetSelectedAccountUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider,
+) : BaseViewModel(hapticProvider) {
 
     private val _account = MutableStateFlow<Account?>(null)
     val account: StateFlow<Account?> = _account.asStateFlow()

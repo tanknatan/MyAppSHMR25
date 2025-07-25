@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.account.R
@@ -21,6 +20,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 import com.natan.shamilov.shmr25.graph.AccountSchedule
 
@@ -43,6 +43,7 @@ fun AccountScreen(
                 AccountFlow.Account.endIcone,
                 onBackOrCanselClick = {},
                 onNavigateClick = {
+                    viewModel.vibrate()
                     viewModel.selectedAccount.value?.id?.let {
                         onEditAccountClick(it.toString())
                     }
@@ -50,7 +51,10 @@ fun AccountScreen(
             )
         },
         floatingActionButton = {
-            MyFloatingActionButton({ onFABClick() })
+            MyFloatingActionButton({
+                viewModel.vibrate()
+                onFABClick()
+            })
         }
     ) { innerPadding ->
         when (uiState) {
@@ -59,7 +63,9 @@ fun AccountScreen(
             }
 
             is State.Error -> {
-                ErrorScreen(innerPadding = innerPadding) { viewModel.initialize() }
+                ErrorScreen(innerPadding = innerPadding) {
+                    viewModel.initialize()
+                }
             }
 
             is State.Content -> {

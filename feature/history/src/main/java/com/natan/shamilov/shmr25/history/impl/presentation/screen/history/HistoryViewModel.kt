@@ -3,10 +3,12 @@ package com.natan.shamilov.shmr25.history.impl.presentation.screen.history
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.natan.shamilov.shmr25.common.api.HapticProvider
 import com.natan.shamilov.shmr25.common.impl.data.model.Result
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Transaction
+import com.natan.shamilov.shmr25.common.impl.presentation.BaseViewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toEndOfDayIso
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.toStartOfDayIso
 import com.natan.shamilov.shmr25.history.impl.domain.usecase.GetHistoryByPeriodUseCase
@@ -29,7 +31,8 @@ import javax.inject.Inject
  */
 class HistoryViewModel @Inject constructor(
     private val getHistoryByPeriodUseCase: GetHistoryByPeriodUseCase,
-) : ViewModel() {
+    private val hapticProvider: HapticProvider
+) : BaseViewModel(hapticProvider) {
 
     private val _historyUiModel = MutableStateFlow<HistoryUiModel?>(null)
     val historyUiModel: StateFlow<HistoryUiModel?> = _historyUiModel.asStateFlow()

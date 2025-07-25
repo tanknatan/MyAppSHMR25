@@ -14,13 +14,12 @@ class ChangeMainColorViewModel @Inject constructor(
     private val optionsProvider: OptionsProvider,
 ) : ViewModel() {
 
-    init {
-        observeMainColor()
-    }
-
     private val _mainColor = MutableStateFlow(MainColorType.getDefault())
     val mainColor = _mainColor.asStateFlow()
 
+    init {
+        observeMainColor()
+    }
     private fun observeMainColor() {
         viewModelScope.launch(Dispatchers.IO) {
             optionsProvider.getMainThemeColorFlow().collect { mainColor ->

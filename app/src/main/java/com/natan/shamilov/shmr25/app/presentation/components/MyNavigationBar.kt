@@ -12,14 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationItem
 import com.natan.shamilov.shmr25.app.presentation.navigation.NavigationState
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.BottomBarBackground
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 @Composable
 fun MyNavigationBar(
@@ -29,7 +27,6 @@ fun MyNavigationBar(
 ) {
     NavigationBar(
         modifier = Modifier.navigationBarsPadding(),
-        containerColor = BottomBarBackground
     ) {
         navigationList.forEach { item ->
             val fromParam = navBackStackEntry.value?.arguments?.getString("from") ?: ""
@@ -58,14 +55,13 @@ fun MyNavigationBar(
                 },
                 label = {
                     Text(
-                        text = stringResource(item.label),
+                        text = localizedString(item.label),
                         style = MaterialTheme.typography.labelMedium,
-                        fontFamily = rodotoFont
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.primary,
-                    indicatorColor = MaterialTheme.colorScheme.secondary
+                    selectedIconColor = MaterialTheme.colorScheme.primaryContainer,
+                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer
                 )
             )
         }

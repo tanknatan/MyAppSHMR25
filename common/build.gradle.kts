@@ -13,7 +13,6 @@ android {
 
     defaultConfig {
         minSdk = 26
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -88,4 +87,6 @@ dependencies {
     kapt(libs.room.compiler)
     //WorkManager
     implementation(libs.work.runtime)
+    //EncryptedSharedPreferences
+    implementation(libs.security.crypto)
 }

@@ -41,7 +41,7 @@ fun SyncSnackbar(
         shape = RoundedCornerShape(12.dp),
         shadowElevation = 6.dp,
         tonalElevation = 2.dp,
-        color = MaterialTheme.colorScheme.secondary
+        color = MaterialTheme.colorScheme.primaryContainer
     ) {
         Row(
             modifier = Modifier

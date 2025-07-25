@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
@@ -88,7 +88,7 @@ fun IncomesContent(
 ) {
     Column(modifier = Modifier.padding(paddingValues)) {
         TopGreenCard(
-            title = stringResource(R.string.total),
+            title = localizedString(R.string.total),
             amount = total
         )
         if (myIncomes.isEmpty()) {

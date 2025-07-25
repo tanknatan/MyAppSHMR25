@@ -16,7 +16,7 @@ import com.natan.shamilov.shmr25.categories.impl.presentation.screen.CategoriesV
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
-import com.natan.shamilov.shmr25.feature.categories.presentation.components.CustomSearchBar
+import com.natan.shamilov.shmr25.categories.impl.presentation.components.CustomSearchBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.ErrorScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen

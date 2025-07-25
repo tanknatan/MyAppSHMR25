@@ -14,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.HistoryType
@@ -96,7 +96,7 @@ private fun AnalysisContent(
 
     Column(modifier = Modifier.padding(paddingValues)) {
         AppCard(
-            title = stringResource(R.string.start_date),
+            title = localizedString(R.string.start_date),
             date = Instant.ofEpochMilli(startDate)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
@@ -107,7 +107,7 @@ private fun AnalysisContent(
             },
         )
         AppCard(
-            title = stringResource(R.string.end_date),
+            title = localizedString(R.string.end_date),
             date = Instant.ofEpochMilli(endDate)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
@@ -118,7 +118,7 @@ private fun AnalysisContent(
             }
         )
         AppCard(
-            title = stringResource(R.string.total_amount),
+            title = localizedString(R.string.total_amount),
             amount = historyUiModel?.totalAmount
         )
         AnalysisSchedule(

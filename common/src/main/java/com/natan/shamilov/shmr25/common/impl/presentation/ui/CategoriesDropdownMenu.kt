@@ -33,13 +33,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.natan.shamilov.shmr25.common.R
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Category
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.rodotoFont
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -82,30 +83,20 @@ fun CategoriesDropdownMenu(
                 }
         ) {
             TextField(
-                value = selectedCategory?.name ?: stringResource(R.string.choose_category),
+                value = selectedCategory?.name ?: localizedString(R.string.choose_category),
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                 modifier = modifier
                     .fillMaxWidth()
                     .height(70.dp)
-                    .menuAnchor()
-                    .drawBehind {
-                        // нижняя серая линия
-                        val strokeWidth = 1.dp.toPx()
-                        drawLine(
-                            color = Color(0xFFE2DDE8),
-                            start = Offset(0f, size.height - strokeWidth / 2),
-                            end = Offset(size.width, size.height - strokeWidth / 2),
-                            strokeWidth = strokeWidth
-                        )
-                    },
+                    .menuAnchor(),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.White,
-                    unfocusedContainerColor = Color.White,
                     disabledTextColor = MaterialTheme.colorScheme.onSurface,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                    focusedContainerColor = MaterialTheme.colorScheme.background
                 ),
                 singleLine = true,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
@@ -113,13 +104,11 @@ fun CategoriesDropdownMenu(
                 )
             )
             Text(
-                text = stringResource(R.string.category),
+                text = localizedString(R.string.category),
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(start = 16.dp),
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    color = Color.Black
-                )
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 

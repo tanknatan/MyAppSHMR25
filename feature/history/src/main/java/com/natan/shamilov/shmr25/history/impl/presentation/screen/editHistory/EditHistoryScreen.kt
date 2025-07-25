@@ -17,8 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,12 +26,12 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.AccountDropdownMenu
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AmountInputField
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.AppCard
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CategoriesDropdownMenu
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomDatePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDialog
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.history.R
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.HistoryFlow
@@ -80,7 +78,7 @@ fun EditHistoryScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.not_network))
+                    Text(text = localizedString(R.string.not_network))
                 }
             }
 
@@ -136,7 +134,6 @@ fun EditHistoryContent(
             onAmountChange = {
                 viewModel.updateAmount(it)
             },
-            label = "Сумма",
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
@@ -157,7 +154,7 @@ fun EditHistoryContent(
         SingleLineTextField(
             value = comment,
             onValueChange = { viewModel.updateText(it) },
-            placeholder = stringResource(R.string.comment)
+            placeholder = localizedString(R.string.comment)
         )
         Spacer(modifier = Modifier.height(16.dp))
 //        CustomButton(

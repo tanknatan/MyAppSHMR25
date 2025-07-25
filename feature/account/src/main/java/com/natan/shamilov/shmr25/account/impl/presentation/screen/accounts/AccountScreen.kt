@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.account.R
@@ -105,14 +105,13 @@ fun AccountContent(
             TopGreenCard(
                 title = account.name,
                 amount = account.balance,
-                currency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {},
-                avatarEmoji = stringResource(R.string.avatarEmoji)
+                avatarEmoji = localizedString(R.string.avatarEmoji)
             )
 
             TopGreenCard(
-                title = stringResource(R.string.currency),
+                title = localizedString(R.string.currency),
                 cucurrency = account.currency,
                 canNavigate = true,
                 onNavigateClick = {}

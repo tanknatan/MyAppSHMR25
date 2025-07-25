@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.natan.shamilov.shmr25.app.appComponent
 import com.natan.shamilov.shmr25.app.presentation.MainScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
+import com.natan.shamilov.shmr25.login.impl.di.DaggerLoginComponent
 import com.natan.shamilov.shmr25.login.impl.presentation.navigation.LoginFlow
 import com.natan.shamilov.shmr25.login.impl.presentation.screen.PinCodeLoginScreen
 import com.natan.shamilov.shmr25.splash.impl.SplashFlow
@@ -38,8 +39,10 @@ fun AppGraph() {
     val context = LocalContext.current
     val appComponent = context.appComponent
     var syncInfo by remember { mutableStateOf(Pair<Long?, String?>(null, null)) }
+    var isPinCodeSet by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         syncInfo = appComponent.syncPreferencesProvider().getLastSyncInfo()
+        isPinCodeSet = appComponent.optionsProvider().getPinCode() != 0
     }
     NavHost(
         navController = navigationState.navHostController,
@@ -51,17 +54,26 @@ fun AppGraph() {
                 LocalViewModelFactory provides splashComponent.viewModelFactory()
             ) {
                 SplashScreen(onNextScreen = {
-                   // navigationState.splashNavigate(LoginFlow.Login)
-                    navigationState.splashNavigate(Screen.Main)
+                    if (isPinCodeSet) {
+                        navigationState.splashNavigate(LoginFlow.Login)
+                    } else {
+                        navigationState.splashNavigate(Screen.Main)
+                    }
                 })
             }
         }
 
         composable(LoginFlow.Login.route) {
-            PinCodeLoginScreen(onContinue = {
-                navigationState.splashNavigate(Screen.Main)
-            })
+            val loginComponent = DaggerLoginComponent.factory().create(appComponent)
+            CompositionLocalProvider(
+                LocalViewModelFactory provides loginComponent.viewModelFactory()
+            ) {
+                PinCodeLoginScreen(onContinue = {
+                    navigationState.splashNavigate(Screen.Main)
+                })
+            }
         }
+
         composable(Screen.Main.route) {
             MainScreen(syncInfo = syncInfo)
         }

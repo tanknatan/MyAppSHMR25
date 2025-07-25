@@ -31,11 +31,12 @@ import com.natan.shamilov.shmr25.expenses.impl.di.DaggerExpensesComponent
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.accountGraph
 import com.natan.shamilov.shmr25.feature.expenses.presentation.navigation.expensesGraph
-import com.natan.shamilov.shmr25.option.presentation.navigation.optionsGraph
 import com.natan.shamilov.shmr25.history.impl.di.DaggerHistoryComponent
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.historyGraph
 import com.natan.shamilov.shmr25.incomes.impl.di.DaggerIncomesComponent
 import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.incomesGraph
+import com.natan.shamilov.shmr25.option.impl.di.DaggerOptionsComponent
+import com.natan.shamilov.shmr25.option.impl.presentation.navigation.optionsGraph
 import kotlinx.coroutines.launch
 
 /**
@@ -118,7 +119,10 @@ fun MainScreen(modifier: Modifier = Modifier, syncInfo: Pair<Long?, String?>) {
                 navHostController = navigationState.navHostController,
                 DaggerCategoriesComponent.factory().create(appComponent)
             )
-            optionsGraph(navHostController = navigationState.navHostController)
+            optionsGraph(
+                navHostController = navigationState.navHostController,
+                DaggerOptionsComponent.factory().create(appComponent)
+            )
             historyGraph(
                 navHostController = navigationState.navHostController,
                 DaggerHistoryComponent.factory().create(appComponent)

@@ -6,7 +6,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     kotlin("kapt")
 }
-
 android {
     namespace = "com.natan.shamilov.shmr25"
     compileSdk = 35
@@ -17,7 +16,6 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true

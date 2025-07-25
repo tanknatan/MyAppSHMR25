@@ -17,7 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,6 +32,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDia
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.impl.presentation.screen.editIncomes.EditIncomesViewModel
 import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
@@ -79,7 +80,7 @@ fun EditIncomesScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.not_network))
+                    Text(text = localizedString(R.string.not_network))
                 }
             }
 
@@ -135,7 +136,6 @@ fun EditIncomesContent(
             onAmountChange = {
                 viewModel.updateAmount(it)
             },
-            label = "Сумма",
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
@@ -156,7 +156,7 @@ fun EditIncomesContent(
         SingleLineTextField(
             value = comment,
             onValueChange = { viewModel.updateText(it) },
-            placeholder = stringResource(R.string.comment)
+            placeholder = localizedString(R.string.comment)
         )
         Spacer(modifier = Modifier.height(16.dp))
 //        CustomButton(

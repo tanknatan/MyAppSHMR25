@@ -1,7 +1,6 @@
 package com.natan.shamilov.shmr25.common.impl.presentation.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -9,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +30,6 @@ fun SingleLineTextField(
         modifier = modifier
             .height(70.dp)
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(4.dp)) // светло-розовый фон
             .drawBehind {
                 // нижняя серая линия
                 val strokeWidth = 1.dp.toPx()
@@ -46,7 +45,7 @@ fun SingleLineTextField(
     ) {
         val textStyle = LocalTextStyle.current.copy(
             fontSize = 16.sp,
-            color = Color.Black
+            color = MaterialTheme.colorScheme.onBackground
         )
         BasicTextField(
             value = value,

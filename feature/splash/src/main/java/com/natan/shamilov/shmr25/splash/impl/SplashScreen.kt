@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,7 +49,7 @@ fun SplashScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                color = Color.White
+                color = MaterialTheme.colorScheme.background
             ),
         contentAlignment = Alignment.Center
     ) {

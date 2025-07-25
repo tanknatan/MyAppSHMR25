@@ -6,7 +6,7 @@ package com.natan.shamilov.shmr25.common.impl.domain.repository
  */
 interface WorkManagerRepository {
 
-    fun schedulePeriodicSync()
+    suspend fun schedulePeriodicSync()
 
     fun triggerImmediateSync()
 } 

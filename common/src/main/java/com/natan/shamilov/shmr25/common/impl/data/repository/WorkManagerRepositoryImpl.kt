@@ -1,6 +1,7 @@
 package com.natan.shamilov.shmr25.common.impl.data.repository
 
 import android.content.Context
+import android.util.Log
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -8,6 +9,7 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.natan.shamilov.shmr25.common.api.SyncPreferencesProvider
 import com.natan.shamilov.shmr25.common.api.WorkManagerProvider
 import com.natan.shamilov.shmr25.common.impl.data.worker.SyncTransactionsWorker
 import com.natan.shamilov.shmr25.common.impl.domain.repository.WorkManagerRepository
@@ -19,12 +21,17 @@ import javax.inject.Inject
  * Предоставляет информацию о состоянии синхронизации и управляет задачами.
  */
 class WorkManagerRepositoryImpl @Inject constructor(
-    private val context: Context
+    private val context: Context,
+    private val syncPreferencesRepository: SyncPreferencesProvider,
 ) : WorkManagerRepository, WorkManagerProvider {
 
     private val workManager = WorkManager.getInstance(context)
 
-    override fun schedulePeriodicSync() {
+    override suspend fun schedulePeriodicSync() {
+        val syncRepeatInterval = syncPreferencesRepository.getSyncInterval()
+
+        Log.d("ServerSyncTest", "sync interval: $syncRepeatInterval hours")
+
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .setRequiresBatteryNotLow(false)
@@ -32,7 +39,7 @@ class WorkManagerRepositoryImpl @Inject constructor(
             .build()
 
         val syncWorkRequest = PeriodicWorkRequestBuilder<SyncTransactionsWorker>(
-            repeatInterval = SYNC_INTERVAL_HOURS,
+            repeatInterval = syncRepeatInterval,
             repeatIntervalTimeUnit = TimeUnit.HOURS
         )
             .setConstraints(constraints)
@@ -46,7 +53,7 @@ class WorkManagerRepositoryImpl @Inject constructor(
 
         workManager.enqueueUniquePeriodicWork(
             SyncTransactionsWorker.WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP, // Сохраняем существующую работу если она уже запланирована
+            ExistingPeriodicWorkPolicy.REPLACE, // Заменяем существующую работу если она уже запланирована
             syncWorkRequest
         )
     }
@@ -70,9 +77,9 @@ class WorkManagerRepositoryImpl @Inject constructor(
         workManager.enqueue(immediateSyncRequest)
     }
 
+
     companion object {
         const val SYNC_INTERVAL_HOURS = 4L
         const val INITIAL_BACKOFF_DELAY_MINUTES = 15L
-        const val MAX_BACKOFF_DELAY_HOURS = 2L
     }
 }

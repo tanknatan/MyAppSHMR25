@@ -18,7 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -34,6 +34,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTimePickerDia
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.SingleLineTextField
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.common.impl.presentation.utils.convertCurrency
 import com.natan.shamilov.shmr25.expenses.R
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
@@ -80,7 +81,7 @@ fun EditExpensesScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = stringResource(R.string.not_network))
+                    Text(text = localizedString(R.string.not_network))
                 }
             }
 
@@ -136,7 +137,6 @@ fun EditExpensesContent(
             onAmountChange = {
                 viewModel.updateAmount(it)
             },
-            label = "Сумма",
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
@@ -157,7 +157,7 @@ fun EditExpensesContent(
         SingleLineTextField(
             value = comment,
             onValueChange = { viewModel.updateText(it) },
-            placeholder = stringResource(R.string.comment)
+            placeholder = localizedString(R.string.comment)
         )
         Spacer(modifier = Modifier.height(16.dp))
 //        CustomButton(

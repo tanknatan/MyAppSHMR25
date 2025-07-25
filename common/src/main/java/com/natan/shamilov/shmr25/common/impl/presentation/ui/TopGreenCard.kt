@@ -39,7 +39,6 @@ fun TopGreenCard(
     title: String,
     amount: Double? = null,
     cucurrency: String? = null,
-    currency: String? = null,
     avatarEmoji: String? = null,
     canNavigate: Boolean = false,
     onNavigateClick: (() -> Unit)? = null
@@ -57,7 +56,7 @@ fun TopGreenCard(
                 .height(56.dep)
         },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 0.dp,

@@ -16,9 +16,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.common.R
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 @Composable
 fun ListEmptyScreen(onRetry: () -> Unit) {
@@ -32,7 +33,7 @@ fun ListEmptyScreen(onRetry: () -> Unit) {
 
             contentAlignment = Alignment.Center
         ) {
-            Text(text = stringResource(R.string.list_empty))
+            Text(text = localizedString(R.string.list_empty))
         }
         TextButton(
             onClick = onRetry,
@@ -44,7 +45,7 @@ fun ListEmptyScreen(onRetry: () -> Unit) {
                 modifier = Modifier.size(18.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = stringResource(R.string.retry))
+            Text(text = localizedString(R.string.retry))
         }
     }
 }

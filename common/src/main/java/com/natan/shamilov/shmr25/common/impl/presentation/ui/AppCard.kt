@@ -114,7 +114,7 @@ fun AppCard(
                     modifier = Modifier
                         .size(30.dep)
                         .clip(CircleShape)
-                        .background(MaterialTheme.colorScheme.secondary),
+                        .background(MaterialTheme.colorScheme.secondaryContainer),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(avatarEmoji, fontSize = 19.sp, fontFamily = rodotoFont)

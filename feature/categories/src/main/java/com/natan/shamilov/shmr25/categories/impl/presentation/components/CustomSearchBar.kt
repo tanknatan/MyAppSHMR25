@@ -1,4 +1,4 @@
-package com.natan.shamilov.shmr25.feature.categories.presentation.components
+package com.natan.shamilov.shmr25.categories.impl.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -24,15 +24,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.categories.R
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 @Composable
 fun CustomSearchBar(
     query: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
     val padding = if (query.isEmpty()) {
@@ -55,7 +55,7 @@ fun CustomSearchBar(
         decorationBox = { innerTextField ->
             Box(modifier = Modifier.fillMaxSize()) {
                 if (query.isEmpty()) {
-                    Text(stringResource(R.string.find_category))
+                    Text(localizedString(R.string.find_category))
                 }
 
                 innerTextField()
@@ -75,7 +75,7 @@ fun CustomSearchBar(
 @Composable
 private fun BoxScope.TrailingIcon(
     query: String,
-    onClear: () -> Unit
+    onClear: () -> Unit,
 ) {
     if (query.isEmpty()) {
         Icon(

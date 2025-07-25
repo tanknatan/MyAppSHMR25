@@ -5,7 +5,7 @@ import com.natan.shamilov.shmr25.feature.account.presentation.navigation.Account
 import com.natan.shamilov.shmr25.feature.categories.presentation.navigation.CategoriesFlow
 import com.natan.shamilov.shmr25.expenses.impl.presentation.navigation.ExpensesFlow
 import com.natan.shamilov.shmr25.incomes.impl.presentation.navigation.IncomesFlow
-import com.natan.shamilov.shmr25.option.presentation.navigation.OptionsFlow
+import com.natan.shamilov.shmr25.option.impl.presentation.navigation.OptionsFlow
 import com.natan.shamilov.shmr25.common.impl.domain.entity.Screen as commoScreen
 
 /**

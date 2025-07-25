@@ -69,7 +69,6 @@ fun AccountSchedule(
     )
 
     Column(modifier = modifier.graphicsLayer { this.alpha = alpha }) {
-        // Кнопки переключения
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +80,7 @@ fun AccountSchedule(
                 Button(
                     onClick = { selectedChart = chart },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.LightGray
+                        containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.LightGray
                     ),
                     modifier = Modifier
                         .padding(horizontal = 4.dp)

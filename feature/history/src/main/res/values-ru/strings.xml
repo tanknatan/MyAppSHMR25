@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="my_transactions">Мои транзакции</string>
+    <string name="analysis">Анализ</string>
+    <string name="total">Всего</string>
+    <string name="start_date">Начало</string>
+    <string name="end_date">Конец</string>
+    <string name="expenses_history">История расходов</string>
+    <string name="incomes_history">История доходов</string>
+    <string name="total_amount">Сумма</string>
+    <string name="not_network">Нет сети</string>
+    <string name="comment">Комментарий</string>
+    <string name="select">Выбрать</string>
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+</resources>

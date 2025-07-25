@@ -64,5 +64,5 @@ dependencies {
     // coroutines
     implementation(libs.kotlinx.coroutines.android)
     implementation(project(":common"))
-    implementation(project(":feature:schedule"))
+    implementation(project(":feature:graph"))
 }

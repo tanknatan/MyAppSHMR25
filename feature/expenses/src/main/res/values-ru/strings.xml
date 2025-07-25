@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="expenses_today">Расходы сегодня</string>
+    <string name="my_expenses">Мои расходы</string>
+    <string name="expenses">Расходы</string>
+    <string name="not_network">Нет сети</string>
+    <string name="comment">Комментарии</string>
+    <string name="total">Всего</string>
+    <string name="select">Выбрать</string>
+    <string name="date">Дата</string>
+    <string name="time">Время</string>
+</resources>

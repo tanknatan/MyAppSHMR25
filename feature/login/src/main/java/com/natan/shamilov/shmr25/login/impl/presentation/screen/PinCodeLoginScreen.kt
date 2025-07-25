@@ -22,6 +22,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.PinIndicators
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.PinKeyboard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
+import com.natan.shamilov.shmr25.login.R
 
 @Composable
 fun PinCodeLoginScreen(
@@ -30,17 +32,7 @@ fun PinCodeLoginScreen(
 ) {
     var enteredPin by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
-    LaunchedEffect(enteredPin) {
-        if (enteredPin.length == 4) {
-            if (viewModel.checkPassword(enteredPin)) {
-                isError = false
-                onContinue()
-            } else {
-                isError = true
-                enteredPin = ""
-            }
-        }
-    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +42,7 @@ fun PinCodeLoginScreen(
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Введите PIN-код",
+            text = localizedString(R.string.enter_pin),
             style = MaterialTheme.typography.titleLarge
         )
 
@@ -71,6 +63,17 @@ fun PinCodeLoginScreen(
                 }
             }
         )
+        LaunchedEffect(enteredPin) {
+            if (enteredPin.length == 4) {
+                if (viewModel.checkPassword(enteredPin)) {
+                    isError = false
+                    onContinue()
+                } else {
+                    isError = true
+                    enteredPin = ""
+                }
+            }
+        }
     }
 }
 

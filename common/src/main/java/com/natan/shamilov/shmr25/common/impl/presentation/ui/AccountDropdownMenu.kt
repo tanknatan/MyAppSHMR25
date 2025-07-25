@@ -33,7 +33,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -69,7 +68,7 @@ fun AccountDropdownMenu(
                 )
             },
 
-        ) {
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()

@@ -27,7 +27,9 @@ import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.PinIndicators
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.PinKeyboard
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.option.impl.presentation.navigation.OptionsFlow
+import com.natan.shamilov.shmr25.options.R
 import kotlinx.coroutines.delay
 
 @Composable
@@ -59,7 +61,7 @@ fun PinCodeContent(paddingValues: PaddingValues, onSetPinCode: (String) -> Unit)
     var step by remember { mutableStateOf(1) } // 1 - ввод, 2 - подтверждение
     var pin by remember { mutableStateOf("") }
     var confirmPin by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val errorMessage by remember { mutableStateOf<Int>(R.string.pin_codes_do_not_match) }
     var isError by remember { mutableStateOf(false) }
 
     val currentPin = if (step == 1) pin else confirmPin
@@ -77,7 +79,7 @@ fun PinCodeContent(paddingValues: PaddingValues, onSetPinCode: (String) -> Unit)
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = if (step == 1) "Придумайте PIN-код" else "Повторите PIN-код",
+                text = if (step == 1) localizedString(R.string.create_pin_code) else localizedString(R.string.repeat_pin_code),
                 style = MaterialTheme.typography.titleMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -90,14 +92,13 @@ fun PinCodeContent(paddingValues: PaddingValues, onSetPinCode: (String) -> Unit)
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Bottom
         ) {
-            errorMessage?.let {
+            if (errorMessage != null) {
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = it, color = Color.Red)
+                Text(text = localizedString(errorMessage), color = Color.Red)
             }
             PinKeyboard(
                 onNumberClick = {
                     isError = false
-                    errorMessage = null
                     if (currentPin.length < 4) {
                         if (step == 1) pin += it else confirmPin += it
                     }
@@ -114,14 +115,11 @@ fun PinCodeContent(paddingValues: PaddingValues, onSetPinCode: (String) -> Unit)
             LaunchedEffect(currentPin) {
                 delay(300)
                 if (step == 1) {
-                    errorMessage = null
                     step = 2
                 } else {
                     if (pin == confirmPin) {
-                        errorMessage = null
                         onSetPinCode(pin)
                     } else {
-                        errorMessage = "PIN-коды не совпадают"
                         isError = true
                         pin = ""
                         confirmPin = ""

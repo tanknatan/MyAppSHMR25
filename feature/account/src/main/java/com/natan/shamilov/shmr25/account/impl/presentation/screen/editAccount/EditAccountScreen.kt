@@ -33,8 +33,8 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
-import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencyBottomSheet
-import com.natan.shamilov.shmr25.feature.account.presentation.components.CurrencySelectorButton
+import com.natan.shamilov.shmr25.account.impl.presentation.components.CurrencyBottomSheet
+import com.natan.shamilov.shmr25.account.impl.presentation.components.CurrencySelectorButton
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
 import kotlinx.coroutines.launch
 

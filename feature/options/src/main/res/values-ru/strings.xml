@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dark_theme">Темная тема</string>
+    <string name="main_color">Основной цвет</string>
+    <string name="sound">Звуки</string>
+    <string name="vibration">Хаптики</string>
+    <string name="password">Код пароль</string>
+    <string name="sync">Синхронизация</string>
+    <string name="language">Язык</string>
+    <string name="about_app">О программе</string>
+    <string name="create_pin_code">Придумайте PIN-код</string>
+    <string name="repeat_pin_code">Повторите PIN-код</string>
+    <string name="pin_codes_do_not_match">PIN-коды не совпадают</string>
+    <string name="sync_interval_hours">Интервал синхронизации (в часах)</string>
+    <string name="options">Настойки</string>
+</resources>

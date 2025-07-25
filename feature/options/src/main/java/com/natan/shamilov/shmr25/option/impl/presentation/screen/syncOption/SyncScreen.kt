@@ -18,7 +18,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.CustomTopAppBar
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import com.natan.shamilov.shmr25.option.impl.presentation.navigation.OptionsFlow
+import com.natan.shamilov.shmr25.options.R
 
 @Composable
 fun SyncScreen(onBackClick: () -> Unit, viewModel: SyncViewModel = viewModel(factory = LocalViewModelFactory.current)) {
@@ -50,8 +52,8 @@ fun SyncContent(paddingValues: PaddingValues, syncInterval: Int, onSyncIntervalC
             .padding(paddingValues),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Интервал синхронизации (в часах)", style = MaterialTheme.typography.titleMedium)
-        Text("${syncInterval.toInt()} ч")
+        Text(localizedString(R.string.sync_interval_hours), style = MaterialTheme.typography.titleMedium)
+        Text("${syncInterval.toInt()}")
         Box(modifier = Modifier.fillMaxWidth(0.8f)) {
             Slider(
                 value = syncInterval.toFloat(),

@@ -13,6 +13,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.natan.shamilov.shmr25.common.R
+import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 
 /**
  * Поле ввода для названия счета.
@@ -27,13 +29,13 @@ import androidx.compose.ui.unit.dp
 fun AccountNameInput(
     accountName: String,
     onNameChange: (String) -> Unit,
-    isError: Boolean
+    isError: Boolean,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         OutlinedTextField(
             value = accountName,
             onValueChange = onNameChange,
-            label = { Text("Имя счёта") },
+            label = { Text(localizedString(R.string.account_name)) },
             isError = isError,
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
@@ -51,7 +53,7 @@ fun AccountNameInput(
         )
         if (isError) {
             Text(
-                text = "Имя счёта обязательно",
+                text = localizedString(R.string.account_name_required),
                 color = MaterialTheme.colorScheme.error,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 16.dp, top = 4.dp)

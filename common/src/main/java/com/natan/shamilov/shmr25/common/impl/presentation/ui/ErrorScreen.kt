@@ -17,7 +17,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.compose.ui.unit.dp
 import com.natan.shamilov.shmr25.common.R
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString

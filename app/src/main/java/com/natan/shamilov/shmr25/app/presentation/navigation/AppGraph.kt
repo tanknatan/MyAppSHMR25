@@ -39,10 +39,8 @@ fun AppGraph() {
     val context = LocalContext.current
     val appComponent = context.appComponent
     var syncInfo by remember { mutableStateOf(Pair<Long?, String?>(null, null)) }
-    var isPinCodeSet by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         syncInfo = appComponent.syncPreferencesProvider().getLastSyncInfo()
-        isPinCodeSet = appComponent.optionsProvider().getPinCode() != 0
     }
     NavHost(
         navController = navigationState.navHostController,
@@ -53,13 +51,14 @@ fun AppGraph() {
             CompositionLocalProvider(
                 LocalViewModelFactory provides splashComponent.viewModelFactory()
             ) {
-                SplashScreen(onNextScreen = {
-                    if (isPinCodeSet) {
-                        navigationState.splashNavigate(LoginFlow.Login)
-                    } else {
+                SplashScreen(
+                    onMainScreen = {
                         navigationState.splashNavigate(Screen.Main)
+                    },
+                    onLoginScreen = {
+                        navigationState.splashNavigate(LoginFlow.Login)
                     }
-                })
+                )
             }
         }
 

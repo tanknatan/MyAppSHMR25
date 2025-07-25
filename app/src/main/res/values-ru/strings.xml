@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyAppSHMR25</string>
+    <string name="options">Настройки</string>
+    <string name="expenses">Расходы</string>
+    <string name="incomes">Доходы</string>
+    <string name="account">Счет</string>
+    <string name="categories">Статьи</string>
+</resources>

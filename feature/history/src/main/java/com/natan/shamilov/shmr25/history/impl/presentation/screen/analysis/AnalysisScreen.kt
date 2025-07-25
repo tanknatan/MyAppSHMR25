@@ -30,7 +30,7 @@ import com.natan.shamilov.shmr25.history.R
 import com.natan.shamilov.shmr25.history.impl.presentation.navigation.HistoryFlow
 import com.natan.shamilov.shmr25.history.impl.presentation.utils.generateColorsHSV
 import com.natan.shamilov.shmr25.history.impl.presentation.utils.toPieChartData
-import com.natan.shamilov.shmr25.schedule.AnalysisSchedule
+import com.natan.shamilov.shmr25.graph.AnalysisSchedule
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -142,7 +142,6 @@ private fun AnalysisContent(
                             percent = item.percent,
                             subPercent = item.amount,
                             color = colors?.getOrNull(model.categoryStats.indexOf(item)),
-                            //currency = item.currency
                         )
                     }
                 }

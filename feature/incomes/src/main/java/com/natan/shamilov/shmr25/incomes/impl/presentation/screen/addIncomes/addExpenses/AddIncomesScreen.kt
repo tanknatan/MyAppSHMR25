@@ -109,7 +109,7 @@ fun AddIncomesContent(
     var showTimeDialog by remember { mutableStateOf(false) }
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: "Выбрать"
+    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?:  localizedString(R.string.select)
     Column(modifier = Modifier.padding(paddingValues)) {
         AccountDropdownMenu(
             accounts = accounts,
@@ -133,7 +133,7 @@ fun AddIncomesContent(
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
-            title = "Дата",
+            title = localizedString(R.string.date),
             onNavigateClick = {
                 showDialog = true
             },
@@ -143,7 +143,7 @@ fun AddIncomesContent(
         )
 
         AppCard(
-            title = "Время",
+            title = localizedString(R.string.time),
             stringDate = formattedTime,
             onNavigateClick = { showTimeDialog = true }
         )

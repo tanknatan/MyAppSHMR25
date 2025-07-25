@@ -22,7 +22,7 @@ import com.natan.shamilov.shmr25.common.impl.presentation.ui.LoadingScreen
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.MyFloatingActionButton
 import com.natan.shamilov.shmr25.common.impl.presentation.ui.TopGreenCard
 import com.natan.shamilov.shmr25.feature.account.presentation.navigation.AccountFlow
-import com.natan.shamilov.shmr25.schedule.AccountSchedule
+import com.natan.shamilov.shmr25.graph.AccountSchedule
 
 @Composable
 fun AccountScreen(

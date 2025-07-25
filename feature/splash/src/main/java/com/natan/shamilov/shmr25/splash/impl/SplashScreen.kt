@@ -23,7 +23,8 @@ import com.natan.shamilov.shmr25.common.impl.presentation.LocalViewModelFactory
 
 @Composable
 fun SplashScreen(
-    onNextScreen: () -> Unit,
+    onMainScreen: () -> Unit,
+    onLoginScreen: () -> Unit,
     viewModel: SplashViewModel = viewModel(factory = LocalViewModelFactory.current),
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.Asset("my_animation.json"))
@@ -32,16 +33,25 @@ fun SplashScreen(
         iterations = 1
     )
     val shouldNavigate by viewModel.uiState.collectAsStateWithLifecycle()
+    val isPinCodeSet by viewModel.isPinCodeSet.collectAsStateWithLifecycle()
 
     LaunchedEffect(progress) {
         if (progress == 1f && shouldNavigate) {
-            onNextScreen()
+            if (isPinCodeSet) {
+                onLoginScreen()
+            } else {
+                onMainScreen()
+            }
         }
     }
 
     LaunchedEffect(shouldNavigate) {
         if (progress == 1f && shouldNavigate) {
-            onNextScreen()
+            if (isPinCodeSet) {
+                onLoginScreen()
+            } else {
+                onMainScreen()
+            }
         }
     }
 

@@ -15,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.natan.shamilov.shmr25.common.impl.presentation.ui.theme.localizedString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.natan.shamilov.shmr25.common.impl.domain.entity.State
@@ -109,7 +108,7 @@ fun AddExpensesContent(
     var showTimeDialog by remember { mutableStateOf(false) }
 
     val dateFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: "Выбрать"
+    val formattedTime = time.format(DateTimeFormatter.ofPattern("HH:mm")) ?: localizedString(R.string.select)
     Column(modifier = Modifier.padding(paddingValues)) {
         AccountDropdownMenu(
             accounts = accounts,
@@ -133,7 +132,7 @@ fun AddExpensesContent(
             currency = selectedAccount?.currency?.convertCurrency(),
         )
         AppCard(
-            title = "Дата",
+            title = localizedString(R.string.date),
             onNavigateClick = {
                 showDialog = true
             },
@@ -143,7 +142,7 @@ fun AddExpensesContent(
         )
 
         AppCard(
-            title = "Время",
+            title = localizedString(R.string.time),
             stringDate = formattedTime,
             onNavigateClick = { showTimeDialog = true }
         )
